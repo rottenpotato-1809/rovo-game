@@ -26,6 +26,22 @@ test('buying spends gold and fills bench', () => {
   assertEqual(result.success, true);
   assertEqual(result.state.gold, 0);
   assertEqual(result.state.bench[0].id, 'ember');
+  assertEqual(result.state.shop[0], null);
+});
+
+test('bought shop slot cannot be bought again', () => {
+  const state = {
+    gold: CONFIG.DRAGON_BUY_COST * 2,
+    team: Array(CONFIG.TEAM_SIZE).fill(null),
+    bench: Array(CONFIG.BENCH_SIZE).fill(null),
+    shop: ['ember'],
+    unlockedDragonIds: ['ember'],
+  };
+  const firstBuy = buyDragon(state, 0);
+  const secondBuy = buyDragon(firstBuy.state, 0);
+  assertEqual(firstBuy.success, true);
+  assertEqual(secondBuy.success, false);
+  assertEqual(secondBuy.state.bench.filter(Boolean).length, 1);
 });
 
 test('starting gold buys two round one dragons', () => {

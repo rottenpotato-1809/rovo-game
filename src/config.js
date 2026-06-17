@@ -131,6 +131,23 @@ export const CONFIG = {
     [0, 1, 2],  // Round 10 — finale, mostly T3
   ],
 
+  ENEMY_POWER_SCALE: [
+    0.45, // Round 1  — very soft intro
+    0.55, // Round 2  — still forgiving
+    0.65, // Round 3  — first full team, but weakened
+    0.75, // Round 4
+    0.85, // Round 5
+    0.95, // Round 6
+    1.00, // Round 7
+    1.10, // Round 8
+    1.20, // Round 9
+    1.30, // Round 10
+  ],
+  // Per-round ATK/HP multiplier for generated enemies.
+
+  ENEMY_MIN_STAT: 1,
+  // Lowest allowed enemy ATK/HP after round power scaling.
+
   // ─── BOSS: ETERNAL WYRM ───────────────────────────────────────
   // Invincible boss fight — the scoring mechanism
 
@@ -209,8 +226,10 @@ export const CONFIG = {
   // Combined with width, gives a 16:9 landscape aspect ratio.
 
   PIXEL_RATIO: 1,
-  // Multiply canvas internal resolution for sharper rendering on retina screens.
-  // 1 = standard. 2 = retina. Auto-detect with window.devicePixelRatio if desired.
+  // Fallback device pixel ratio when browser pixel ratio is unavailable.
+
+  CANVAS_MAX_PIXEL_RATIO: 2,
+  // Maximum backing-store pixel ratio for sharp scaled rendering without huge canvases.
 
   // ─── RENDERING — COLORS ───────────────────────────────────────
   // All color values used in the game. Change these to retheme instantly.

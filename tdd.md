@@ -118,6 +118,7 @@ export const CONFIG = {
     [0, 2, 1],  // round 9
     [0, 1, 2],  // round 10
   ],
+  ENEMY_POWER_SCALE: [0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.0, 1.1, 1.2, 1.3],
 
   // ─── BOSS ─────────────────────────────────────────────────
   BOSS_HP: 99999,            // effectively invincible
@@ -208,6 +209,8 @@ Shop (systems/shop.js)
 
 - Returns an array of dragon IDs. The prep state renders them as cards.
 
+- Buying a dragon sets that shop slot to null. Null shop slots render as sold and cannot be bought again until reroll or next round.
+
 Merge (systems/merge.js)
 - Scans bench + team for groups of MERGE_COUNT same-id, same-tier dragons.
 
@@ -219,6 +222,8 @@ Enemy (systems/enemy.js)
 - Reads ENEMY_SCALING[roundIndex] to know how many of each tier to generate.
 
 - Early ENEMY_SCALING rows may contain fewer than TEAM_SIZE dragons for onboarding difficulty.
+
+- Applies ENEMY_POWER_SCALE[roundIndex] to generated enemy ATK/HP so early rounds are intentionally weaker than equivalent player dragons.
 
 - Picks from ALL 8 dragon types (including locked ones) — this is the player's preview of what they can unlock.
 
@@ -249,7 +254,7 @@ Rendering (ui/renderer.js)
 
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
-- Logical resolution stays fixed at CANVAS_WIDTH × CANVAS_HEIGHT.
+- Game coordinates stay fixed at CANVAS_WIDTH × CANVAS_HEIGHT, but the backing canvas is resized to displayed CSS pixels times device pixel ratio, capped by CANVAS_MAX_PIXEL_RATIO, to avoid blurry scaled rendering.
 
 Run Health
 - Owned dragon HP is round-based. Battle instances start each fight at full tier HP, and winning a fight returns all owned team/bench dragons to full HP for the next prep phase.

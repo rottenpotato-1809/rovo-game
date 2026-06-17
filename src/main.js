@@ -11,8 +11,6 @@ import { ResultState } from './states/resultState.js';
 function main() {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-  canvas.width = CONFIG.CANVAS_WIDTH;
-  canvas.height = CONFIG.CANVAS_HEIGHT;
 
   const stateManager = new StateManager();
   const game = { run: null };
@@ -25,9 +23,26 @@ function main() {
   new Input(canvas, stateManager);
   const loop = new GameLoop(
     dt => stateManager.update(dt),
-    () => stateManager.render(ctx),
+    () => {
+      syncCanvasResolution(canvas, ctx);
+      stateManager.render(ctx);
+    },
   );
   loop.start();
+}
+
+// Match the canvas backing store to its displayed size for crisp scaled rendering.
+function syncCanvasResolution(canvas, ctx) {
+  const rect = canvas.getBoundingClientRect();
+  const ratio = Math.min(window.devicePixelRatio || CONFIG.PIXEL_RATIO, CONFIG.CANVAS_MAX_PIXEL_RATIO);
+  const width = Math.round(rect.width * ratio);
+  const height = Math.round(rect.height * ratio);
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  ctx.imageSmoothingEnabled = false;
+  ctx.setTransform(canvas.width / CONFIG.CANVAS_WIDTH, 0, 0, canvas.height / CONFIG.CANVAS_HEIGHT, 0, 0);
 }
 
 main();

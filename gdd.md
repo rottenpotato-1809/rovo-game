@@ -45,6 +45,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Shop & Economy
 - The shop displays **3 random dragons** each round from the player's unlocked pool.
 - All dragons cost **3 gold** to buy.
+- Buying a shop dragon consumes that shop slot until the next reroll or round refresh.
 - Selling returns **2 gold** (Tier 1), **4 gold** (Tier 2), or **8 gold** (Tier 3).
 - Rerolling the shop costs **1 gold** and can be done unlimited times.
 - Starting gold: **6** so round 1 can field two dragons. Gold earned per round won: **3 + current round number** (e.g., winning round 4 gives 7 gold).
@@ -66,7 +67,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Enemies
 - Enemy teams are pre-generated per round from ALL 8 dragon types (including ones the player hasn't unlocked).
-- Difficulty escalates by both team size and tier: round 1 has one Tier 1 enemy, round 2 has two Tier 1 enemies, round 3 begins full enemy teams, and by rounds 9–10 enemies field Tier 2 and Tier 3 dragons.
+- Difficulty escalates by team size, tier, and power scale: round 1 has one weakened Tier 1 enemy, round 2 has two weakened Tier 1 enemies, round 3 begins weakened full enemy teams, and later rounds ramp toward stronger Tier 2 and Tier 3 enemies.
 
 ### Boss Fight (Eternal Wyrm)
 - Only reached by winning all 10 rounds.

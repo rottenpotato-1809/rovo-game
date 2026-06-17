@@ -88,6 +88,11 @@ export class PrepState {
     drawText(ctx, 'SHOP', CONFIG.PREP_RIGHT_PANEL_X, CONFIG.SHOP_ZONE_Y - CONFIG.PREP_SECTION_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY, 'left');
     getShopCards().forEach((rect, index) => {
       const id = this.game.run.shop[index];
+      if (!id) {
+        drawRect(ctx, rect, CONFIG.ACCENT_SECONDARY, CONFIG.BENCH_EMPTY_BORDER);
+        drawText(ctx, 'SOLD', rect.x + rect.width / 2, rect.y + rect.height / 2, CONFIG.FONT_SIZE_BUTTON, CONFIG.TEXT_MUTED);
+        return;
+      }
       const dragon = getDragon(id);
       const tier = getDragonTier(id, 1);
       drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, CONFIG.ELEMENT_COLORS[dragon.element]);

@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
-import { getAllDragonIds } from '../data/dragons.js';
-import { generateEnemyTeam } from '../systems/enemy.js';
+import { getAllDragonIds, getDragon } from '../data/dragons.js';
+import { generateEnemyTeam, getEnemyPowerScale } from '../systems/enemy.js';
 import { assert, assertEqual, test, summarize } from './testHarness.js';
 
 console.log('Enemy System Test Suite');
@@ -24,6 +24,14 @@ test('enemy tier mix follows round scaling', () => {
   }, {});
   assertEqual(tierCounts[2], CONFIG.ENEMY_SCALING[9][1]);
   assertEqual(tierCounts[3], CONFIG.ENEMY_SCALING[9][2]);
+});
+
+test('enemy stats use configured round power scale', () => {
+  const team = generateEnemyTeam(1, () => 0);
+  const expectedAtk = Math.max(CONFIG.ENEMY_MIN_STAT, Math.round(getDragon(team[0].id).tiers[0].atk * getEnemyPowerScale(1)));
+  const expectedHp = Math.max(CONFIG.ENEMY_MIN_STAT, Math.round(getDragon(team[0].id).tiers[0].hp * getEnemyPowerScale(1)));
+  assertEqual(team[0].atk, expectedAtk);
+  assertEqual(team[0].maxHp, expectedHp);
 });
 
 test('enemy generation can use locked dragon ids', () => {

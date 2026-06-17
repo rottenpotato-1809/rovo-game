@@ -28,6 +28,7 @@ export function buyDragon(state, shopIndex) {
   const nextState = cloneDraftState(state);
   nextState.gold = paid.gold;
   nextState.bench[benchIndex] = createOwnedDragon(dragonId);
+  nextState.shop[shopIndex] = null;
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_SHOP) {
     console.log(`[SHOP] bought ${dragonId}`);
   }
