@@ -13,6 +13,7 @@ export class Input {
   // Send a pointer press to the active state after hit-test coordinate conversion.
   onPointerDown(event) {
     event.preventDefault();
+    if (this.canvas.setPointerCapture) this.canvas.setPointerCapture(event.pointerId);
     const point = this.toCanvasPoint(event);
     if (CONFIG.LOG_ENABLED && CONFIG.LOG_INPUT) {
       console.log(`[INPUT] pointer down at ${point.x}, ${point.y}`);
@@ -30,6 +31,9 @@ export class Input {
   // Send pointer release to the active state for drops and clicks.
   onPointerUp(event) {
     event.preventDefault();
+    if (this.canvas.releasePointerCapture && this.canvas.hasPointerCapture(event.pointerId)) {
+      this.canvas.releasePointerCapture(event.pointerId);
+    }
     const point = this.toCanvasPoint(event);
     if (this.stateManager.handlePointerUp) this.stateManager.handlePointerUp(point);
   }

@@ -28,6 +28,23 @@ test('buying spends gold and fills bench', () => {
   assertEqual(result.state.bench[0].id, 'ember');
 });
 
+test('starting gold buys two round one dragons', () => {
+  const expectedOpeningBuys = CONFIG.STARTING_GOLD / CONFIG.DRAGON_BUY_COST;
+  const state = {
+    gold: CONFIG.STARTING_GOLD,
+    team: Array(CONFIG.TEAM_SIZE).fill(null),
+    bench: Array(CONFIG.BENCH_SIZE).fill(null),
+    shop: ['ember', 'stonescale'],
+    unlockedDragonIds: ['ember', 'stonescale'],
+  };
+  const firstBuy = buyDragon(state, 0);
+  const secondBuy = buyDragon(firstBuy.state, 1);
+  assertEqual(firstBuy.success, true);
+  assertEqual(secondBuy.success, true);
+  assertEqual(secondBuy.state.gold, CONFIG.STARTING_GOLD - (CONFIG.DRAGON_BUY_COST * expectedOpeningBuys));
+  assertEqual(secondBuy.state.bench.filter(Boolean).length, expectedOpeningBuys);
+});
+
 test('reroll spends gold and refreshes offerings', () => {
   const state = {
     gold: CONFIG.REROLL_COST,

@@ -64,6 +64,17 @@ export function drawText(ctx, text, x, y, size, color = CONFIG.TEXT_PRIMARY, ali
   ctx.fillText(text, x, y);
 }
 
+// Draw text that shrinks to stay within a fixed max width.
+export function drawFitText(ctx, text, x, y, size, maxWidth, minSize, color = CONFIG.TEXT_PRIMARY, align = 'center') {
+  let fittedSize = size;
+  ctx.font = `${fittedSize}px ${CONFIG.FONT_FAMILY}`;
+  while (ctx.measureText(text).width > maxWidth && fittedSize > minSize) {
+    fittedSize -= 1;
+    ctx.font = `${fittedSize}px ${CONFIG.FONT_FAMILY}`;
+  }
+  drawText(ctx, text, x, y, fittedSize, color, align);
+}
+
 // Draw a horizontal value bar for HP and shields.
 export function drawBar(ctx, x, y, width, height, ratio, fill) {
   const clamped = Math.max(0, Math.min(CONFIG.ARENA_ALIVE_ALPHA, ratio));

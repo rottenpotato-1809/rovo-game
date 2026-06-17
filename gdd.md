@@ -46,7 +46,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - All dragons cost **3 gold** to buy.
 - Selling returns **2 gold** (Tier 1), **4 gold** (Tier 2), or **8 gold** (Tier 3).
 - Rerolling the shop costs **1 gold** and can be done unlimited times.
-- Starting gold: **3**. Gold earned per round won: **3 + current round number** (e.g., winning round 4 gives 7 gold).
+- Starting gold: **6** so round 1 can field two dragons. Gold earned per round won: **3 + current round number** (e.g., winning round 4 gives 7 gold).
 
 ### Merging
 - Place 3 identical dragons together → they fuse into 1 dragon of the next tier.

@@ -36,9 +36,9 @@ export const CONFIG = {
   // ─── ECONOMY ─────────────────────────────────────────────────
   // Gold flow controls how fast players can buy and upgrade
 
-  STARTING_GOLD: 3,
+  STARTING_GOLD: 6,
   // Gold the player begins with on round 1.
-  // Recommended range: 2–5. Lower = tighter early game.
+  // Recommended range: 3-6. Higher = lets round 1 field more than one dragon.
 
   GOLD_PER_WIN_BASE: 3,
   // Flat gold earned for winning any round (before scaling).
@@ -455,6 +455,12 @@ export const CONFIG = {
   FONT_SIZE_HEADER: 16,
   // Round number, gold display (px).
 
+  FONT_SIZE_CARD_TITLE_MIN: 10,
+  // Smallest shop-card title size allowed before text is clipped.
+
+  FONT_SIZE_CARD_META_MIN: 7,
+  // Smallest shop-card metadata size allowed before text is clipped.
+
   FONT_SIZE_DRAGON_NAME: 12,
   // Dragon name below its circle (px).
 
@@ -637,6 +643,9 @@ export const CONFIG = {
 
   PREP_MESSAGE_Y: 512,
   // Y position for temporary prep feedback text.
+
+  PREP_DRAG_PREVIEW_ALPHA: 0.8,
+  // Opacity for the floating dragon preview while dragging.
 
   RESULT_BUTTON_X: 380,
   // X position for result screen replay button.

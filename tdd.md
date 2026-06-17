@@ -84,7 +84,7 @@ export const CONFIG = {
   BENCH_SIZE: 5,             // reserve slots for merge planning
   
   // ─── ECONOMY ─────────────────────────────────────────────
-  STARTING_GOLD: 3,          // gold at the start of round 1
+  STARTING_GOLD: 6,          // gold at the start of round 1; enough for two dragons
   GOLD_PER_WIN_BASE: 3,      // flat gold for winning any round
   GOLD_PER_WIN_SCALING: 1,   // multiplied by round number and added to base (round 4 win = 3 + 4×1 = 7)
   DRAGON_BUY_COST: 3,        // cost to purchase any dragon from shop
@@ -236,7 +236,7 @@ Input Handling (engine/input.js)
 
 - On pointer down: run hit-test against current state's interactive regions (returned by each state's getHitZones() method).
 
-- Drag-and-drop: track pointer down → move → up. States define valid drag sources and drop targets.
+- Drag-and-drop: track pointer down → move → up with pointer capture and a visible drag preview. States define valid drag sources and drop targets.
 
 - No keyboard controls needed for prototype.
 

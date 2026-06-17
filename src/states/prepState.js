@@ -6,7 +6,7 @@ import { checkMergeAvailable, executeMerge } from '../systems/merge.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
 import { buyDragon, cloneDraftState, rerollShop, sellDragon } from '../systems/shop.js';
 import { getBenchSlots, getPrepButtons, getSellZone, getShopCards, getTeamSlots, pointInRect } from '../ui/layout.js';
-import { clear, drawArenaBackdrop, drawButton, drawCircle, drawRect, drawText } from '../ui/renderer.js';
+import { clear, drawArenaBackdrop, drawButton, drawCircle, drawFitText, drawRect, drawText } from '../ui/renderer.js';
 
 // Render and operate the draft/prep phase for Milestone 2.
 export class PrepState {
@@ -15,6 +15,7 @@ export class PrepState {
     this.game = game;
     this.selectedSource = null;
     this.dragSource = null;
+    this.dragPoint = null;
     this.message = '';
   }
 
@@ -23,6 +24,7 @@ export class PrepState {
     if (!this.game.run) this.game.run = createRunState();
     this.selectedSource = null;
     this.dragSource = null;
+    this.dragPoint = null;
   }
 
   // Keep prep state static between pointer interactions.
@@ -37,6 +39,7 @@ export class PrepState {
     this.renderSlots(ctx, 'bench', getBenchSlots(), this.game.run.bench, 'BENCH');
     this.renderShop(ctx);
     this.renderCommands(ctx);
+    this.renderDragPreview(ctx);
     drawText(ctx, this.message, CONFIG.CANVAS_WIDTH / 2, CONFIG.PREP_MESSAGE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
   }
 
@@ -53,10 +56,11 @@ export class PrepState {
     drawText(ctx, label, rects[0].x, rects[0].y - CONFIG.PREP_SECTION_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY, 'left');
     rects.forEach((rect, index) => {
       const isSelected = this.selectedSource && this.selectedSource.zone === zone && this.selectedSource.index === index;
-      drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, isSelected ? CONFIG.GOLD_COLOR : CONFIG.BENCH_EMPTY_BORDER);
+      const isDragged = this.dragSource && this.dragSource.zone === zone && this.dragSource.index === index;
+      drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, isSelected || isDragged ? CONFIG.GOLD_COLOR : CONFIG.BENCH_EMPTY_BORDER);
       const dragon = dragons[index];
-      if (dragon) this.renderOwnedDragon(ctx, dragon, rect);
-      else drawText(ctx, 'EMPTY', rect.x + rect.width / 2, rect.y + CONFIG.PREP_SLOT_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_MUTED);
+      if (dragon && !isDragged) this.renderOwnedDragon(ctx, dragon, rect);
+      else if (!dragon) drawText(ctx, 'EMPTY', rect.x + rect.width / 2, rect.y + CONFIG.PREP_SLOT_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_MUTED);
     });
   }
 
@@ -66,10 +70,17 @@ export class PrepState {
     const color = CONFIG.ELEMENT_COLORS[dragon.element];
     const centerX = rect.x + rect.width / 2;
     const centerY = rect.y + CONFIG.PREP_DRAGON_Y_OFFSET;
-    drawCircle(ctx, centerX, centerY, CONFIG.DRAGON_RADIUS_TEAM, color, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
-    drawText(ctx, dragon.emoji || '?', centerX, centerY, CONFIG.FONT_SIZE_EMOJI);
-    drawText(ctx, dragon.name, centerX, rect.y + CONFIG.PREP_DRAGON_TIER_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME);
+    this.renderDragonToken(ctx, owned, centerX, centerY, CONFIG.ARENA_ALIVE_ALPHA);
+    drawFitText(ctx, dragon.name, centerX, rect.y + CONFIG.PREP_DRAGON_TIER_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
     drawText(ctx, `T${owned.tier} HP ${owned.hp}/${owned.maxHp}`, centerX, rect.y + rect.height - CONFIG.PREP_SLOT_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
+  }
+
+  // Draw a compact dragon token for slots and drag previews.
+  renderDragonToken(ctx, owned, centerX, centerY, alpha) {
+    const dragon = getDragon(owned.id);
+    const color = CONFIG.ELEMENT_COLORS[dragon.element];
+    drawCircle(ctx, centerX, centerY, CONFIG.DRAGON_RADIUS_TEAM, color, alpha, CONFIG.TEXT_PRIMARY);
+    drawText(ctx, dragon.emoji || '?', centerX, centerY, CONFIG.FONT_SIZE_EMOJI);
   }
 
   // Draw shop cards.
@@ -80,11 +91,21 @@ export class PrepState {
       const dragon = getDragon(id);
       const tier = getDragonTier(id, 1);
       drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, CONFIG.ELEMENT_COLORS[dragon.element]);
-      drawText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY, 'left');
-      drawText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, CONFIG.TEXT_SECONDARY, 'left');
-      drawText(ctx, `ATK ${tier.atk} HP ${tier.hp} SPD ${tier.spd}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_STAT_Y_OFFSET, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_PRIMARY, 'left');
+      const textWidth = rect.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2);
+      drawFitText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
+      drawFitText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_SECONDARY, 'left');
+      drawFitText(ctx, `ATK ${tier.atk} HP ${tier.hp} SPD ${tier.spd}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_STAT_Y_OFFSET, CONFIG.FONT_SIZE_STATS, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_PRIMARY, 'left');
       drawText(ctx, `BUY ${CONFIG.DRAGON_BUY_COST}G`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_COST_Y_OFFSET, CONFIG.FONT_SIZE_BUTTON, CONFIG.GOLD_COLOR, 'left');
     });
+  }
+
+  // Draw the floating dragon while the pointer is dragging it.
+  renderDragPreview(ctx) {
+    if (!this.dragSource || !this.dragPoint) return;
+    const list = this.dragSource.zone === 'team' ? this.game.run.team : this.game.run.bench;
+    const owned = list[this.dragSource.index];
+    if (!owned) return;
+    this.renderDragonToken(ctx, owned, this.dragPoint.x, this.dragPoint.y, CONFIG.PREP_DRAG_PREVIEW_ALPHA);
   }
 
   // Draw sell, merge, reroll, and fight controls.
@@ -129,10 +150,14 @@ export class PrepState {
     if (!source) return;
     this.selectedSource = source;
     this.dragSource = source;
+    this.dragPoint = point;
   }
 
   // Track pointer movement for future drag previews.
-  handlePointerMove() {}
+  handlePointerMove(point) {
+    if (!this.dragSource) return;
+    this.dragPoint = point;
+  }
 
   // Drop selected dragons onto slots or sell zone.
   handlePointerUp(point) {
@@ -141,11 +166,13 @@ export class PrepState {
       this.applyDraftResult(sellDragon(this.game.run, this.dragSource), 'Sold dragon', 'Nothing to sell');
       this.dragSource = null;
       this.selectedSource = null;
+      this.dragPoint = null;
       return;
     }
     const target = this.getSlotTarget(point);
     if (target && !this.sameSource(this.dragSource, target)) this.moveDragon(this.dragSource, target);
     this.dragSource = null;
+    this.dragPoint = null;
   }
 
   // Apply a shop/economy state change result.
