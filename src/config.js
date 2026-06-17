@@ -117,11 +117,11 @@ export const CONFIG = {
 
   ENEMY_SCALING: [
     // Each entry = [T1 count, T2 count, T3 count] for that round's enemy team.
-    // Total per row must equal TEAM_SIZE (3).
+    // Rows may start below TEAM_SIZE for onboarding, then grow into full teams.
     // Difficulty ramps from all-T1 to mostly-T3.
-    [3, 0, 0],  // Round 1  — easy intro
-    [3, 0, 0],  // Round 2  — still easy
-    [2, 1, 0],  // Round 3  — first T2 appears
+    [1, 0, 0],  // Round 1  — one-dragon intro
+    [2, 0, 0],  // Round 2  — two-dragon warmup
+    [3, 0, 0],  // Round 3  — first full enemy team
     [2, 1, 0],  // Round 4  — same
     [1, 2, 0],  // Round 5  — mid-game spike
     [1, 2, 0],  // Round 6  — same

@@ -20,15 +20,13 @@ export function createRunState(random = Math.random) {
   };
 }
 
-// Convert owned team slots to battle instances while preserving current HP.
+// Convert owned team slots to fresh battle instances for this round.
 export function createPlayerBattleTeam(team) {
   return team
     .filter(Boolean)
     .map((owned, index) => {
       const instance = createBattleInstance(getDragon(owned.id), owned.tier, 'player', index);
       instance.uid = owned.uid;
-      instance.hp = owned.hp;
-      instance.maxHp = owned.maxHp;
       return instance;
     });
 }
@@ -39,17 +37,11 @@ export function createRoundEnemyTeam(round, random = Math.random) {
 }
 
 // Apply a winning battle result to the persistent run state.
-export function applyWin(runState, survivingPlayer, random = Math.random) {
-  const survivorsByUid = new Map(survivingPlayer.map(dragon => [dragon.uid, dragon]));
+export function applyWin(runState, random = Math.random) {
   const nextState = {
     ...runState,
-    team: runState.team.map(owned => {
-      if (!owned) return null;
-      const survivor = survivorsByUid.get(owned.uid);
-      if (!survivor) return null;
-      return { ...owned, hp: survivor.hp, maxHp: survivor.maxHp };
-    }),
-    bench: runState.bench.map(owned => owned ? { ...owned } : null),
+    team: runState.team.map(refreshOwnedDragonHealth),
+    bench: runState.bench.map(refreshOwnedDragonHealth),
     shop: [...runState.shop],
     unlockedDragonIds: [...runState.unlockedDragonIds],
     roundsSurvived: runState.round,
@@ -61,6 +53,13 @@ export function applyWin(runState, survivingPlayer, random = Math.random) {
     console.log(`[STATE] advanced to round ${nextState.round}`);
   }
   return nextState;
+}
+
+// Reset an owned dragon to full health for the next prep/fight round.
+export function refreshOwnedDragonHealth(owned) {
+  if (!owned) return null;
+  const tierData = getDragon(owned.id).tiers[owned.tier - 1];
+  return { ...owned, hp: tierData.hp, maxHp: tierData.hp };
 }
 
 // Return whether a run should end after a battle outcome.

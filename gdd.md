@@ -40,6 +40,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Exactly **3 dragons** fight per round. No more, no fewer.
 - A **bench** holds up to **5** reserve dragons (for merge planning).
 - If the player has fewer than 3 dragons, empty slots fight with nothing (disadvantage).
+- Dragon HP is round-based: every owned dragon starts each new round at full health, even if it died in the previous winning fight.
 
 ### Shop & Economy
 - The shop displays **3 random dragons** each round from the player's unlocked pool.
@@ -65,7 +66,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Enemies
 - Enemy teams are pre-generated per round from ALL 8 dragon types (including ones the player hasn't unlocked).
-- Difficulty escalates: rounds 1–2 are all Tier 1; by rounds 9–10, enemies field Tier 2 and Tier 3 dragons.
+- Difficulty escalates by both team size and tier: round 1 has one Tier 1 enemy, round 2 has two Tier 1 enemies, round 3 begins full enemy teams, and by rounds 9–10 enemies field Tier 2 and Tier 3 dragons.
 
 ### Boss Fight (Eternal Wyrm)
 - Only reached by winning all 10 rounds.

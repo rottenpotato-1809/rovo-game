@@ -107,9 +107,9 @@ export const CONFIG = {
   // ─── ROUNDS ───────────────────────────────────────────────
   TOTAL_ROUNDS: 10,          // rounds to survive before boss
   ENEMY_SCALING: [           // per-round enemy composition [T1 count, T2 count, T3 count]
-    [3, 0, 0],  // round 1
-    [3, 0, 0],  // round 2
-    [2, 1, 0],  // round 3
+    [1, 0, 0],  // round 1
+    [2, 0, 0],  // round 2
+    [3, 0, 0],  // round 3
     [2, 1, 0],  // round 4
     [1, 2, 0],  // round 5
     [1, 2, 0],  // round 6
@@ -218,6 +218,8 @@ Merge (systems/merge.js)
 Enemy (systems/enemy.js)
 - Reads ENEMY_SCALING[roundIndex] to know how many of each tier to generate.
 
+- Early ENEMY_SCALING rows may contain fewer than TEAM_SIZE dragons for onboarding difficulty.
+
 - Picks from ALL 8 dragon types (including locked ones) — this is the player's preview of what they can unlock.
 
 - Randomly assigns tier upgrades to picked dragons based on the round's tier distribution.
@@ -245,9 +247,12 @@ Rendering (ui/renderer.js)
 
 - All coordinates and sizes pulled from CONFIG layout constants.
 
-- Canvas scales to fit viewport via CSS (width: min(100vw, 960px); aspect-ratio: 16/9).
+- Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
 - Logical resolution stays fixed at CANVAS_WIDTH × CANVAS_HEIGHT.
+
+Run Health
+- Owned dragon HP is round-based. Battle instances start each fight at full tier HP, and winning a fight returns all owned team/bench dragons to full HP for the next prep phase.
 
 - Battle playback is landscape-first and brisk by default; tune TURN_DELAY_MS and animation durations in config.js rather than per-state literals.
 

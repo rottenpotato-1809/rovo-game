@@ -5,9 +5,15 @@ import { assert, assertEqual, test, summarize } from './testHarness.js';
 
 console.log('Enemy System Test Suite');
 
-test('enemy team size matches configured team size', () => {
+test('enemy team size matches configured round scaling', () => {
   const team = generateEnemyTeam(1, () => 0);
-  assertEqual(team.length, CONFIG.TEAM_SIZE);
+  const expectedSize = CONFIG.ENEMY_SCALING[0].reduce((total, count) => total + count, 0);
+  assertEqual(team.length, expectedSize);
+});
+
+test('early enemy teams ramp from one to two dragons', () => {
+  assertEqual(generateEnemyTeam(1, () => 0).length, CONFIG.ENEMY_SCALING[0][0]);
+  assertEqual(generateEnemyTeam(2, () => 0).length, CONFIG.ENEMY_SCALING[1][0]);
 });
 
 test('enemy tier mix follows round scaling', () => {

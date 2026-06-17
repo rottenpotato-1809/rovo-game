@@ -141,16 +141,15 @@ export class PrepState {
       this.startFight();
       return;
     }
-    const target = this.getSlotTarget(point);
-    if (target && this.selectedSource) {
-      this.moveDragon(this.selectedSource, target);
+    const source = this.getSlotSource(point);
+    if (source) {
+      this.selectedSource = source;
+      this.dragSource = source;
+      this.dragPoint = point;
       return;
     }
-    const source = this.getSlotSource(point);
-    if (!source) return;
-    this.selectedSource = source;
-    this.dragSource = source;
-    this.dragPoint = point;
+    const target = this.getSlotTarget(point);
+    if (target && this.selectedSource) this.moveDragon(this.selectedSource, target);
   }
 
   // Track pointer movement for future drag previews.
@@ -173,6 +172,7 @@ export class PrepState {
     if (target && !this.sameSource(this.dragSource, target)) this.moveDragon(this.dragSource, target);
     this.dragSource = null;
     this.dragPoint = null;
+    this.selectedSource = null;
   }
 
   // Apply a shop/economy state change result.
@@ -207,7 +207,7 @@ export class PrepState {
     sourceList[source.index] = targetList[target.index];
     targetList[target.index] = moving;
     this.game.run = nextState;
-    this.selectedSource = target;
+    this.selectedSource = null;
     this.message = 'Moved dragon';
   }
 
@@ -237,11 +237,11 @@ export class PrepState {
       return;
     }
     if (this.game.run.round >= CONFIG.TOTAL_ROUNDS) {
-      this.game.run = applyWin(this.game.run, result.survivingPlayer);
+      this.game.run = applyWin(this.game.run);
       this.stateManager.change('result', { victory: true, run: this.game.run });
       return;
     }
-    this.game.run = applyWin(this.game.run, result.survivingPlayer);
+    this.game.run = applyWin(this.game.run);
     this.stateManager.change('prep');
   }
 
