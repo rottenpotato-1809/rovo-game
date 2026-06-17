@@ -6,6 +6,8 @@ export class Input {
     this.canvas = canvas;
     this.stateManager = stateManager;
     this.canvas.addEventListener('pointerdown', event => this.onPointerDown(event));
+    this.canvas.addEventListener('pointermove', event => this.onPointerMove(event));
+    this.canvas.addEventListener('pointerup', event => this.onPointerUp(event));
   }
 
   // Send a pointer press to the active state after hit-test coordinate conversion.
@@ -16,6 +18,20 @@ export class Input {
       console.log(`[INPUT] pointer down at ${point.x}, ${point.y}`);
     }
     this.stateManager.handlePointerDown(point);
+  }
+
+  // Send pointer movement to the active state for drag previews.
+  onPointerMove(event) {
+    event.preventDefault();
+    const point = this.toCanvasPoint(event);
+    if (this.stateManager.handlePointerMove) this.stateManager.handlePointerMove(point);
+  }
+
+  // Send pointer release to the active state for drops and clicks.
+  onPointerUp(event) {
+    event.preventDefault();
+    const point = this.toCanvasPoint(event);
+    if (this.stateManager.handlePointerUp) this.stateManager.handlePointerUp(point);
   }
 
   // Translate browser pixels into the fixed logical canvas resolution.

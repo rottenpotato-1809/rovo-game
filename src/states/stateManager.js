@@ -40,4 +40,18 @@ export class StateManager {
       this.current.handlePointerDown(point);
     }
   }
+
+  // Route pointer movement to the active state.
+  handlePointerMove(point) {
+    if (this.current && this.current.handlePointerMove) {
+      this.current.handlePointerMove(point);
+    }
+  }
+
+  // Route pointer release to the active state.
+  handlePointerUp(point) {
+    if (this.current && this.current.handlePointerUp) {
+      this.current.handlePointerUp(point);
+    }
+  }
 }

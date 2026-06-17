@@ -305,10 +305,10 @@ export const CONFIG = {
   HP_BAR_WIDTH_TEAM: 96,
   // Width of HP bars in team/fight view (px).
 
-  SHOP_CARD_WIDTH: 110,
+  SHOP_CARD_WIDTH: 100,
   // Width of each shop card (px).
 
-  SHOP_CARD_HEIGHT: 140,
+  SHOP_CARD_HEIGHT: 132,
   // Height of each shop card (px).
 
   BUTTON_HEIGHT: 45,
@@ -324,46 +324,46 @@ export const CONFIG = {
   HEADER_HEIGHT: 50,
   // Height of the top bar showing round + gold.
 
-  TEAM_ZONE_Y: 90,
+  TEAM_ZONE_Y: 74,
   // Top edge of the team slots area.
 
-  TEAM_SLOT_WIDTH: 100,
+  TEAM_SLOT_WIDTH: 130,
   // Width of each team slot box.
 
-  TEAM_SLOT_HEIGHT: 120,
+  TEAM_SLOT_HEIGHT: 118,
   // Height of each team slot box.
 
-  TEAM_SLOT_GAP: 20,
+  TEAM_SLOT_GAP: 18,
   // Horizontal gap between team slots.
 
-  BENCH_ZONE_Y: 255,
+  BENCH_ZONE_Y: 222,
   // Top edge of the bench area.
 
-  BENCH_SLOT_WIDTH: 64,
+  BENCH_SLOT_WIDTH: 96,
   // Width of each bench slot.
 
-  BENCH_SLOT_HEIGHT: 80,
+  BENCH_SLOT_HEIGHT: 88,
   // Height of each bench slot.
 
-  BENCH_SLOT_GAP: 10,
+  BENCH_SLOT_GAP: 12,
   // Horizontal gap between bench slots.
 
-  SELL_ZONE_Y: 355,
+  SELL_ZONE_Y: 280,
   // Top edge of the sell/trash drop zone.
 
-  SELL_ZONE_WIDTH: 120,
+  SELL_ZONE_WIDTH: 130,
   // Width of sell zone.
 
-  SELL_ZONE_HEIGHT: 40,
+  SELL_ZONE_HEIGHT: 44,
   // Height of sell zone.
 
-  SHOP_ZONE_Y: 455,
+  SHOP_ZONE_Y: 112,
   // Top edge of the shop cards area.
 
-  SHOP_CARD_GAP: 15,
+  SHOP_CARD_GAP: 12,
   // Horizontal gap between shop cards.
 
-  BUTTON_ZONE_Y: 615,
+  BUTTON_ZONE_Y: 388,
   // Top edge of action buttons row.
 
   // ─── RENDERING — FIGHT LAYOUT ────────────────────────────────
@@ -592,6 +592,57 @@ export const CONFIG = {
 
   ARENA_BACKDROP_SUN_RADIUS: 82,
   // Radius for the center glow in the battlefield.
+
+  PREP_LEFT_PANEL_X: 36,
+  // Left edge for team and bench management.
+
+  PREP_RIGHT_PANEL_X: 600,
+  // Left edge for shop and command buttons.
+
+  PREP_SECTION_LABEL_OFFSET_Y: 18,
+  // Vertical offset from a region top to its label.
+
+  PREP_SLOT_LABEL_OFFSET_Y: 18,
+  // Vertical offset for empty slot labels.
+
+  PREP_CARD_TEXT_LEFT_PAD: 10,
+  // Left text padding inside shop cards.
+
+  PREP_CARD_NAME_Y_OFFSET: 18,
+  // Name text offset from card top.
+
+  PREP_CARD_ROLE_Y_OFFSET: 38,
+  // Role text offset from card top.
+
+  PREP_CARD_STAT_Y_OFFSET: 70,
+  // Stat text offset from card top.
+
+  PREP_CARD_COST_Y_OFFSET: 108,
+  // Cost text offset from card top.
+
+  PREP_DRAGON_Y_OFFSET: 56,
+  // Dragon circle vertical offset inside a prep slot.
+
+  PREP_DRAGON_TIER_Y_OFFSET: 92,
+  // Tier label vertical offset inside a prep slot.
+
+  PREP_BUTTON_WIDTH: 130,
+  // Width of prep buttons.
+
+  PREP_BUTTON_GAP: 18,
+  // Horizontal gap between prep buttons.
+
+  PREP_MERGE_BUTTON_Y: 334,
+  // Y position for the explicit merge button.
+
+  PREP_MESSAGE_Y: 512,
+  // Y position for temporary prep feedback text.
+
+  RESULT_BUTTON_X: 380,
+  // X position for result screen replay button.
+
+  RESULT_BUTTON_Y: 360,
+  // Y position for result screen replay button.
 
   // ─── PERSISTENCE ──────────────────────────────────────────────
   // LocalStorage configuration

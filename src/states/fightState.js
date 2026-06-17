@@ -15,12 +15,16 @@ export class FightState {
     this.eventIndex = 0;
     this.eventTimerMs = 0;
     this.outcome = '';
+    this.result = null;
+    this.onComplete = null;
   }
 
   // Load a fresh battle result and create visual state for each combatant.
   enter(payload) {
     this.playerTeam = payload.playerTeam;
     this.enemyTeam = payload.enemyTeam;
+    this.result = payload.result;
+    this.onComplete = payload.onComplete || null;
     this.events = payload.result.log;
     this.outcome = payload.result.outcome;
     this.combatLog = [];
@@ -67,7 +71,14 @@ export class FightState {
     this.renderCombatLog(ctx);
     if (this.eventIndex >= this.events.length) {
       drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_SCORE, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
+      drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y + CONFIG.BUTTON_HEIGHT, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
     }
+  }
+
+  // Continue to the next run state after playback finishes.
+  handlePointerDown() {
+    if (this.eventIndex < this.events.length || !this.onComplete) return;
+    this.onComplete(this.result);
   }
 
   // Draw one combatant with its optional ability glow.
