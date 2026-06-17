@@ -470,6 +470,93 @@ export const CONFIG = {
   FONT_SIZE_SCORE: 32,
   // Boss damage score display (px).
 
+  FONT_SIZE_BODY: 16,
+  // General body copy and arena status text (px).
+
+  FONT_SIZE_EMOJI: 24,
+  // Emoji glyph size rendered inside dragon circles (px).
+
+  FONT_SIZE_SMALL: 7,
+  // Tiny helper labels in compact arena areas (px).
+
+  // ─── MILESTONE 1 ARENA UI ─────────────────────────────────────
+  // Temporary spectator-only screen and fight playback measurements
+
+  ARENA_TITLE_Y: 120,
+  // Y position of the temporary arena title.
+
+  ARENA_SUBTITLE_Y: 165,
+  // Y position of the temporary arena subtitle.
+
+  ARENA_FIGHT_BUTTON_X: 100,
+  // X position of the temporary Fight button.
+
+  ARENA_FIGHT_BUTTON_Y: 520,
+  // Y position of the temporary Fight button.
+
+  ARENA_FIGHT_BUTTON_WIDTH: 200,
+  // Width of the temporary Fight button.
+
+  ARENA_STATUS_Y: 575,
+  // Y position for small temporary arena hints.
+
+  ARENA_TEAM_LABEL_Y: 95,
+  // Y position for fight-side team labels.
+
+  ARENA_NAME_OFFSET_Y: 43,
+  // Vertical offset from dragon center to name text.
+
+  ARENA_HP_OFFSET_Y: 38,
+  // Vertical offset from dragon center to HP bar.
+
+  ARENA_VS_X: 200,
+  // X position of center "VS" label.
+
+  ARENA_RESULT_Y: 92,
+  // Y position for WIN/LOSE result text after combat.
+
+  ARENA_LOG_X: 16,
+  // Left edge of combat log text.
+
+  ARENA_LOG_LINE_HEIGHT: 14,
+  // Vertical spacing between combat log lines.
+
+  ARENA_LOG_BG_HEIGHT: 72,
+  // Background panel height behind combat log.
+
+  ARENA_HP_HIGH_THRESHOLD: 0.5,
+  // HP ratio at or above this uses healthy green.
+
+  ARENA_HP_LOW_THRESHOLD: 0.25,
+  // HP ratio below this uses low-health red.
+
+  ARENA_DEAD_ALPHA: 0.2,
+  // Final opacity after a dragon death fade completes.
+
+  ARENA_ALIVE_ALPHA: 1,
+  // Full opacity for living dragons.
+
+  ARENA_ABILITY_GLOW_RADIUS_MULTIPLIER: 1.45,
+  // Ability flash radius relative to dragon radius.
+
+  ARENA_ABILITY_GLOW_ALPHA: 0.45,
+  // Ability flash opacity at cast start.
+
+  ARENA_FLOAT_ALPHA: 1,
+  // Starting opacity for floating damage and heal numbers.
+
+  ARENA_FLOAT_OFFSET_X: 12,
+  // Horizontal nudge for floating numbers so they do not cover HP bars.
+
+  ARENA_FLOAT_OFFSET_Y: -28,
+  // Vertical starting offset for floating numbers.
+
+  ARENA_LUNGE_DIRECTION_RIGHT: 1,
+  // Direction multiplier when the player lunges toward enemies.
+
+  ARENA_LUNGE_DIRECTION_LEFT: -1,
+  // Direction multiplier when enemies lunge toward players.
+
   // ─── PERSISTENCE ──────────────────────────────────────────────
   // LocalStorage configuration
 
