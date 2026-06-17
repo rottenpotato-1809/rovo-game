@@ -6,6 +6,28 @@ export function clear(ctx) {
   ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
 }
 
+// Paint a simple landscape battlefield behind the combat UI.
+export function drawArenaBackdrop(ctx) {
+  ctx.fillStyle = CONFIG.ARENA_SKY_COLOR;
+  ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_SKY_HEIGHT);
+  ctx.fillStyle = CONFIG.ARENA_HORIZON_COLOR;
+  ctx.fillRect(0, CONFIG.ARENA_HILL_Y, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_GROUND_Y - CONFIG.ARENA_HILL_Y);
+  ctx.fillStyle = CONFIG.ARENA_HILL_COLOR;
+  ctx.fillRect(0, CONFIG.ARENA_HILL_Y, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_GROUND_Y - CONFIG.ARENA_HILL_Y);
+  ctx.fillStyle = CONFIG.ARENA_GROUND_COLOR;
+  ctx.fillRect(0, CONFIG.ARENA_GROUND_Y, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT - CONFIG.ARENA_GROUND_Y);
+  ctx.fillStyle = CONFIG.ARENA_GROUND_DARK_COLOR;
+  ctx.fillRect(0, CONFIG.ARENA_FOREGROUND_Y, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT - CONFIG.ARENA_FOREGROUND_Y);
+  drawCircle(
+    ctx,
+    CONFIG.ARENA_BACKDROP_SUN_X,
+    CONFIG.ARENA_BACKDROP_SUN_Y,
+    CONFIG.ARENA_BACKDROP_SUN_RADIUS,
+    CONFIG.GOLD_COLOR,
+    CONFIG.ARENA_ABILITY_GLOW_ALPHA,
+  );
+}
+
 // Draw a filled rectangle with an optional border.
 export function drawRect(ctx, rect, fill, stroke = null, radius = CONFIG.BUTTON_BORDER_RADIUS) {
   ctx.beginPath();

@@ -135,8 +135,8 @@ export const CONFIG = {
   // (Full dragon table here — too long to repeat; see data/dragons.js which imports and structures these)
 
   // ─── RENDERING ────────────────────────────────────────────
-  CANVAS_WIDTH: 400,         // logical width (CSS scales to viewport)
-  CANVAS_HEIGHT: 700,        // logical height
+  CANVAS_WIDTH: 960,         // logical width (CSS scales to viewport)
+  CANVAS_HEIGHT: 540,        // logical height
   BG_COLOR: '#1a1a2e',       // main background
   HEADER_COLOR: '#16213e',   // top bar background
   CARD_COLOR: '#1a1a4e',     // shop card fill
@@ -145,10 +145,10 @@ export const CONFIG = {
   HEALTH_BAR_HEIGHT: 6,      // pixel height of HP bars above dragons
   DRAGON_RADIUS_TEAM: 25,    // circle radius for dragons in team slots
   DRAGON_RADIUS_BENCH: 16,   // circle radius for bench dragons
-  DAMAGE_FLOAT_SPEED: 40,    // pixels per second for floating damage numbers
-  DAMAGE_FLOAT_DURATION: 800,// milliseconds before damage number fades
-  ATTACK_LUNGE_DIST: 20,     // pixels a dragon lunges forward on basic attack
-  ATTACK_LUNGE_DURATION: 150,// ms for lunge animation
+  DAMAGE_FLOAT_SPEED: 64,    // pixels per second for floating damage numbers
+  DAMAGE_FLOAT_DURATION: 520,// milliseconds before damage number fades
+  ATTACK_LUNGE_DIST: 36,     // pixels a dragon lunges forward on basic attack
+  ATTACK_LUNGE_DURATION: 95, // ms for lunge animation
 
   // ─── ELEMENT COLORS ───────────────────────────────────────
   ELEMENT_COLORS: {
@@ -245,9 +245,11 @@ Rendering (ui/renderer.js)
 
 - All coordinates and sizes pulled from CONFIG layout constants.
 
-- Canvas scales to fit viewport via CSS (width: 100%; max-width: 400px; aspect-ratio: 4/7).
+- Canvas scales to fit viewport via CSS (width: min(100vw, 960px); aspect-ratio: 16/9).
 
 - Logical resolution stays fixed at CANVAS_WIDTH × CANVAS_HEIGHT.
+
+- Battle playback is landscape-first and brisk by default; tune TURN_DELAY_MS and animation durations in config.js rather than per-state literals.
 
 Animation (ui/animations.js)
 - Tween system: array of active tweens, each with { target, property, from, to, duration, elapsed, easing }.

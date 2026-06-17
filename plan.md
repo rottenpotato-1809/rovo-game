@@ -21,8 +21,8 @@ Each milestone ends in something you can physically interact with and judge. No 
 Scaffold the full project structure per tdd.md. All files exist, config.js is the single source of truth, Canvas renders at correct aspect ratio. The prep phase is a placeholder (just a FIGHT button that launches a hardcoded 3v3 battle). The battle plays back turn-by-turn on Canvas with: dragon circles colored by element, HP bars, floating damage numbers, attack lunge animations, death fade-outs, and a scrolling combat log. Abilities are visually distinguishable from basic attacks (glow on cast). When the fight ends, a simple "WIN" or "LOSE" text appears.
 
 ### End-User Test Checklist
-- [ ] Opening `index.html` in browser shows a dark Canvas at correct 4:7 aspect ratio
-- [ ] Clicking "FIGHT" starts an animated 3v3 battle (no manual team selection yet)
+- [ ] Opening `index.html` in browser shows a landscape Canvas at correct 16:9 aspect ratio
+- [ ] Clicking "FIGHT" starts a brisk animated 3v3 battle (no manual team selection yet)
 - [ ] Each dragon is a colored circle with its emoji, name, and HP bar
 - [ ] Fastest dragon visibly acts first each turn
 - [ ] Basic attacks show a lunge-forward animation toward the target
@@ -95,7 +95,7 @@ CRITICAL RULES (from tdd.md):
 
 WHEN DONE — tell the user to run through this test checklist:
 
-[ ] index.html loads with dark Canvas at 4:7 ratio
+[ ] index.html loads with landscape Canvas at 16:9 ratio
 
 [ ] Clicking FIGHT starts an animated 3v3 battle
 

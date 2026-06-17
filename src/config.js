@@ -200,13 +200,13 @@ export const CONFIG = {
   // ─── RENDERING — CANVAS ───────────────────────────────────────
   // Visual dimensions, colors, and layout coordinates
 
-  CANVAS_WIDTH: 400,
+  CANVAS_WIDTH: 960,
   // Logical canvas width in pixels. CSS scales this to fit the viewport.
-  // Recommended: 400 (mobile-friendly aspect ratio).
+  // Recommended: 960 (landscape-friendly aspect ratio).
 
-  CANVAS_HEIGHT: 700,
+  CANVAS_HEIGHT: 540,
   // Logical canvas height in pixels.
-  // Combined with width, gives a 4:7 portrait aspect ratio.
+  // Combined with width, gives a 16:9 landscape aspect ratio.
 
   PIXEL_RATIO: 1,
   // Multiply canvas internal resolution for sharper rendering on retina screens.
@@ -293,7 +293,7 @@ export const CONFIG = {
   DRAGON_RADIUS_BENCH: 16,
   // Radius of dragon circles on the bench (px).
 
-  DRAGON_RADIUS_FIGHT: 30,
+  DRAGON_RADIUS_FIGHT: 34,
   // Radius of dragon circles during battle view (px).
 
   BOSS_RADIUS: 60,
@@ -302,7 +302,7 @@ export const CONFIG = {
   HP_BAR_HEIGHT: 6,
   // Height of HP bars above dragons (px).
 
-  HP_BAR_WIDTH_TEAM: 50,
+  HP_BAR_WIDTH_TEAM: 96,
   // Width of HP bars in team/fight view (px).
 
   SHOP_CARD_WIDTH: 110,
@@ -369,13 +369,13 @@ export const CONFIG = {
   // ─── RENDERING — FIGHT LAYOUT ────────────────────────────────
   // Positions for the 3v3 battle screen
 
-  FIGHT_PLAYER_X: 80,
+  FIGHT_PLAYER_X: 260,
   // X position for center of player dragons column.
 
-  FIGHT_ENEMY_X: 320,
+  FIGHT_ENEMY_X: 700,
   // X position for center of enemy dragons column.
 
-  FIGHT_Y_POSITIONS: [150, 300, 450],
+  FIGHT_Y_POSITIONS: [190, 270, 350],
   // Y positions for the 3 dragon slots (top, middle, bottom) during fight.
 
   FIGHT_BOSS_X: 280,
@@ -384,7 +384,7 @@ export const CONFIG = {
   FIGHT_BOSS_Y: 300,
   // Y position for the boss.
 
-  COMBAT_LOG_Y: 620,
+  COMBAT_LOG_Y: 462,
   // Y position for the scrolling combat log text.
 
   COMBAT_LOG_MAX_LINES: 4,
@@ -393,23 +393,23 @@ export const CONFIG = {
   // ─── ANIMATION — TIMING ──────────────────────────────────────
   // All animation durations and speeds
 
-  TURN_DELAY_MS: 800,
+  TURN_DELAY_MS: 280,
   // Milliseconds to wait between each combat turn (pacing for readability).
-  // Recommended range: 400–1200. Lower = faster battles. Higher = more dramatic.
+  // Recommended range: 220-600. Lower = faster battles. Higher = more dramatic.
 
-  ATTACK_LUNGE_DIST: 20,
+  ATTACK_LUNGE_DIST: 36,
   // Pixels a dragon moves toward its target during an attack animation.
 
-  ATTACK_LUNGE_DURATION: 150,
+  ATTACK_LUNGE_DURATION: 95,
   // Duration of the lunge forward (ms).
 
-  ATTACK_RETURN_DURATION: 100,
+  ATTACK_RETURN_DURATION: 75,
   // Duration of the return to original position (ms).
 
-  DAMAGE_FLOAT_SPEED: 40,
+  DAMAGE_FLOAT_SPEED: 64,
   // Pixels per second that floating damage numbers rise.
 
-  DAMAGE_FLOAT_DURATION: 800,
+  DAMAGE_FLOAT_DURATION: 520,
   // Milliseconds before floating numbers fully fade out.
 
   DAMAGE_FLOAT_FONT_SIZE: 16,
@@ -421,13 +421,13 @@ export const CONFIG = {
   SHAKE_DURATION: 200,
   // Milliseconds the shake effect lasts.
 
-  ABILITY_GLOW_DURATION: 300,
+  ABILITY_GLOW_DURATION: 180,
   // Milliseconds the ability-cast glow effect lasts on the caster.
 
   HEAL_PULSE_DURATION: 400,
   // Milliseconds for the green heal pulse animation.
 
-  DEATH_FADE_DURATION: 500,
+  DEATH_FADE_DURATION: 320,
   // Milliseconds for a defeated dragon to fade out.
 
   ROUND_TRANSITION_DURATION: 1000,
@@ -449,22 +449,22 @@ export const CONFIG = {
   FONT_FAMILY: 'monospace',
   // Base font family. Monospace ensures consistent widths.
 
-  FONT_SIZE_TITLE: 28,
+  FONT_SIZE_TITLE: 36,
   // Game title on main menu (px).
 
-  FONT_SIZE_HEADER: 14,
+  FONT_SIZE_HEADER: 16,
   // Round number, gold display (px).
 
-  FONT_SIZE_DRAGON_NAME: 9,
+  FONT_SIZE_DRAGON_NAME: 12,
   // Dragon name below its circle (px).
 
   FONT_SIZE_STATS: 8,
   // ATK/HP/SPD stat line (px).
 
-  FONT_SIZE_BUTTON: 12,
+  FONT_SIZE_BUTTON: 16,
   // Button label text (px).
 
-  FONT_SIZE_COMBAT_LOG: 10,
+  FONT_SIZE_COMBAT_LOG: 13,
   // Combat log text (px).
 
   FONT_SIZE_SCORE: 32,
@@ -473,7 +473,7 @@ export const CONFIG = {
   FONT_SIZE_BODY: 16,
   // General body copy and arena status text (px).
 
-  FONT_SIZE_EMOJI: 24,
+  FONT_SIZE_EMOJI: 26,
   // Emoji glyph size rendered inside dragon circles (px).
 
   FONT_SIZE_SMALL: 7,
@@ -482,46 +482,46 @@ export const CONFIG = {
   // ─── MILESTONE 1 ARENA UI ─────────────────────────────────────
   // Temporary spectator-only screen and fight playback measurements
 
-  ARENA_TITLE_Y: 120,
+  ARENA_TITLE_Y: 96,
   // Y position of the temporary arena title.
 
-  ARENA_SUBTITLE_Y: 165,
+  ARENA_SUBTITLE_Y: 138,
   // Y position of the temporary arena subtitle.
 
-  ARENA_FIGHT_BUTTON_X: 100,
+  ARENA_FIGHT_BUTTON_X: 380,
   // X position of the temporary Fight button.
 
-  ARENA_FIGHT_BUTTON_Y: 520,
+  ARENA_FIGHT_BUTTON_Y: 336,
   // Y position of the temporary Fight button.
 
   ARENA_FIGHT_BUTTON_WIDTH: 200,
   // Width of the temporary Fight button.
 
-  ARENA_STATUS_Y: 575,
+  ARENA_STATUS_Y: 404,
   // Y position for small temporary arena hints.
 
-  ARENA_TEAM_LABEL_Y: 95,
+  ARENA_TEAM_LABEL_Y: 116,
   // Y position for fight-side team labels.
 
-  ARENA_NAME_OFFSET_Y: 43,
+  ARENA_NAME_OFFSET_Y: 50,
   // Vertical offset from dragon center to name text.
 
-  ARENA_HP_OFFSET_Y: 38,
+  ARENA_HP_OFFSET_Y: 50,
   // Vertical offset from dragon center to HP bar.
 
-  ARENA_VS_X: 200,
+  ARENA_VS_X: 480,
   // X position of center "VS" label.
 
-  ARENA_RESULT_Y: 92,
+  ARENA_RESULT_Y: 66,
   // Y position for WIN/LOSE result text after combat.
 
-  ARENA_LOG_X: 16,
+  ARENA_LOG_X: 24,
   // Left edge of combat log text.
 
-  ARENA_LOG_LINE_HEIGHT: 14,
+  ARENA_LOG_LINE_HEIGHT: 18,
   // Vertical spacing between combat log lines.
 
-  ARENA_LOG_BG_HEIGHT: 72,
+  ARENA_LOG_BG_HEIGHT: 78,
   // Background panel height behind combat log.
 
   ARENA_HP_HIGH_THRESHOLD: 0.5,
@@ -556,6 +556,42 @@ export const CONFIG = {
 
   ARENA_LUNGE_DIRECTION_LEFT: -1,
   // Direction multiplier when enemies lunge toward players.
+
+  ARENA_SKY_COLOR: '#47b7e8',
+  // Top color for the landscape battle sky.
+
+  ARENA_HORIZON_COLOR: '#9be7d2',
+  // Far horizon color behind the battlefield.
+
+  ARENA_HILL_COLOR: '#187c63',
+  // Midground hill color.
+
+  ARENA_GROUND_COLOR: '#5aaa3d',
+  // Main battlefield grass color.
+
+  ARENA_GROUND_DARK_COLOR: '#245f3f',
+  // Dark foreground strip color.
+
+  ARENA_SKY_HEIGHT: 190,
+  // Height of the sky band.
+
+  ARENA_HILL_Y: 170,
+  // Y position where the hills begin.
+
+  ARENA_GROUND_Y: 245,
+  // Y position where the fightable ground begins.
+
+  ARENA_FOREGROUND_Y: 470,
+  // Y position of the darker foreground strip.
+
+  ARENA_BACKDROP_SUN_X: 480,
+  // Center X for the arena glow.
+
+  ARENA_BACKDROP_SUN_Y: 245,
+  // Center Y for the arena glow.
+
+  ARENA_BACKDROP_SUN_RADIUS: 82,
+  // Radius for the center glow in the battlefield.
 
   // ─── PERSISTENCE ──────────────────────────────────────────────
   // LocalStorage configuration

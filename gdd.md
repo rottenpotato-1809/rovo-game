@@ -118,12 +118,14 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Sell zone:** Visible drop target (trash icon or "SELL" label) near bench.
 
 ### Fight Phase Screen
-- **Left side:** 3 player dragons stacked vertically.
-- **Right side:** 3 enemy dragons stacked vertically.
+- **Landscape arena:** combat uses a 16:9 battlefield view instead of the earlier mobile portrait layout.
+- **Left side:** 3 player dragons staged as a compact column on the left half.
+- **Right side:** 3 enemy dragons staged as a compact column on the right half.
 - **Above each dragon:** HP bar + name.
 - **Center:** Floating damage/heal numbers animate on hit.
 - **Bottom strip:** Scrolling combat log (one line per action).
 - **After battle ends:** "CONTINUE" button overlays the center.
+- **Pacing:** battle playback should be brisk by default so a full 3v3 fight resolves quickly while attacks and ability flashes remain readable.
 
 ### Boss Fight Screen
 - Same as fight phase, but enemies replaced by one large Wyrm sprite center-right.

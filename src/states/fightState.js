@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
 import { TweenSystem, createFloatingNumber, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawCircle, drawDragon, drawText } from '../ui/renderer.js';
+import { clear, drawArenaBackdrop, drawCircle, drawDragon, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play a simulated battle log back as animated canvas combat.
@@ -58,6 +58,7 @@ export class FightState {
   // Draw the fight state.
   render(ctx) {
     clear(ctx);
+    drawArenaBackdrop(ctx);
     drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
     drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
     drawText(ctx, 'VS', CONFIG.ARENA_VS_X, CONFIG.FIGHT_Y_POSITIONS[1], CONFIG.FONT_SIZE_TITLE, CONFIG.ACCENT_PRIMARY);

@@ -14,10 +14,10 @@ body {
 }
 
 canvas {
-  aspect-ratio: 4 / 7;
+  aspect-ratio: 16 / 9;
   display: block;
   max-height: 100vh;
   max-width: 100vw;
   touch-action: none;
-  width: auto;
+  width: min(100vw, 960px);
 }
