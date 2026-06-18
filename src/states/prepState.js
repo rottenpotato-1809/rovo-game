@@ -59,33 +59,28 @@ export class PrepState {
       const isDragged = this.dragSource && this.dragSource.zone === zone && this.dragSource.index === index;
       drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, isSelected || isDragged ? CONFIG.GOLD_COLOR : CONFIG.BENCH_EMPTY_BORDER);
       const dragon = dragons[index];
-      if (dragon && !isDragged) this.renderOwnedDragon(ctx, dragon, rect);
+      if (dragon && !isDragged) this.renderOwnedDragon(ctx, dragon, rect, zone);
       else if (!dragon) drawText(ctx, 'EMPTY', rect.x + rect.width / 2, rect.y + CONFIG.PREP_SLOT_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_MUTED);
     });
   }
 
   // Draw a stored dragon inside a slot.
-  renderOwnedDragon(ctx, owned, rect) {
+  renderOwnedDragon(ctx, owned, rect, zone) {
     const dragon = getDragon(owned.id);
     const centerX = rect.x + rect.width / 2;
-    const centerY = rect.y + CONFIG.PREP_DRAGON_Y_OFFSET;
-    this.renderDragonToken(ctx, owned, centerX, centerY, CONFIG.ARENA_ALIVE_ALPHA);
-    ctx.fillStyle = CONFIG.PREP_SLOT_FOOTER_COLOR;
-    ctx.fillRect(
-      rect.x,
-      rect.y + rect.height - CONFIG.PREP_SLOT_FOOTER_HEIGHT,
-      rect.width,
-      CONFIG.PREP_SLOT_FOOTER_HEIGHT,
-    );
+    const isTeam = zone === 'team';
+    const centerY = rect.y + (isTeam ? CONFIG.PREP_TEAM_DRAGON_Y_OFFSET : CONFIG.PREP_BENCH_DRAGON_Y_OFFSET);
+    const radius = isTeam ? CONFIG.DRAGON_RADIUS_TEAM : CONFIG.DRAGON_RADIUS_BENCH;
+    this.renderDragonToken(ctx, owned, centerX, centerY, CONFIG.ARENA_ALIVE_ALPHA, radius);
     drawFitText(ctx, dragon.name, centerX, rect.y + rect.height - CONFIG.PREP_DRAGON_NAME_BOTTOM_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
     drawText(ctx, `T${owned.tier} HP ${owned.hp}/${owned.maxHp}`, centerX, rect.y + rect.height - CONFIG.PREP_DRAGON_STATS_BOTTOM_OFFSET, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
   }
 
   // Draw a compact dragon token for slots and drag previews.
-  renderDragonToken(ctx, owned, centerX, centerY, alpha) {
+  renderDragonToken(ctx, owned, centerX, centerY, alpha, radius = CONFIG.DRAGON_RADIUS_TEAM) {
     const dragon = getDragon(owned.id);
     const color = CONFIG.ELEMENT_COLORS[dragon.element];
-    drawCircle(ctx, centerX, centerY, CONFIG.DRAGON_RADIUS_TEAM, color, alpha, CONFIG.TEXT_PRIMARY);
+    drawCircle(ctx, centerX, centerY, radius, color, alpha, CONFIG.TEXT_PRIMARY);
     drawText(ctx, dragon.emoji || '?', centerX, centerY, CONFIG.FONT_SIZE_EMOJI);
   }
 

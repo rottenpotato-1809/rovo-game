@@ -36,10 +36,17 @@ test('battle information columns leave clear center space', () => {
 test('prep dragon name and stats have separate baselines', () => {
   const minimumGap = (CONFIG.FONT_SIZE_DRAGON_NAME + CONFIG.FONT_SIZE_STATS) / 2;
   const actualGap = CONFIG.PREP_DRAGON_NAME_BOTTOM_OFFSET - CONFIG.PREP_DRAGON_STATS_BOTTOM_OFFSET;
-  const footerTop = CONFIG.TEAM_SLOT_HEIGHT - CONFIG.PREP_SLOT_FOOTER_HEIGHT;
   assert(actualGap >= minimumGap, 'Owned dragon name and stat text must not overlap');
-  assert(CONFIG.TEAM_SLOT_HEIGHT - CONFIG.PREP_DRAGON_NAME_BOTTOM_OFFSET > footerTop, 'Dragon name must remain inside the slot footer');
   assert(CONFIG.PREP_DRAGON_STATS_BOTTOM_OFFSET > 0, 'Stats must remain inside the slot');
+});
+
+test('team and bench portraits stay above their labels', () => {
+  const teamPortraitBottom = CONFIG.PREP_TEAM_DRAGON_Y_OFFSET + CONFIG.DRAGON_RADIUS_TEAM;
+  const teamNameTop = CONFIG.TEAM_SLOT_HEIGHT - CONFIG.PREP_DRAGON_NAME_BOTTOM_OFFSET - (CONFIG.FONT_SIZE_DRAGON_NAME / 2);
+  const benchPortraitBottom = CONFIG.PREP_BENCH_DRAGON_Y_OFFSET + CONFIG.DRAGON_RADIUS_BENCH;
+  const benchNameTop = CONFIG.BENCH_SLOT_HEIGHT - CONFIG.PREP_DRAGON_NAME_BOTTOM_OFFSET - (CONFIG.FONT_SIZE_DRAGON_NAME / 2);
+  assert(teamPortraitBottom < teamNameTop, 'Team portrait and name must not overlap');
+  assert(benchPortraitBottom < benchNameTop, 'Bench portrait and name must not overlap');
 });
 
 test('team heading clears the fixed header', () => {

@@ -254,7 +254,7 @@ Rendering (ui/renderer.js)
 
 - Canvas text is filled over a configurable dark outline for contrast. Battle portrait names and HP bars are laid out beside each portrait, and completed-fight messaging occupies a dedicated opaque header band to prevent label collisions.
 
-- Owned-dragon slot labels render inside a fixed-height footer. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
+- Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 

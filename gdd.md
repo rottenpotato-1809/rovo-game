@@ -172,6 +172,7 @@ MAIN MENU → [Codex] → CODEX SCREEN → [Back] → MAIN MENU
 - Arena labels use high-contrast outlined text, with dragon names and HP placed beside portraits so combat rows never overlap.
 - The arena uses a subdued neutral stone-and-moss backdrop so elemental dragons and combat text remain the visual focus.
 - Voltfang is a fast multi-target DPS whose total early-tier ability damage is spread across targets rather than exceeding starter DPS output.
+- Owned-dragon slots present the portrait, name, and HP as one unified card without a separate name plate.
 - Desktop and mobile touch input.
 
 ---

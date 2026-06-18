@@ -669,20 +669,17 @@ export const CONFIG = {
   PREP_CARD_COST_Y_OFFSET: 108,
   // Cost text offset from card top.
 
-  PREP_DRAGON_Y_OFFSET: 56,
-  // Dragon circle vertical offset inside a prep slot.
+  PREP_TEAM_DRAGON_Y_OFFSET: 38,
+  // Dragon circle vertical offset inside a team slot.
+
+  PREP_BENCH_DRAGON_Y_OFFSET: 23,
+  // Smaller dragon circle vertical offset inside a bench slot.
 
   PREP_DRAGON_NAME_BOTTOM_OFFSET: 24,
   // Distance from a prep slot bottom to the dragon name baseline.
 
   PREP_DRAGON_STATS_BOTTOM_OFFSET: 8,
   // Distance from a prep slot bottom to the tier and HP baseline.
-
-  PREP_SLOT_FOOTER_HEIGHT: 36,
-  // Reserved footer height that contains owned-dragon name and stats.
-
-  PREP_SLOT_FOOTER_COLOR: '#141936',
-  // Dark footer fill that keeps owned-dragon labels inside their slot.
 
   PREP_BUTTON_WIDTH: 130,
   // Width of prep buttons.
