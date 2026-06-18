@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
 import { getMenuButtons } from '../ui/layout.js';
-import { drawText } from '../ui/renderer.js';
+import { drawText, getDragonTierScale } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
 function createTextContext(calls) {
@@ -65,6 +65,18 @@ test('team and bench portraits stay above their labels', () => {
   const benchNameTop = CONFIG.BENCH_SLOT_HEIGHT - CONFIG.PREP_DRAGON_NAME_BOTTOM_OFFSET - (CONFIG.FONT_SIZE_DRAGON_NAME / 2);
   assert(teamPortraitBottom < teamNameTop, 'Team portrait and name must not overlap');
   assert(benchPortraitBottom < benchNameTop, 'Bench portrait and name must not overlap');
+});
+
+test('adult dragon artwork is larger than baby artwork', () => {
+  assert(getDragonTierScale(2) > getDragonTierScale(1), 'Tier 2 must visually read as larger than Tier 1');
+  assertEqual(getDragonTierScale(3), getDragonTierScale(2), 'Tier 3 reuses the adult silhouette scale');
+});
+
+test('bench row fills the lower-left prep staging area', () => {
+  const benchBottom = CONFIG.BENCH_ZONE_Y + CONFIG.BENCH_SLOT_HEIGHT;
+  assert(CONFIG.BENCH_ZONE_Y > CONFIG.TEAM_ZONE_Y + CONFIG.TEAM_SLOT_HEIGHT, 'Bench must sit below the active team');
+  assert(benchBottom < CONFIG.PREP_MESSAGE_Y, 'Bench must leave room for feedback text');
+  assert(CONFIG.BENCH_SLOT_HEIGHT > CONFIG.TEAM_SLOT_HEIGHT, 'Reserve staging should use the available lower field');
 });
 
 test('team heading clears the fixed header', () => {

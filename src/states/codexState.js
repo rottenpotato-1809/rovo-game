@@ -38,7 +38,7 @@ export class CodexState {
     const centerX = rect.x + rect.width / 2;
     const portraitY = rect.y + CONFIG.CODEX_PORTRAIT_Y_OFFSET;
     if (unlocked) {
-      drawDragonSprite(ctx, { ...dragon, tier: tier.tier }, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS);
+      drawDragonSprite(ctx, { ...dragon, tier: tier.tier }, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_ALIVE_ALPHA, true);
     } else {
       drawCircle(ctx, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.TEXT_MUTED, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
       drawText(ctx, '?', centerX, portraitY, CONFIG.FONT_SIZE_HEADER);

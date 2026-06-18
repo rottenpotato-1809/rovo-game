@@ -205,10 +205,11 @@ export function drawDragonSprite(
   mirrored = false,
 ) {
   const image = getDragonImage(dragon.id, dragon.tier);
-  const spriteSize = radius * CONFIG.DRAGON_SPRITE_SCALE * scale;
+  const tierScale = getDragonTierScale(dragon.tier);
+  const spriteSize = radius * CONFIG.DRAGON_SPRITE_SCALE * scale * tierScale;
   ctx.save();
   ctx.globalAlpha = alpha;
-  if (dragon.tier >= CONFIG.MAX_TIER) drawTierThreeAura(ctx, x, y, radius * scale);
+  if (dragon.tier >= CONFIG.MAX_TIER) drawTierThreeAura(ctx, x, y, radius * scale * tierScale);
   if (image && image.complete && image.naturalWidth) {
     ctx.imageSmoothingEnabled = true;
     ctx.translate(x, y);
@@ -219,6 +220,13 @@ export function drawDragonSprite(
     drawCircle(ctx, x, y, radius, color, alpha, CONFIG.TEXT_PRIMARY);
   }
   ctx.restore();
+}
+
+// Keep baby forms smaller while Tier 2 and Tier 3 use the adult silhouette scale.
+export function getDragonTierScale(tier) {
+  if (tier >= CONFIG.MAX_TIER) return CONFIG.DRAGON_TIER_THREE_SCALE;
+  if (tier >= 2) return CONFIG.DRAGON_TIER_TWO_SCALE;
+  return CONFIG.DRAGON_TIER_ONE_SCALE;
 }
 
 // Draw a dragon portrait, name, and HP bar for battle playback.

@@ -315,7 +315,7 @@ export const CONFIG = {
   DRAGON_RADIUS_TEAM: 25,
   // Radius of dragon circles in team slots (px).
 
-  DRAGON_RADIUS_BENCH: 16,
+  DRAGON_RADIUS_BENCH: 22,
   // Radius of dragon circles on the bench (px).
 
   DRAGON_RADIUS_FIGHT: 34,
@@ -323,6 +323,15 @@ export const CONFIG = {
 
   DRAGON_SPRITE_SCALE: 2.7,
   // Sprite width/height relative to the legacy dragon-token radius.
+
+  DRAGON_TIER_ONE_SCALE: 0.86,
+  // Baby-dragon artwork scale relative to its slot or battle radius.
+
+  DRAGON_TIER_TWO_SCALE: 1.08,
+  // Adult-dragon artwork scale so evolved forms read larger than babies.
+
+  DRAGON_TIER_THREE_SCALE: 1.08,
+  // Tier 3 keeps the adult silhouette and adds evolution effects.
 
   SHOP_DRAGON_SPRITE_SIZE: 54,
   // Dragon artwork size inside one shop card.
@@ -406,13 +415,13 @@ export const CONFIG = {
   TEAM_SLOT_GAP: 18,
   // Horizontal gap between team slots.
 
-  BENCH_ZONE_Y: 232,
+  BENCH_ZONE_Y: 326,
   // Top edge of the bench area.
 
   BENCH_SLOT_WIDTH: 96,
   // Width of each bench slot.
 
-  BENCH_SLOT_HEIGHT: 88,
+  BENCH_SLOT_HEIGHT: 140,
   // Height of each bench slot.
 
   BENCH_SLOT_GAP: 12,
@@ -789,7 +798,7 @@ export const CONFIG = {
   PREP_TEAM_DRAGON_Y_OFFSET: 38,
   // Dragon circle vertical offset inside a team slot.
 
-  PREP_BENCH_DRAGON_Y_OFFSET: 23,
+  PREP_BENCH_DRAGON_Y_OFFSET: 46,
   // Smaller dragon circle vertical offset inside a bench slot.
 
   PREP_DRAGON_NAME_BOTTOM_OFFSET: 24,

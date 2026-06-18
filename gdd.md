@@ -36,6 +36,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Each dragon has a **role** (DPS, Tank, Assassin, or Support), an **element**, and one **ability**.
 - Abilities fire automatically during combat when ready.
 - Every dragon uses bespoke Tier 1 and Tier 2 character artwork. Tier 3 keeps its Tier 2 form and is distinguished by an animated golden aura and orbiting evolution motes.
+- Tier 1 baby artwork renders smaller than the Tier 2/Tier 3 adult silhouette so evolution is immediately readable.
 
 ### Team
 - Exactly **3 dragons** fight per round. No more, no fewer.
@@ -117,6 +118,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Header bar:** Round number (left), Gold count (right).
 - **Team zone:** 3 large slots in a row (the active fighters). Clearly labelled "YOUR TEAM."
 - **Bench zone:** 5 smaller slots below the team. Labelled "BENCH."
+- The bench occupies the lower-left staging floor instead of crowding the active team row. Prep and codex portraits consistently face left.
 - **Shop zone:** 3 dragon cards side by side + Reroll button + Fight button. Positioned at the bottom.
 - **Sell zone:** Visible drop target (trash icon or "SELL" label) near bench.
 

@@ -264,6 +264,8 @@ Rendering (ui/renderer.js)
 
 - Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
+- Dragon artwork applies centralized per-tier scale multipliers: Tier 1 is smaller, while Tier 2 and Tier 3 share the larger adult silhouette. Prep, shop, drag-preview, and codex rendering mirror sprites to face left. The prep bench row uses the lower-left staging floor with taller reserve slots.
+
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
 - Game coordinates stay fixed at CANVAS_WIDTH × CANVAS_HEIGHT, but the backing canvas is resized to displayed CSS pixels times device pixel ratio, capped by CANVAS_MAX_PIXEL_RATIO, to avoid blurry scaled rendering.

@@ -80,7 +80,7 @@ export class PrepState {
   // Draw a compact dragon token for slots and drag previews.
   renderDragonToken(ctx, owned, centerX, centerY, alpha, radius = CONFIG.DRAGON_RADIUS_TEAM) {
     const dragon = getDragon(owned.id);
-    drawDragonSprite(ctx, { ...dragon, tier: owned.tier }, centerX, centerY, radius, alpha);
+    drawDragonSprite(ctx, { ...dragon, tier: owned.tier }, centerX, centerY, radius, alpha, CONFIG.ARENA_ALIVE_ALPHA, true);
   }
 
   // Draw shop cards.
@@ -103,6 +103,9 @@ export class PrepState {
         rect.x + (rect.width / 2),
         rect.y + CONFIG.PREP_CARD_SPRITE_Y_OFFSET,
         CONFIG.SHOP_DRAGON_SPRITE_SIZE / CONFIG.DRAGON_SPRITE_SCALE,
+        CONFIG.ARENA_ALIVE_ALPHA,
+        CONFIG.ARENA_ALIVE_ALPHA,
+        true,
       );
       drawFitText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
       drawFitText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_SECONDARY, 'left');
