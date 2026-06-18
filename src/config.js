@@ -255,10 +255,10 @@ export const CONFIG = {
   TEXT_PRIMARY: '#ffffff',
   // Main text color.
 
-  TEXT_SECONDARY: '#aaaaaa',
+  TEXT_SECONDARY: '#e3e8ef',
   // Subdued text (stat labels, descriptions).
 
-  TEXT_MUTED: '#555555',
+  TEXT_MUTED: '#aeb8c6',
   // Very faint text (empty slot labels, annotations).
 
   HP_BAR_FULL: '#4CAF50',
@@ -272,6 +272,12 @@ export const CONFIG = {
 
   HP_BAR_BG: '#333333',
   // Health bar background (empty portion).
+
+  TEXT_OUTLINE_COLOR: '#101522',
+  // Dark outline behind canvas text so labels remain legible over the arena.
+
+  TEXT_OUTLINE_WIDTH: 3,
+  // Canvas stroke width used for readable text edges.
 
   SHIELD_COLOR: '#B3E5FC',
   // Shield bar overlay color.
@@ -528,17 +534,23 @@ export const CONFIG = {
   ARENA_TEAM_LABEL_Y: 116,
   // Y position for fight-side team labels.
 
-  ARENA_NAME_OFFSET_Y: 50,
-  // Vertical offset from dragon center to name text.
+  ARENA_INFO_OFFSET_X: 48,
+  // Horizontal gap between a battle portrait and its name/HP information.
 
-  ARENA_HP_OFFSET_Y: 50,
-  // Vertical offset from dragon center to HP bar.
+  ARENA_INFO_NAME_OFFSET_Y: -10,
+  // Vertical offset for the battle name beside a portrait.
+
+  ARENA_INFO_HP_OFFSET_Y: 8,
+  // Vertical offset for the battle HP bar beside a portrait.
 
   ARENA_VS_X: 480,
   // X position of center "VS" label.
 
   ARENA_RESULT_Y: 66,
   // Y position for WIN/LOSE result text after combat.
+
+  ARENA_RESULT_PANEL_HEIGHT: 142,
+  // Opaque top band that separates completed-fight messaging from the arena.
 
   ARENA_LOG_X: 24,
   // Left edge of combat log text.
@@ -648,8 +660,11 @@ export const CONFIG = {
   PREP_DRAGON_Y_OFFSET: 56,
   // Dragon circle vertical offset inside a prep slot.
 
-  PREP_DRAGON_TIER_Y_OFFSET: 92,
-  // Tier label vertical offset inside a prep slot.
+  PREP_DRAGON_NAME_Y_OFFSET: 92,
+  // Dragon name baseline inside a prep slot.
+
+  PREP_DRAGON_STATS_Y_OFFSET: 108,
+  // Tier and HP baseline below the dragon name.
 
   PREP_BUTTON_WIDTH: 130,
   // Width of prep buttons.

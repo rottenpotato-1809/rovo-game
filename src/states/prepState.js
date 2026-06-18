@@ -71,8 +71,8 @@ export class PrepState {
     const centerX = rect.x + rect.width / 2;
     const centerY = rect.y + CONFIG.PREP_DRAGON_Y_OFFSET;
     this.renderDragonToken(ctx, owned, centerX, centerY, CONFIG.ARENA_ALIVE_ALPHA);
-    drawFitText(ctx, dragon.name, centerX, rect.y + CONFIG.PREP_DRAGON_TIER_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
-    drawText(ctx, `T${owned.tier} HP ${owned.hp}/${owned.maxHp}`, centerX, rect.y + rect.height - CONFIG.PREP_SLOT_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
+    drawFitText(ctx, dragon.name, centerX, rect.y + CONFIG.PREP_DRAGON_NAME_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
+    drawText(ctx, `T${owned.tier} HP ${owned.hp}/${owned.maxHp}`, centerX, rect.y + CONFIG.PREP_DRAGON_STATS_Y_OFFSET, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
   }
 
   // Draw a compact dragon token for slots and drag previews.

@@ -57,10 +57,14 @@ export function drawCircle(ctx, x, y, radius, fill, alpha = CONFIG.ARENA_ALIVE_A
 
 // Draw centered or left-aligned text using canvas fonts.
 export function drawText(ctx, text, x, y, size, color = CONFIG.TEXT_PRIMARY, align = 'center') {
-  ctx.fillStyle = color;
   ctx.font = `${size}px ${CONFIG.FONT_FAMILY}`;
   ctx.textAlign = align;
   ctx.textBaseline = 'middle';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = CONFIG.TEXT_OUTLINE_COLOR;
+  ctx.lineWidth = CONFIG.TEXT_OUTLINE_WIDTH;
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = color;
   ctx.fillText(text, x, y);
 }
 
@@ -105,13 +109,27 @@ export function drawDragon(ctx, dragon, view) {
       ? CONFIG.HP_BAR_MID
       : CONFIG.HP_BAR_FULL;
   const color = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.ACCENT_SECONDARY;
+  const isPlayer = dragon.team === 'player';
+  const infoX = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? 1 : -1));
+  const infoAlign = isPlayer ? 'left' : 'right';
+  const barX = isPlayer ? infoX : infoX - CONFIG.HP_BAR_WIDTH_TEAM;
   drawCircle(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, color, view.alpha, CONFIG.TEXT_PRIMARY);
   drawText(ctx, dragon.emoji || '?', view.x, view.y, CONFIG.FONT_SIZE_EMOJI, CONFIG.TEXT_PRIMARY);
-  drawText(ctx, dragon.name, view.x, view.y + CONFIG.ARENA_NAME_OFFSET_Y, CONFIG.FONT_SIZE_DRAGON_NAME);
+  drawFitText(
+    ctx,
+    dragon.name,
+    infoX,
+    view.y + CONFIG.ARENA_INFO_NAME_OFFSET_Y,
+    CONFIG.FONT_SIZE_DRAGON_NAME,
+    CONFIG.HP_BAR_WIDTH_TEAM,
+    CONFIG.FONT_SIZE_CARD_META_MIN,
+    CONFIG.TEXT_PRIMARY,
+    infoAlign,
+  );
   drawBar(
     ctx,
-    view.x - CONFIG.HP_BAR_WIDTH_TEAM / 2,
-    view.y - CONFIG.ARENA_HP_OFFSET_Y,
+    barX,
+    view.y + CONFIG.ARENA_INFO_HP_OFFSET_Y,
     CONFIG.HP_BAR_WIDTH_TEAM,
     CONFIG.HP_BAR_HEIGHT,
     hpRatio,

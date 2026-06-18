@@ -63,13 +63,18 @@ export class FightState {
   render(ctx) {
     clear(ctx);
     drawArenaBackdrop(ctx);
-    drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
-    drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
+    const isFinished = this.eventIndex >= this.events.length;
+    if (!isFinished) {
+      drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
+      drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
+    }
     drawText(ctx, 'VS', CONFIG.ARENA_VS_X, CONFIG.FIGHT_Y_POSITIONS[1], CONFIG.FONT_SIZE_TITLE, CONFIG.ACCENT_PRIMARY);
     [...this.playerTeam, ...this.enemyTeam].forEach(dragon => this.renderDragon(ctx, dragon));
     this.renderFloaters(ctx);
     this.renderCombatLog(ctx);
-    if (this.eventIndex >= this.events.length) {
+    if (isFinished) {
+      ctx.fillStyle = CONFIG.HEADER_BG_COLOR;
+      ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_RESULT_PANEL_HEIGHT);
       drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_SCORE, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
       drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y + CONFIG.BUTTON_HEIGHT, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
     }

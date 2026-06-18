@@ -169,6 +169,7 @@ MAIN MENU → [Codex] → CODEX SCREEN → [Back] → MAIN MENU
 - XP progression with 4 unlock thresholds.
 - Score tracking (high score saved locally).
 - Basic visual feedback: HP bars, damage numbers, attack animations.
+- Arena labels use high-contrast outlined text, with dragon names and HP placed beside portraits so combat rows never overlap.
 - Desktop and mobile touch input.
 
 ---

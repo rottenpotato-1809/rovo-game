@@ -252,6 +252,8 @@ Rendering (ui/renderer.js)
 
 - All coordinates and sizes pulled from CONFIG layout constants.
 
+- Canvas text is filled over a configurable dark outline for contrast. Battle portrait names and HP bars are laid out beside each portrait, and completed-fight messaging occupies a dedicated opaque header band to prevent label collisions.
+
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
 - Game coordinates stay fixed at CANVAS_WIDTH × CANVAS_HEIGHT, but the backing canvas is resized to displayed CSS pixels times device pixel ratio, capped by CANVAS_MAX_PIXEL_RATIO, to avoid blurry scaled rendering.
