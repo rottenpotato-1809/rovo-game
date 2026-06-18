@@ -84,6 +84,64 @@ export function getResultButton() {
   };
 }
 
+// Return main-menu command rectangles.
+export function getMenuButtons() {
+  return {
+    newRun: {
+      x: CONFIG.MENU_BUTTON_X,
+      y: CONFIG.MENU_NEW_RUN_Y,
+      width: CONFIG.MENU_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
+    },
+    codex: {
+      x: CONFIG.MENU_BUTTON_X,
+      y: CONFIG.MENU_CODEX_Y,
+      width: CONFIG.MENU_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
+    },
+  };
+}
+
+// Return the codex back-button rectangle.
+export function getCodexBackButton() {
+  return {
+    x: CONFIG.MENU_BUTTON_X,
+    y: CONFIG.CODEX_BACK_Y,
+    width: CONFIG.MENU_BUTTON_WIDTH,
+    height: CONFIG.BUTTON_HEIGHT,
+  };
+}
+
+// Return the two full-results command rectangles.
+export function getFullResultButtons() {
+  const totalWidth = (CONFIG.RESULT_BUTTON_WIDTH * 2) + CONFIG.RESULT_BUTTON_GAP;
+  const startX = (CONFIG.CANVAS_WIDTH - totalWidth) / 2;
+  return {
+    playAgain: {
+      x: startX,
+      y: CONFIG.RESULT_BUTTON_Y_FULL,
+      width: CONFIG.RESULT_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
+    },
+    menu: {
+      x: startX + CONFIG.RESULT_BUTTON_WIDTH + CONFIG.RESULT_BUTTON_GAP,
+      y: CONFIG.RESULT_BUTTON_Y_FULL,
+      width: CONFIG.RESULT_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
+    },
+  };
+}
+
+// Return a codex cell rectangle by dragon column and tier row.
+export function getCodexCell(column, row) {
+  return {
+    x: CONFIG.CODEX_START_X + (column * (CONFIG.CODEX_CELL_WIDTH + CONFIG.CODEX_COLUMN_GAP)),
+    y: CONFIG.CODEX_START_Y + (row * (CONFIG.CODEX_CELL_HEIGHT + CONFIG.CODEX_ROW_GAP)),
+    width: CONFIG.CODEX_CELL_WIDTH,
+    height: CONFIG.CODEX_CELL_HEIGHT,
+  };
+}
+
 // Return the fixed fight-screen point for a dragon side and slot.
 export function getFightPoint(team, index) {
   return {

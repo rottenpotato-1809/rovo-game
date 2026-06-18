@@ -403,7 +403,7 @@ export const CONFIG = {
   FIGHT_Y_POSITIONS: [190, 270, 350],
   // Y positions for the 3 dragon slots (top, middle, bottom) during fight.
 
-  FIGHT_BOSS_X: 280,
+  FIGHT_BOSS_X: 700,
   // X position for the boss during boss fight.
 
   FIGHT_BOSS_Y: 300,
@@ -701,6 +701,126 @@ export const CONFIG = {
 
   RESULT_BUTTON_Y: 360,
   // Y position for result screen replay button.
+
+  MENU_TITLE_Y: 92,
+  // Main menu title baseline.
+
+  MENU_SCORE_Y: 154,
+  // Main menu high-score baseline.
+
+  MENU_XP_LABEL_Y: 202,
+  // Main menu progression label baseline.
+
+  MENU_XP_BAR_X: 280,
+  // Main menu XP bar left edge.
+
+  MENU_XP_BAR_Y: 224,
+  // Main menu XP bar top edge.
+
+  MENU_XP_BAR_WIDTH: 400,
+  // Main menu XP bar width.
+
+  MENU_XP_BAR_HEIGHT: 16,
+  // Main menu XP bar height.
+
+  MENU_BUTTON_X: 380,
+  // Main menu button left edge.
+
+  MENU_NEW_RUN_Y: 290,
+  // New-run button top edge.
+
+  MENU_CODEX_Y: 352,
+  // Codex button top edge.
+
+  MENU_BUTTON_WIDTH: 200,
+  // Main menu button width.
+
+  CODEX_START_X: 38,
+  // Codex grid left edge.
+
+  CODEX_START_Y: 92,
+  // Codex grid top edge.
+
+  CODEX_CELL_WIDTH: 100,
+  // Codex cell width.
+
+  CODEX_CELL_HEIGHT: 102,
+  // Codex cell height.
+
+  CODEX_COLUMN_GAP: 12,
+  // Horizontal gap between codex columns.
+
+  CODEX_ROW_GAP: 10,
+  // Vertical gap between codex rows.
+
+  CODEX_DRAGON_RADIUS: 18,
+  // Portrait radius inside an unlocked codex cell.
+
+  CODEX_PORTRAIT_Y_OFFSET: 28,
+  // Portrait offset inside a codex cell.
+
+  CODEX_NAME_Y_OFFSET: 58,
+  // Name offset inside a codex cell.
+
+  CODEX_TIER_Y_OFFSET: 80,
+  // Tier label offset inside a codex cell.
+
+  CODEX_FOOTER_Y: 464,
+  // Discovery count baseline.
+
+  CODEX_BACK_Y: 484,
+  // Codex back-button top edge.
+
+  BOSS_SCORE_Y: 62,
+  // Live boss damage-counter baseline.
+
+  BOSS_NAME_Y: 146,
+  // Eternal Wyrm name baseline.
+
+  BOSS_HP_BAR_X: 590,
+  // Boss HP bar left edge.
+
+  BOSS_HP_BAR_Y: 170,
+  // Boss HP bar top edge.
+
+  BOSS_HP_BAR_WIDTH: 220,
+  // Boss HP bar width.
+
+  BOSS_HP_BAR_HEIGHT: 12,
+  // Boss HP bar height.
+
+  BOSS_RESULT_Y: 228,
+  // Final score reveal baseline.
+
+  BOSS_CONTINUE_Y: 278,
+  // Boss result continue prompt baseline.
+
+  BOSS_RESULT_PANEL_Y: 112,
+  // Boss score-reveal panel top edge.
+
+  BOSS_RESULT_PANEL_HEIGHT: 190,
+  // Boss score-reveal panel height.
+
+  RESULT_TITLE_Y: 76,
+  // Full results title baseline.
+
+  RESULT_LINE_START_Y: 138,
+  // First results statistic baseline.
+
+  RESULT_LINE_GAP: 34,
+  // Vertical gap between results statistics.
+
+  RESULT_NOTICE_Y: 326,
+  // Discovery or unlock notification baseline.
+
+  RESULT_BUTTON_Y_FULL: 414,
+  // Full results button row top edge.
+
+  RESULT_BUTTON_WIDTH: 180,
+  // Full results button width.
+
+  RESULT_BUTTON_GAP: 24,
+  // Gap between full results buttons.
 
   // ─── PERSISTENCE ──────────────────────────────────────────────
   // LocalStorage configuration

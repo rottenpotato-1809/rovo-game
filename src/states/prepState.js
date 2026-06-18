@@ -3,6 +3,7 @@ import { getDragon, getDragonTier } from '../data/dragons.js';
 import { simulateBattle } from '../systems/battle.js';
 import { calculateRoundGold } from '../systems/economy.js';
 import { checkMergeAvailable, executeMerge } from '../systems/merge.js';
+import { registerCodexEntry } from '../systems/progression.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
 import { buyDragon, cloneDraftState, rerollShop, sellDragon } from '../systems/shop.js';
 import { getBenchSlots, getPrepButtons, getSellZone, getShopCards, getTeamSlots, pointInRect } from '../ui/layout.js';
@@ -21,7 +22,7 @@ export class PrepState {
 
   // Ensure a run exists before showing prep.
   enter() {
-    if (!this.game.run) this.game.run = createRunState();
+    if (!this.game.run) this.game.run = createRunState(this.game.saveData.unlockedDragons);
     this.selectedSource = null;
     this.dragSource = null;
     this.dragPoint = null;
@@ -199,7 +200,7 @@ export class PrepState {
       return;
     }
     this.game.run = result.state;
-    this.game.run.lastDiscoveries = [...this.game.run.lastDiscoveries, result.discovery];
+    this.registerOwnedDiscovery(result.discovery);
     this.message = `Merged ${result.discovery.name} T${result.discovery.tier}`;
   }
 
@@ -223,6 +224,11 @@ export class PrepState {
       this.message = 'Place at least one dragon';
       return;
     }
+    this.game.run.team.filter(Boolean).forEach(owned => this.registerOwnedDiscovery({
+      id: owned.id,
+      tier: owned.tier,
+      name: getDragon(owned.id).name,
+    }));
     const playerBattleTeam = createPlayerBattleTeam(this.game.run.team);
     const enemyBattleTeam = createRoundEnemyTeam(this.game.run.round);
     const displayPlayerTeam = playerBattleTeam.map(dragon => ({ ...dragon, statuses: [] }));
@@ -244,7 +250,7 @@ export class PrepState {
     }
     if (this.game.run.round >= CONFIG.TOTAL_ROUNDS) {
       this.game.run = applyWin(this.game.run);
-      this.stateManager.change('result', { victory: true, run: this.game.run });
+      this.stateManager.change('boss', { run: this.game.run });
       return;
     }
     this.game.run = applyWin(this.game.run);
@@ -271,5 +277,14 @@ export class PrepState {
   // Check if two slot references point to the same place.
   sameSource(left, right) {
     return left.zone === right.zone && left.index === right.index;
+  }
+
+  // Register a personally owned tier and remember first-time discoveries for results.
+  registerOwnedDiscovery(discovery) {
+    const registration = registerCodexEntry(this.game.saveData.codex, discovery.id, discovery.tier);
+    this.game.saveData.codex = registration.codex;
+    if (registration.isNew) {
+      this.game.run.lastDiscoveries = [...this.game.run.lastDiscoveries, discovery];
+    }
   }
 }

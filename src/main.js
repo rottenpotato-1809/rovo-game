@@ -3,9 +3,13 @@ import { GameLoop } from './engine/loop.js';
 import { Input } from './engine/input.js';
 import { StateManager } from './states/stateManager.js';
 import { ArenaState } from './states/arenaState.js';
+import { BossState } from './states/bossState.js';
+import { CodexState } from './states/codexState.js';
 import { FightState } from './states/fightState.js';
+import { MenuState } from './states/menuState.js';
 import { PrepState } from './states/prepState.js';
 import { ResultState } from './states/resultState.js';
+import { load } from './persistence/save.js';
 
 // Boot the canvas application and start the animation loop.
 function main() {
@@ -13,12 +17,15 @@ function main() {
   const ctx = canvas.getContext('2d');
 
   const stateManager = new StateManager();
-  const game = { run: null };
+  const game = { run: null, saveData: load() };
   stateManager.register('arena', new ArenaState(stateManager));
+  stateManager.register('menu', new MenuState(stateManager, game));
+  stateManager.register('codex', new CodexState(stateManager, game));
   stateManager.register('fight', new FightState(stateManager));
+  stateManager.register('boss', new BossState(stateManager, game));
   stateManager.register('prep', new PrepState(stateManager, game));
   stateManager.register('result', new ResultState(stateManager, game));
-  stateManager.change('prep');
+  stateManager.change('menu');
 
   new Input(canvas, stateManager);
   const loop = new GameLoop(

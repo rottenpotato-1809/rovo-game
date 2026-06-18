@@ -6,16 +6,20 @@ import { generateEnemyTeam } from './enemy.js';
 import { generateShop } from './shop.js';
 
 // Create the initial draft state for a new run.
-export function createRunState(random = Math.random) {
-  const unlockedDragonIds = [...CONFIG.DEFAULT_SAVE.unlockedDragons];
+export function createRunState(unlockedDragonIds = CONFIG.DEFAULT_SAVE.unlockedDragons, random = Math.random) {
+  if (typeof unlockedDragonIds === 'function') {
+    random = unlockedDragonIds;
+    unlockedDragonIds = CONFIG.DEFAULT_SAVE.unlockedDragons;
+  }
+  const availableDragonIds = [...unlockedDragonIds];
   return {
     round: 1,
     gold: CONFIG.STARTING_GOLD,
     roundsSurvived: 0,
     team: Array(CONFIG.TEAM_SIZE).fill(null),
     bench: Array(CONFIG.BENCH_SIZE).fill(null),
-    shop: generateShop(unlockedDragonIds, random),
-    unlockedDragonIds,
+    shop: generateShop(availableDragonIds, random),
+    unlockedDragonIds: availableDragonIds,
     lastDiscoveries: [],
   };
 }

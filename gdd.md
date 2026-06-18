@@ -174,6 +174,7 @@ MAIN MENU → [Codex] → CODEX SCREEN → [Back] → MAIN MENU
 - Voltfang is a fast multi-target DPS whose total early-tier ability damage is spread across targets rather than exceeding starter DPS output.
 - Owned-dragon slots present the portrait, name, and HP as one unified card without a separate name plate.
 - Desktop and mobile touch input.
+- Persistent meta loop: main menu, boss score chase, XP unlocks, 24-entry codex, and local save data.
 
 ---
 

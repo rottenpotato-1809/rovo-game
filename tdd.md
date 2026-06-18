@@ -48,6 +48,8 @@ progression.test.js← unlock threshold tests
 
 ---
 
+Milestone 3 runtime owns one shared `game.saveData` object loaded at boot. Results calculate XP, high score, and unlocks once, then persist immediately. A new run copies `saveData.unlockedDragons` into its draft state so rerolls remain deterministic and save-backed.
+
 ## Code Conventions
 
 | Rule | Detail |

@@ -1,41 +1,92 @@
 import { CONFIG } from '../config.js';
+import { getDragon } from '../data/dragons.js';
+import { save } from '../persistence/save.js';
+import { calculateXP, checkUnlocks } from '../systems/progression.js';
 import { createRunState } from '../systems/run.js';
-import { getResultButton, pointInRect } from '../ui/layout.js';
-import { clear, drawArenaBackdrop, drawButton, drawText } from '../ui/renderer.js';
+import { getFullResultButtons, pointInRect } from '../ui/layout.js';
+import { clear, drawArenaBackdrop, drawButton, drawFitText, drawText } from '../ui/renderer.js';
 
-// Show a simple end-of-run summary for Milestone 2.
+// Summarize a run and immediately persist its score and progression rewards.
 export class ResultState {
   constructor(stateManager, game) {
     this.stateManager = stateManager;
     this.game = game;
-    this.payload = null;
-    this.button = getResultButton();
+    this.summary = null;
+    this.buttons = getFullResultButtons();
   }
 
-  // Store result payload.
+  // Calculate rewards once and save them immediately.
   enter(payload) {
-    this.payload = payload;
+    const bossDamage = payload.bossDamage || 0;
+    const roundsSurvived = payload.run.roundsSurvived;
+    const earnedXP = calculateXP(roundsSurvived, bossDamage);
+    const previousUnlocked = [...this.game.saveData.unlockedDragons];
+    const totalXP = this.game.saveData.totalXP + earnedXP;
+    const unlockedDragons = checkUnlocks(totalXP);
+    const newlyUnlocked = unlockedDragons.filter(id => !previousUnlocked.includes(id));
+    const newHighScore = bossDamage > this.game.saveData.highScore;
+    this.game.saveData = save({
+      ...this.game.saveData,
+      totalXP,
+      highScore: Math.max(this.game.saveData.highScore, bossDamage),
+      unlockedDragons,
+    });
+    this.summary = {
+      roundsSurvived,
+      bossDamage,
+      reachedBoss: Boolean(payload.reachedBoss),
+      earnedXP,
+      totalXP,
+      newHighScore,
+      newlyUnlocked,
+      discoveries: [...payload.run.lastDiscoveries],
+    };
   }
 
-  // Keep result screen static.
+  // Keep results static.
   update() {}
 
-  // Draw the result summary.
+  // Draw complete run rewards and navigation commands.
   render(ctx) {
     clear(ctx);
     drawArenaBackdrop(ctx);
-    const run = this.payload.run;
-    const title = this.payload.victory ? 'RUN CLEARED' : `DEFEATED AT ROUND ${run.round}`;
-    drawText(ctx, title, CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_TITLE_Y, CONFIG.FONT_SIZE_TITLE);
-    drawText(ctx, `Rounds survived: ${run.roundsSurvived}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_SUBTITLE_Y, CONFIG.FONT_SIZE_BODY);
-    drawText(ctx, `XP earned placeholder: ${run.roundsSurvived * CONFIG.XP_PER_ROUND_SURVIVED}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_SUBTITLE_Y + CONFIG.BUTTON_HEIGHT, CONFIG.FONT_SIZE_BODY, CONFIG.TEXT_SECONDARY);
-    drawButton(ctx, this.button, 'PLAY AGAIN');
+    drawText(ctx, this.summary.reachedBoss ? 'RUN COMPLETE' : 'RUN OVER', CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_TITLE_Y, CONFIG.FONT_SIZE_TITLE, CONFIG.GOLD_COLOR);
+    const lines = [
+      `ROUNDS SURVIVED ${this.summary.roundsSurvived}`,
+      this.summary.reachedBoss ? `BOSS DAMAGE ${this.summary.bossDamage}` : 'BOSS NOT REACHED',
+      `XP EARNED +${this.summary.earnedXP}`,
+      `TOTAL XP ${this.summary.totalXP}`,
+      `HIGH SCORE ${this.game.saveData.highScore}${this.summary.newHighScore ? ' NEW!' : ''}`,
+    ];
+    lines.forEach((line, index) => drawText(ctx, line, CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_LINE_START_Y + (index * CONFIG.RESULT_LINE_GAP), CONFIG.FONT_SIZE_BODY));
+    const notice = this.getNotice();
+    drawFitText(ctx, notice, CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_NOTICE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.MENU_XP_BAR_WIDTH, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_SECONDARY);
+    drawButton(ctx, this.buttons.playAgain, 'PLAY AGAIN', CONFIG.ACCENT_PRIMARY);
+    drawButton(ctx, this.buttons.menu, 'MAIN MENU', CONFIG.ACCENT_SECONDARY);
   }
 
-  // Restart the run when Play Again is clicked.
+  // Return the highest-priority progression notification.
+  getNotice() {
+    if (this.summary.newlyUnlocked.length > 0) {
+      return `UNLOCKED: ${this.summary.newlyUnlocked.map(id => getDragon(id).name).join(', ')}`;
+    }
+    if (this.summary.discoveries.length > 0) {
+      const discovery = this.summary.discoveries[0];
+      return `NEW DISCOVERY: ${discovery.name} T${discovery.tier}`;
+    }
+    return 'Draft again. Climb higher.';
+  }
+
+  // Start another run or return to the persistent menu.
   handlePointerDown(point) {
-    if (!pointInRect(point, this.button)) return;
-    this.game.run = createRunState();
-    this.stateManager.change('prep');
+    if (pointInRect(point, this.buttons.playAgain)) {
+      this.game.run = createRunState(this.game.saveData.unlockedDragons);
+      this.stateManager.change('prep');
+      return;
+    }
+    if (pointInRect(point, this.buttons.menu)) {
+      this.game.run = null;
+      this.stateManager.change('menu');
+    }
   }
 }
