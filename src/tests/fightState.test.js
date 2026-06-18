@@ -32,4 +32,16 @@ test('combat log scrolling clamps to available history', () => {
   assertEqual(state.logScrollOffset, 0);
 });
 
+test('combat log hit testing is limited to the upper-right panel', () => {
+  const state = new FightState({});
+  assert(state.isPointInCombatLog({ x: CONFIG.ARENA_LOG_PANEL_X + 1, y: CONFIG.ARENA_LOG_PANEL_Y + 1 }));
+  assert(!state.isPointInCombatLog({ x: CONFIG.ARENA_RESULT_PANEL_X, y: CONFIG.ARENA_RESULT_PANEL_Y }));
+});
+
+test('continue hit testing is limited to the compact result panel', () => {
+  const state = new FightState({});
+  assert(state.isPointInResultPanel({ x: CONFIG.CANVAS_WIDTH / 2, y: CONFIG.ARENA_RESULT_Y }));
+  assert(!state.isPointInResultPanel({ x: CONFIG.CANVAS_WIDTH / 2, y: CONFIG.FIGHT_Y_POSITIONS[1] }));
+});
+
 summarize();

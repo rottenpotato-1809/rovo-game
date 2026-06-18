@@ -123,13 +123,13 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Fight Phase Screen
 - **Landscape arena:** combat uses a 16:9 battlefield view instead of the earlier mobile portrait layout.
 - The arena uses the dedicated full-screen fight background, while menu and prep each use their own full-screen illustrated scene.
-- **Left side:** 3 player dragons staged as a compact column on the left half.
-- **Right side:** 3 enemy dragons staged as a compact column on the right half.
-- **Above each dragon:** HP bar + name.
+- **Brown floor:** all 6 combatants stand entirely on the lower arena floor in two compact columns.
+- **Facing:** player dragons are mirrored to face right; enemy dragons face left.
+- **Outer information:** player names, HP, and cooldowns sit left of player artwork; enemy information sits right of enemy artwork.
 - **Center:** Floating damage/heal numbers animate on hit.
-- **Bottom strip:** Scrolling combat log (one line per action).
+- **Upper-right panel:** scrolling combat log, separated from the battlefield.
 - Each combatant shows whether its special ability is ready or how many actions remain on cooldown. The combat log supports wheel and touch-drag history scrolling, and action labels are displayed as readable words.
-- **After battle ends:** "CONTINUE" button overlays the center.
+- **After battle ends:** WIN/LOSE and the Continue prompt occupy one compact upper-center panel without covering the arena.
 - **Pacing:** battle playback should be brisk by default so a full 3v3 fight resolves quickly while attacks and ability flashes remain readable.
 - Combatants lunge, recoil, flash on impact, pulse when casting abilities, and fade on defeat. Buttons scale and glow on hover and compress while pressed.
 

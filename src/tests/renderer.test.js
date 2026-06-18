@@ -27,10 +27,27 @@ test('canvas text draws a contrast outline before its fill', () => {
   assertEqual(ctx.lineWidth, CONFIG.TEXT_OUTLINE_WIDTH);
 });
 
-test('battle information columns leave clear center space', () => {
-  const playerInfoRight = CONFIG.FIGHT_PLAYER_X + CONFIG.ARENA_INFO_OFFSET_X + CONFIG.HP_BAR_WIDTH_TEAM;
-  const enemyInfoLeft = CONFIG.FIGHT_ENEMY_X - CONFIG.ARENA_INFO_OFFSET_X - CONFIG.HP_BAR_WIDTH_TEAM;
-  assert(playerInfoRight < enemyInfoLeft, 'Player and enemy information columns must not overlap');
+test('battle information sits outside each dragon column', () => {
+  const spriteHalfWidth = (CONFIG.DRAGON_RADIUS_FIGHT * CONFIG.DRAGON_SPRITE_SCALE) / 2;
+  const playerBarRight = CONFIG.FIGHT_PLAYER_X - CONFIG.ARENA_INFO_OFFSET_X;
+  const enemyBarLeft = CONFIG.FIGHT_ENEMY_X + CONFIG.ARENA_INFO_OFFSET_X;
+  assert(playerBarRight <= CONFIG.FIGHT_PLAYER_X - spriteHalfWidth, 'Player information must stay left of player artwork');
+  assert(enemyBarLeft >= CONFIG.FIGHT_ENEMY_X + spriteHalfWidth, 'Enemy information must stay right of enemy artwork');
+});
+
+test('all combatants stand inside the brown battlefield region', () => {
+  const spriteHalfHeight = (CONFIG.DRAGON_RADIUS_FIGHT * CONFIG.DRAGON_SPRITE_SCALE) / 2;
+  assert(CONFIG.FIGHT_Y_POSITIONS[0] - spriteHalfHeight >= CONFIG.ARENA_BATTLEFIELD_TOP_Y);
+  assert(CONFIG.FIGHT_Y_POSITIONS[CONFIG.FIGHT_Y_POSITIONS.length - 1] + spriteHalfHeight <= CONFIG.CANVAS_HEIGHT);
+});
+
+test('combat log and result panels remain above the battlefield without overlap', () => {
+  const logBottom = CONFIG.ARENA_LOG_PANEL_Y + CONFIG.ARENA_LOG_PANEL_HEIGHT;
+  const resultBottom = CONFIG.ARENA_RESULT_PANEL_Y + CONFIG.ARENA_RESULT_PANEL_HEIGHT;
+  const resultRight = CONFIG.ARENA_RESULT_PANEL_X + CONFIG.ARENA_RESULT_PANEL_WIDTH;
+  assert(logBottom < CONFIG.ARENA_BATTLEFIELD_TOP_Y);
+  assert(resultBottom < CONFIG.ARENA_BATTLEFIELD_TOP_Y);
+  assert(resultRight < CONFIG.ARENA_LOG_PANEL_X);
 });
 
 test('prep dragon name and stats have separate baselines', () => {
@@ -57,7 +74,7 @@ test('team heading clears the fixed header', () => {
 
 test('completed fight messaging stays inside its result panel', () => {
   const continueY = CONFIG.ARENA_RESULT_Y + CONFIG.BUTTON_HEIGHT;
-  assert(continueY < CONFIG.ARENA_RESULT_PANEL_HEIGHT, 'Continue prompt must remain inside the result panel');
+  assert(continueY < CONFIG.ARENA_RESULT_PANEL_Y + CONFIG.ARENA_RESULT_PANEL_HEIGHT, 'Continue prompt must remain inside the result panel');
 });
 
 summarize();

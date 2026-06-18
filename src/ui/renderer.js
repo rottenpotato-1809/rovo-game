@@ -151,7 +151,16 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
 }
 
 // Draw one dragon's bitmap artwork with a distinct animated Tier 3 aura.
-export function drawDragonSprite(ctx, dragon, x, y, radius, alpha = CONFIG.ARENA_ALIVE_ALPHA, scale = CONFIG.ARENA_ALIVE_ALPHA) {
+export function drawDragonSprite(
+  ctx,
+  dragon,
+  x,
+  y,
+  radius,
+  alpha = CONFIG.ARENA_ALIVE_ALPHA,
+  scale = CONFIG.ARENA_ALIVE_ALPHA,
+  mirrored = false,
+) {
   const image = getDragonImage(dragon.id, dragon.tier);
   const spriteSize = radius * CONFIG.DRAGON_SPRITE_SCALE * scale;
   ctx.save();
@@ -159,7 +168,9 @@ export function drawDragonSprite(ctx, dragon, x, y, radius, alpha = CONFIG.ARENA
   if (dragon.tier >= CONFIG.MAX_TIER) drawTierThreeAura(ctx, x, y, radius * scale);
   if (image && image.complete && image.naturalWidth) {
     ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(image, x - (spriteSize / 2), y - (spriteSize / 2), spriteSize, spriteSize);
+    ctx.translate(x, y);
+    ctx.scale(mirrored ? -1 : 1, 1);
+    ctx.drawImage(image, -(spriteSize / 2), -(spriteSize / 2), spriteSize, spriteSize);
   } else {
     const color = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.ACCENT_SECONDARY;
     drawCircle(ctx, x, y, radius, color, alpha, CONFIG.TEXT_PRIMARY);
@@ -176,13 +187,22 @@ export function drawDragon(ctx, dragon, view) {
       ? CONFIG.HP_BAR_MID
       : CONFIG.HP_BAR_FULL;
   const isPlayer = dragon.team === 'player';
-  const infoX = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? 1 : -1));
-  const infoAlign = isPlayer ? 'left' : 'right';
-  const barX = isPlayer ? infoX : infoX - CONFIG.HP_BAR_WIDTH_TEAM;
+  const infoX = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? -1 : 1));
+  const infoAlign = isPlayer ? 'right' : 'left';
+  const barX = isPlayer ? infoX - CONFIG.HP_BAR_WIDTH_TEAM : infoX;
   if (view.hitFlash > 0) {
     drawCircle(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT * CONFIG.ARENA_ABILITY_GLOW_RADIUS_MULTIPLIER, CONFIG.HP_BAR_LOW, view.hitFlash);
   }
-  drawDragonSprite(ctx, dragon, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, view.alpha, view.scale || CONFIG.ARENA_ALIVE_ALPHA);
+  drawDragonSprite(
+    ctx,
+    dragon,
+    view.x,
+    view.y,
+    CONFIG.DRAGON_RADIUS_FIGHT,
+    view.alpha,
+    view.scale || CONFIG.ARENA_ALIVE_ALPHA,
+    isPlayer,
+  );
   drawFitText(
     ctx,
     dragon.name,

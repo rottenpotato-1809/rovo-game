@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
 import { TweenSystem, createFloatingNumber, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawCircle, drawDragon, drawFitText, drawPhaseBackground, drawText } from '../ui/renderer.js';
+import { clear, drawCircle, drawDragon, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play a simulated battle log back as animated canvas combat.
@@ -80,8 +80,7 @@ export class FightState {
     this.renderFloaters(ctx);
     this.renderCombatLog(ctx);
     if (isFinished) {
-      ctx.fillStyle = CONFIG.HEADER_BG_COLOR;
-      ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_RESULT_PANEL_HEIGHT);
+      drawRect(ctx, this.getResultPanel(), CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
       drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_SCORE, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
       drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y + CONFIG.BUTTON_HEIGHT, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
     }
@@ -89,12 +88,12 @@ export class FightState {
 
   // Continue to the next run state after playback finishes.
   handlePointerDown(point) {
-    if (this.eventIndex < this.events.length && this.isPointInCombatLog(point)) {
+    if (this.isPointInCombatLog(point)) {
       this.logDragY = point.y;
       return;
     }
     if (this.eventIndex < this.events.length || !this.onComplete) return;
-    this.onComplete(this.result);
+    if (this.isPointInResultPanel(point)) this.onComplete(this.result);
   }
 
   // Scroll the combat log by dragging inside its panel.
@@ -139,7 +138,7 @@ export class FightState {
   // Draw readiness or remaining turns for one dragon's special ability.
   renderAbilityTimer(ctx, dragon, view) {
     const isPlayer = dragon.team === 'player';
-    const x = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? 1 : -1));
+    const x = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? -1 : 1));
     const label = dragon.cooldownCurrent <= 0 ? 'ABILITY READY' : `ABILITY IN ${dragon.cooldownCurrent}`;
     drawFitText(
       ctx,
@@ -150,7 +149,7 @@ export class FightState {
       CONFIG.ARENA_ABILITY_TIMER_WIDTH,
       CONFIG.FONT_SIZE_SMALL,
       dragon.cooldownCurrent <= 0 ? CONFIG.GOLD_COLOR : CONFIG.TEXT_SECONDARY,
-      isPlayer ? 'left' : 'right',
+      isPlayer ? 'right' : 'left',
     );
   }
 
@@ -166,18 +165,20 @@ export class FightState {
 
   // Draw the newest combat log lines near the bottom.
   renderCombatLog(ctx) {
-    ctx.fillStyle = CONFIG.HEADER_BG_COLOR;
-    ctx.fillRect(0, CONFIG.COMBAT_LOG_Y - CONFIG.ARENA_LOG_LINE_HEIGHT, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_LOG_BG_HEIGHT);
+    drawRect(ctx, this.getCombatLogPanel(), CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_SECONDARY);
+    drawText(ctx, 'BATTLE LOG', CONFIG.ARENA_LOG_X, CONFIG.ARENA_LOG_HEADER_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR, 'left');
     const end = Math.max(0, this.combatLog.length - this.logScrollOffset);
     const start = Math.max(0, end - CONFIG.COMBAT_LOG_MAX_LINES);
     const visible = this.combatLog.slice(start, end);
     visible.forEach((line, index) => {
-      drawText(
+      drawFitText(
         ctx,
         line,
         CONFIG.ARENA_LOG_X,
         CONFIG.COMBAT_LOG_Y + (index * CONFIG.ARENA_LOG_LINE_HEIGHT),
         CONFIG.FONT_SIZE_COMBAT_LOG,
+        CONFIG.ARENA_LOG_PANEL_WIDTH - (CONFIG.ARENA_LOG_PANEL_PADDING * 2) - CONFIG.ARENA_LOG_SCROLLBAR_WIDTH,
+        CONFIG.FONT_SIZE_SMALL,
         CONFIG.TEXT_PRIMARY,
         'left',
       );
@@ -188,9 +189,9 @@ export class FightState {
   // Draw a scrollbar thumb that shows the current combat-log history position.
   renderCombatLogScrollbar(ctx) {
     if (this.combatLog.length <= CONFIG.COMBAT_LOG_MAX_LINES) return;
-    const trackTop = CONFIG.COMBAT_LOG_Y - CONFIG.ARENA_LOG_LINE_HEIGHT;
-    const trackHeight = CONFIG.ARENA_LOG_BG_HEIGHT;
-    const trackX = CONFIG.CANVAS_WIDTH - CONFIG.ARENA_LOG_SCROLLBAR_MARGIN - CONFIG.ARENA_LOG_SCROLLBAR_WIDTH;
+    const trackTop = CONFIG.COMBAT_LOG_Y - (CONFIG.ARENA_LOG_LINE_HEIGHT / 2);
+    const trackHeight = CONFIG.ARENA_LOG_PANEL_HEIGHT - (trackTop - CONFIG.ARENA_LOG_PANEL_Y) - CONFIG.ARENA_LOG_PANEL_PADDING;
+    const trackX = CONFIG.ARENA_LOG_PANEL_X + CONFIG.ARENA_LOG_PANEL_WIDTH - CONFIG.ARENA_LOG_SCROLLBAR_MARGIN - CONFIG.ARENA_LOG_SCROLLBAR_WIDTH;
     const thumbHeight = Math.max(
       CONFIG.ARENA_LOG_SCROLLBAR_MIN_HEIGHT,
       trackHeight * (CONFIG.COMBAT_LOG_MAX_LINES / this.combatLog.length),
@@ -331,7 +332,39 @@ export class FightState {
 
   // Check whether a logical pointer position is inside the combat-log panel.
   isPointInCombatLog(point) {
-    const top = CONFIG.COMBAT_LOG_Y - CONFIG.ARENA_LOG_LINE_HEIGHT;
-    return point.y >= top && point.y <= top + CONFIG.ARENA_LOG_BG_HEIGHT;
+    const panel = this.getCombatLogPanel();
+    return point.x >= panel.x
+      && point.x <= panel.x + panel.width
+      && point.y >= panel.y
+      && point.y <= panel.y + panel.height;
+  }
+
+  // Return the configured upper-right combat-log bounds.
+  getCombatLogPanel() {
+    return {
+      x: CONFIG.ARENA_LOG_PANEL_X,
+      y: CONFIG.ARENA_LOG_PANEL_Y,
+      width: CONFIG.ARENA_LOG_PANEL_WIDTH,
+      height: CONFIG.ARENA_LOG_PANEL_HEIGHT,
+    };
+  }
+
+  // Return the compact completed-fight panel bounds.
+  getResultPanel() {
+    return {
+      x: CONFIG.ARENA_RESULT_PANEL_X,
+      y: CONFIG.ARENA_RESULT_PANEL_Y,
+      width: CONFIG.ARENA_RESULT_PANEL_WIDTH,
+      height: CONFIG.ARENA_RESULT_PANEL_HEIGHT,
+    };
+  }
+
+  // Check whether a pointer press requests continuation after combat.
+  isPointInResultPanel(point) {
+    const panel = this.getResultPanel();
+    return point.x >= panel.x
+      && point.x <= panel.x + panel.width
+      && point.y >= panel.y
+      && point.y <= panel.y + panel.height;
   }
 }

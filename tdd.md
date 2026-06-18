@@ -258,7 +258,7 @@ Rendering (ui/renderer.js)
 
 - All coordinates and sizes pulled from CONFIG layout constants.
 
-- Canvas text is filled over a configurable dark outline for contrast. Battle portrait names and HP bars are laid out beside each portrait, and completed-fight messaging occupies a dedicated opaque header band to prevent label collisions.
+- Canvas text is filled over a configurable dark outline for contrast. Fight layout reserves the upper-center result panel and upper-right scrolling log panel above `ARENA_BATTLEFIELD_TOP_Y`. All combat rows sit below that boundary. Player sprites are mirrored toward the center with their name/HP/cooldown column outside on the left; enemy artwork faces left with information outside on the right.
 
 - Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
@@ -271,7 +271,7 @@ Run Health
 
 - Battle playback is landscape-first and brisk by default; tune TURN_DELAY_MS and animation durations in config.js rather than per-state literals.
 
-- Fight playback reconstructs ability cooldowns from combat events. The canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display.
+- Fight playback reconstructs ability cooldowns from combat events. The upper-right canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display. Completed fights only continue from the compact result-panel hit area, leaving log interaction independent.
 
 Animation (ui/animations.js)
 - Tween system: array of active tweens, each with { target, property, from, to, duration, elapsed, easing }.
@@ -321,7 +321,7 @@ Non-Goals (Technical)
 
 - No WebSocket or backend.
 
-- No sprite sheets or image assets (emoji + shapes + gradients only).
+- No sprite sheets; individual bitmap backgrounds and dragon portraits are preloaded through the centralized asset registry.
 
 - No mobile-specific viewport hacks beyond basic CSS scaling.
 

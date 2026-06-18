@@ -445,8 +445,11 @@ export const CONFIG = {
   FIGHT_ENEMY_X: 700,
   // X position for center of enemy dragons column.
 
-  FIGHT_Y_POSITIONS: [190, 270, 350],
+  FIGHT_Y_POSITIONS: [310, 390, 470],
   // Y positions for the 3 dragon slots (top, middle, bottom) during fight.
+
+  ARENA_BATTLEFIELD_TOP_Y: 260,
+  // Top edge of the brown floor reserved for combatants.
 
   FIGHT_BOSS_X: 700,
   // X position for the boss during boss fight.
@@ -454,10 +457,10 @@ export const CONFIG = {
   FIGHT_BOSS_Y: 300,
   // Y position for the boss.
 
-  COMBAT_LOG_Y: 462,
-  // Y position for the scrolling combat log text.
+  COMBAT_LOG_Y: 50,
+  // Baseline of the first scrolling combat-log line.
 
-  COMBAT_LOG_MAX_LINES: 4,
+  COMBAT_LOG_MAX_LINES: 9,
   // How many lines of combat log to show at once.
 
   COMBAT_LOG_SCROLL_STEP: 1,
@@ -591,7 +594,7 @@ export const CONFIG = {
   ARENA_STATUS_Y: 404,
   // Y position for small temporary arena hints.
 
-  ARENA_TEAM_LABEL_Y: 116,
+  ARENA_TEAM_LABEL_Y: 246,
   // Y position for fight-side team labels.
 
   ARENA_INFO_OFFSET_X: 48,
@@ -612,20 +615,44 @@ export const CONFIG = {
   ARENA_VS_X: 480,
   // X position of center "VS" label.
 
-  ARENA_RESULT_Y: 66,
+  ARENA_RESULT_Y: 35,
   // Y position for WIN/LOSE result text after combat.
 
-  ARENA_RESULT_PANEL_HEIGHT: 142,
-  // Opaque top band that separates completed-fight messaging from the arena.
+  ARENA_RESULT_PANEL_X: 338,
+  // Left edge of the compact completed-fight panel.
 
-  ARENA_LOG_X: 24,
-  // Left edge of combat log text.
+  ARENA_RESULT_PANEL_Y: 12,
+  // Top edge of the compact completed-fight panel.
+
+  ARENA_RESULT_PANEL_WIDTH: 304,
+  // Width of the compact completed-fight panel.
+
+  ARENA_RESULT_PANEL_HEIGHT: 94,
+  // Height of the completed-fight panel.
+
+  ARENA_LOG_PANEL_X: 662,
+  // Left edge of the combat-log panel in the upper-right UI space.
+
+  ARENA_LOG_PANEL_Y: 12,
+  // Top edge of the combat-log panel.
+
+  ARENA_LOG_PANEL_WIDTH: 280,
+  // Width of the combat-log panel.
+
+  ARENA_LOG_PANEL_HEIGHT: 218,
+  // Height of the combat-log panel.
+
+  ARENA_LOG_PANEL_PADDING: 12,
+  // Inner padding for combat-log text.
+
+  ARENA_LOG_HEADER_Y: 28,
+  // Battle-log heading baseline.
+
+  ARENA_LOG_X: 674,
+  // Left edge of combat-log text.
 
   ARENA_LOG_LINE_HEIGHT: 18,
   // Vertical spacing between combat log lines.
-
-  ARENA_LOG_BG_HEIGHT: 78,
-  // Background panel height behind combat log.
 
   ARENA_LOG_SCROLLBAR_MARGIN: 10,
   // Right margin for the combat-log scrollbar.
