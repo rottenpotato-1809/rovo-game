@@ -349,7 +349,7 @@ export const CONFIG = {
   HEADER_HEIGHT: 50,
   // Height of the top bar showing round + gold.
 
-  TEAM_ZONE_Y: 74,
+  TEAM_ZONE_Y: 84,
   // Top edge of the team slots area.
 
   TEAM_SLOT_WIDTH: 130,
@@ -361,7 +361,7 @@ export const CONFIG = {
   TEAM_SLOT_GAP: 18,
   // Horizontal gap between team slots.
 
-  BENCH_ZONE_Y: 222,
+  BENCH_ZONE_Y: 232,
   // Top edge of the bench area.
 
   BENCH_SLOT_WIDTH: 96,
@@ -594,20 +594,32 @@ export const CONFIG = {
   ARENA_LUNGE_DIRECTION_LEFT: -1,
   // Direction multiplier when enemies lunge toward players.
 
-  ARENA_SKY_COLOR: '#47b7e8',
-  // Top color for the landscape battle sky.
+  ARENA_SKY_COLOR: '#cbd3d0',
+  // Pale neutral sky above the arena wall.
 
-  ARENA_HORIZON_COLOR: '#9be7d2',
-  // Far horizon color behind the battlefield.
+  ARENA_HORIZON_COLOR: '#a5afaa',
+  // Distant stone band behind the battlefield.
 
-  ARENA_HILL_COLOR: '#187c63',
-  // Midground hill color.
+  ARENA_HILL_COLOR: '#7c8983',
+  // Muted lower wall color.
 
-  ARENA_GROUND_COLOR: '#5aaa3d',
-  // Main battlefield grass color.
+  ARENA_GROUND_COLOR: '#74836d',
+  // Main moss-toned arena floor.
 
-  ARENA_GROUND_DARK_COLOR: '#245f3f',
-  // Dark foreground strip color.
+  ARENA_GROUND_DARK_COLOR: '#3c4944',
+  // Dark neutral foreground strip.
+
+  ARENA_LINE_COLOR: '#5e6c66',
+  // Boundary and center-ring color on the neutral arena floor.
+
+  ARENA_LINE_WIDTH: 3,
+  // Width of arena boundary lines and center ring.
+
+  ARENA_CENTER_RING_Y: 340,
+  // Vertical center of the arena floor marking.
+
+  ARENA_CENTER_RING_RADIUS: 88,
+  // Radius of the neutral arena center marking.
 
   ARENA_SKY_HEIGHT: 190,
   // Height of the sky band.
@@ -660,11 +672,17 @@ export const CONFIG = {
   PREP_DRAGON_Y_OFFSET: 56,
   // Dragon circle vertical offset inside a prep slot.
 
-  PREP_DRAGON_NAME_Y_OFFSET: 92,
-  // Dragon name baseline inside a prep slot.
+  PREP_DRAGON_NAME_BOTTOM_OFFSET: 24,
+  // Distance from a prep slot bottom to the dragon name baseline.
 
-  PREP_DRAGON_STATS_Y_OFFSET: 108,
-  // Tier and HP baseline below the dragon name.
+  PREP_DRAGON_STATS_BOTTOM_OFFSET: 8,
+  // Distance from a prep slot bottom to the tier and HP baseline.
+
+  PREP_SLOT_FOOTER_HEIGHT: 36,
+  // Reserved footer height that contains owned-dragon name and stats.
+
+  PREP_SLOT_FOOTER_COLOR: '#141936',
+  // Dark footer fill that keeps owned-dragon labels inside their slot.
 
   PREP_BUTTON_WIDTH: 130,
   // Width of prep buttons.

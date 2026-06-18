@@ -170,6 +170,8 @@ MAIN MENU → [Codex] → CODEX SCREEN → [Back] → MAIN MENU
 - Score tracking (high score saved locally).
 - Basic visual feedback: HP bars, damage numbers, attack animations.
 - Arena labels use high-contrast outlined text, with dragon names and HP placed beside portraits so combat rows never overlap.
+- The arena uses a subdued neutral stone-and-moss backdrop so elemental dragons and combat text remain the visual focus.
+- Voltfang is a fast multi-target DPS whose total early-tier ability damage is spread across targets rather than exceeding starter DPS output.
 - Desktop and mobile touch input.
 
 ---

@@ -18,14 +18,21 @@ export function drawArenaBackdrop(ctx) {
   ctx.fillRect(0, CONFIG.ARENA_GROUND_Y, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT - CONFIG.ARENA_GROUND_Y);
   ctx.fillStyle = CONFIG.ARENA_GROUND_DARK_COLOR;
   ctx.fillRect(0, CONFIG.ARENA_FOREGROUND_Y, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT - CONFIG.ARENA_FOREGROUND_Y);
-  drawCircle(
-    ctx,
-    CONFIG.ARENA_BACKDROP_SUN_X,
-    CONFIG.ARENA_BACKDROP_SUN_Y,
-    CONFIG.ARENA_BACKDROP_SUN_RADIUS,
-    CONFIG.GOLD_COLOR,
-    CONFIG.ARENA_ABILITY_GLOW_ALPHA,
+  ctx.strokeStyle = CONFIG.ARENA_LINE_COLOR;
+  ctx.lineWidth = CONFIG.ARENA_LINE_WIDTH;
+  ctx.beginPath();
+  ctx.moveTo(0, CONFIG.ARENA_GROUND_Y);
+  ctx.lineTo(CONFIG.CANVAS_WIDTH, CONFIG.ARENA_GROUND_Y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(
+    CONFIG.CANVAS_WIDTH / 2,
+    CONFIG.ARENA_CENTER_RING_Y,
+    CONFIG.ARENA_CENTER_RING_RADIUS,
+    0,
+    Math.PI * 2,
   );
+  ctx.stroke();
 }
 
 // Draw a filled rectangle with an optional border.
