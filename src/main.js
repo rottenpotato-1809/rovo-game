@@ -17,7 +17,9 @@ async function main() {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
 
-  await preloadAssets();
+  preloadAssets()
+    .then(() => console.log('[ASSET] runtime images ready'))
+    .catch(error => console.warn('[ASSET] preload incomplete', error));
   const stateManager = new StateManager();
   const game = { run: null, saveData: load() };
   stateManager.register('arena', new ArenaState(stateManager));

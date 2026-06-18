@@ -304,7 +304,7 @@ Testing (src/tests/)
 - Tests run before every commit. Commit blocked if any test fails.
 
 Development Workflow (for the coding agent)
-1. Start the dev server before any work. A simple npx serve . or Python http.server is fine.
+1. Start the dependency-free concurrent dev server with `node scripts/dev-server.mjs 5176` before browser work.
 
 2. After every completed task:
 
@@ -326,6 +326,8 @@ Non-Goals (Technical)
 - No WebSocket or backend.
 
 - No sprite sheets; individual bitmap backgrounds and dragon portraits are preloaded through the centralized asset registry.
+
+- Asset preloading is non-blocking. The state machine and render loop start immediately with renderer fallbacks, then automatically show bitmap assets as each cached image becomes available.
 
 - No mobile-specific viewport hacks beyond basic CSS scaling.
 
