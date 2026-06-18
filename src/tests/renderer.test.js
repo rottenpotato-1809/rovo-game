@@ -1,4 +1,5 @@
 import { CONFIG } from '../config.js';
+import { getMenuButtons } from '../ui/layout.js';
 import { drawText } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
@@ -75,6 +76,22 @@ test('team heading clears the fixed header', () => {
 test('completed fight messaging stays inside its result panel', () => {
   const continueY = CONFIG.ARENA_RESULT_Y + CONFIG.BUTTON_HEIGHT;
   assert(continueY < CONFIG.ARENA_RESULT_PANEL_Y + CONFIG.ARENA_RESULT_PANEL_HEIGHT, 'Continue prompt must remain inside the result panel');
+});
+
+test('main menu regions stay aligned to the illustrated scene', () => {
+  const buttons = getMenuButtons();
+  const statsRight = CONFIG.MENU_STATS_PANEL_X + CONFIG.MENU_STATS_PANEL_WIDTH;
+  const statsBottom = CONFIG.MENU_STATS_PANEL_Y + CONFIG.MENU_STATS_PANEL_HEIGHT;
+  const newRunLabelRight = CONFIG.MENU_NEW_RUN_LABEL_X + CONFIG.MENU_HOTSPOT_LABEL_WIDTH;
+  const newRunLabelBottom = CONFIG.MENU_NEW_RUN_LABEL_Y + CONFIG.MENU_HOTSPOT_LABEL_HEIGHT;
+  const codexLabelRight = CONFIG.MENU_CODEX_LABEL_X + CONFIG.MENU_HOTSPOT_LABEL_WIDTH;
+  const codexLabelBottom = CONFIG.MENU_CODEX_LABEL_Y + CONFIG.MENU_HOTSPOT_LABEL_HEIGHT;
+
+  assert(statsRight <= CONFIG.CANVAS_WIDTH && statsBottom <= CONFIG.CANVAS_HEIGHT, 'Progression panel must fit the canvas');
+  assert(CONFIG.MENU_NEW_RUN_LABEL_X >= buttons.newRun.x && newRunLabelRight <= buttons.newRun.x + buttons.newRun.width, 'New Run label must stay on the tower');
+  assert(CONFIG.MENU_NEW_RUN_LABEL_Y >= buttons.newRun.y && newRunLabelBottom <= buttons.newRun.y + buttons.newRun.height, 'New Run label must stay inside the tower hotspot');
+  assert(CONFIG.MENU_CODEX_LABEL_X >= buttons.codex.x && codexLabelRight <= buttons.codex.x + buttons.codex.width, 'Codex label must stay with the ground dragons');
+  assert(CONFIG.MENU_CODEX_LABEL_Y >= buttons.codex.y && codexLabelBottom <= buttons.codex.y + buttons.codex.height, 'Codex label must stay inside the dragon hotspot');
 });
 
 summarize();

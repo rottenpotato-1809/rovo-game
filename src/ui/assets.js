@@ -65,9 +65,10 @@ function loadImage(source) {
   }
   const image = new Image();
   image.decoding = 'async';
-  image.src = source;
   imageCache.set(source, image);
-  return waitForImage(image);
+  const ready = waitForImage(image);
+  image.src = source;
+  return image.complete ? Promise.resolve(image) : ready;
 }
 
 // Resolve image loading without preventing the game from booting on one bad asset.

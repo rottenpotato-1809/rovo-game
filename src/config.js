@@ -540,6 +540,12 @@ export const CONFIG = {
   FONT_SIZE_TITLE: 36,
   // Game title on main menu (px).
 
+  FONT_SIZE_MENU_TITLE: 56,
+  // Large fantasy title used only on the illustrated main menu.
+
+  FONT_FAMILY_DISPLAY: 'Georgia, serif',
+  // Display face for the Wyrmpit title.
+
   FONT_SIZE_HEADER: 16,
   // Round number, gold display (px).
 
@@ -813,34 +819,46 @@ export const CONFIG = {
   RESULT_BUTTON_Y: 360,
   // Y position for result screen replay button.
 
-  MENU_TITLE_Y: 92,
+  MENU_TITLE_X: 720,
+  // Main menu title horizontal center in the upper-right sky.
+
+  MENU_TITLE_Y: 82,
   // Main menu title baseline.
 
-  MENU_PANEL_X: 250,
-  // Left edge of the translucent menu control panel.
+  MENU_TITLE_SHADOW_BLUR: 16,
+  // Glow softness behind the main-menu title.
 
-  MENU_PANEL_Y: 48,
-  // Top edge of the translucent menu control panel.
+  MENU_TITLE_SHADOW_COLOR: 'rgba(15, 20, 52, 0.9)',
+  // Dark title glow that separates the logo from the sky.
 
-  MENU_PANEL_WIDTH: 460,
-  // Width of the main-menu readability panel.
+  MENU_TITLE_STROKE_WIDTH: 5,
+  // Outline width for the main-menu title.
 
-  MENU_PANEL_HEIGHT: 370,
-  // Height of the main-menu readability panel.
+  MENU_STATS_PANEL_X: 650,
+  // Left edge of the progression panel over the lower-right sea.
 
-  MENU_SCORE_Y: 154,
+  MENU_STATS_PANEL_Y: 320,
+  // Top edge of the progression panel.
+
+  MENU_STATS_PANEL_WIDTH: 276,
+  // Width of the progression panel.
+
+  MENU_STATS_PANEL_HEIGHT: 150,
+  // Height of the progression panel.
+
+  MENU_SCORE_Y: 350,
   // Main menu high-score baseline.
 
-  MENU_XP_LABEL_Y: 202,
+  MENU_XP_LABEL_Y: 392,
   // Main menu progression label baseline.
 
-  MENU_XP_BAR_X: 280,
+  MENU_XP_BAR_X: 674,
   // Main menu XP bar left edge.
 
-  MENU_XP_BAR_Y: 224,
+  MENU_XP_BAR_Y: 416,
   // Main menu XP bar top edge.
 
-  MENU_XP_BAR_WIDTH: 400,
+  MENU_XP_BAR_WIDTH: 228,
   // Main menu XP bar width.
 
   MENU_XP_BAR_HEIGHT: 16,
@@ -857,6 +875,57 @@ export const CONFIG = {
 
   MENU_BUTTON_WIDTH: 200,
   // Main menu button width.
+
+  MENU_NEW_RUN_HOTSPOT_X: 242,
+  // Tower hotspot left edge.
+
+  MENU_NEW_RUN_HOTSPOT_Y: 44,
+  // Tower hotspot top edge.
+
+  MENU_NEW_RUN_HOTSPOT_WIDTH: 172,
+  // Tower hotspot width.
+
+  MENU_NEW_RUN_HOTSPOT_HEIGHT: 226,
+  // Tower hotspot height.
+
+  MENU_NEW_RUN_LABEL_X: 258,
+  // New Run label left edge over the tower entrance.
+
+  MENU_NEW_RUN_LABEL_Y: 214,
+  // New Run label top edge.
+
+  MENU_CODEX_HOTSPOT_X: 178,
+  // Ground-dragon hotspot left edge.
+
+  MENU_CODEX_HOTSPOT_Y: 312,
+  // Ground-dragon hotspot top edge.
+
+  MENU_CODEX_HOTSPOT_WIDTH: 410,
+  // Ground-dragon hotspot width.
+
+  MENU_CODEX_HOTSPOT_HEIGHT: 104,
+  // Ground-dragon hotspot height.
+
+  MENU_CODEX_LABEL_X: 426,
+  // Codex label left edge beside the ground dragons.
+
+  MENU_CODEX_LABEL_Y: 348,
+  // Codex label top edge.
+
+  MENU_HOTSPOT_LABEL_WIDTH: 140,
+  // Shared command-label width on image hotspots.
+
+  MENU_HOTSPOT_LABEL_HEIGHT: 40,
+  // Shared command-label height on image hotspots.
+
+  MENU_HOTSPOT_HOVER_ALPHA: 0.16,
+  // Scene tint opacity while hovering an image hotspot.
+
+  MENU_HOTSPOT_BORDER_WIDTH: 3,
+  // Hover outline width around a scene hotspot.
+
+  MENU_HOTSPOT_GLOW_BLUR: 24,
+  // Hover glow softness around the tower and dragon group.
 
   CODEX_START_X: 38,
   // Codex grid left edge.

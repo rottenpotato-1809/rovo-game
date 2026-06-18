@@ -88,16 +88,16 @@ export function getResultButton() {
 export function getMenuButtons() {
   return {
     newRun: {
-      x: CONFIG.MENU_BUTTON_X,
-      y: CONFIG.MENU_NEW_RUN_Y,
-      width: CONFIG.MENU_BUTTON_WIDTH,
-      height: CONFIG.BUTTON_HEIGHT,
+      x: CONFIG.MENU_NEW_RUN_HOTSPOT_X,
+      y: CONFIG.MENU_NEW_RUN_HOTSPOT_Y,
+      width: CONFIG.MENU_NEW_RUN_HOTSPOT_WIDTH,
+      height: CONFIG.MENU_NEW_RUN_HOTSPOT_HEIGHT,
     },
     codex: {
-      x: CONFIG.MENU_BUTTON_X,
-      y: CONFIG.MENU_CODEX_Y,
-      width: CONFIG.MENU_BUTTON_WIDTH,
-      height: CONFIG.BUTTON_HEIGHT,
+      x: CONFIG.MENU_CODEX_HOTSPOT_X,
+      y: CONFIG.MENU_CODEX_HOTSPOT_Y,
+      width: CONFIG.MENU_CODEX_HOTSPOT_WIDTH,
+      height: CONFIG.MENU_CODEX_HOTSPOT_HEIGHT,
     },
   };
 }

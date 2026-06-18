@@ -148,10 +148,10 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Footer: "Discovered: X / 24."
 
 ### Main Menu
-- Title: "WYRMPIT"
-- High Score display.
-- XP progress bar toward next unlock.
-- Buttons: "NEW RUN" / "CODEX."
+- The large "WYRMPIT" title occupies the open upper-right sky without covering the illustrated landmarks.
+- High Score and the XP progress bar share a compact lower-right panel over the sea.
+- The tower is the full New Run interaction region; hovering highlights the whole tower and its entrance label.
+- The ground-dragon group is the full Codex interaction region; hovering highlights the group and its label.
 
 ---
 

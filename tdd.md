@@ -260,6 +260,8 @@ Rendering (ui/renderer.js)
 
 - Canvas text is filled over a configurable dark outline for contrast. Fight layout reserves the upper-center result panel and upper-right scrolling log panel above `ARENA_BATTLEFIELD_TOP_Y`. All combat rows sit below that boundary. Player sprites are mirrored toward the center with their name/HP/cooldown column outside on the left; enemy artwork faces left with information outside on the right.
 
+- Main-menu controls use image-aligned rectangular hotspots configured in `config.js`: the tower opens a new run and the ground-dragon group opens the codex. Hover rendering highlights the complete scene region while compact labels remain inside their associated artwork. The title and progression panel occupy dedicated right-side negative space.
+
 - Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.

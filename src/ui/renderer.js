@@ -150,6 +150,49 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
   ctx.restore();
 }
 
+// Draw a large illustrated-scene hotspot with a compact command label.
+export function drawMenuHotspot(ctx, hotspot, labelRect, label, accent) {
+  const pointer = getPointerState();
+  const hovered = pointInRect(pointer, hotspot);
+  ctx.save();
+  if (hovered) {
+    ctx.globalAlpha = CONFIG.MENU_HOTSPOT_HOVER_ALPHA;
+    ctx.shadowColor = accent;
+    ctx.shadowBlur = CONFIG.MENU_HOTSPOT_GLOW_BLUR;
+    ctx.lineWidth = CONFIG.MENU_HOTSPOT_BORDER_WIDTH;
+    drawRect(ctx, hotspot, accent, accent);
+  }
+  ctx.globalAlpha = CONFIG.ARENA_ALIVE_ALPHA;
+  ctx.shadowColor = hovered ? accent : CONFIG.BUTTON_SHADOW_COLOR;
+  ctx.shadowBlur = hovered ? CONFIG.BUTTON_GLOW_BLUR : 0;
+  drawRect(ctx, labelRect, hovered ? accent : CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
+  drawText(
+    ctx,
+    label,
+    labelRect.x + (labelRect.width / 2),
+    labelRect.y + (labelRect.height / 2),
+    CONFIG.FONT_SIZE_BUTTON,
+  );
+  ctx.restore();
+}
+
+// Draw the large outlined fantasy title over the menu sky.
+export function drawDisplayTitle(ctx, text, x, y) {
+  ctx.save();
+  ctx.font = `bold ${CONFIG.FONT_SIZE_MENU_TITLE}px ${CONFIG.FONT_FAMILY_DISPLAY}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.lineJoin = 'round';
+  ctx.shadowColor = CONFIG.MENU_TITLE_SHADOW_COLOR;
+  ctx.shadowBlur = CONFIG.MENU_TITLE_SHADOW_BLUR;
+  ctx.strokeStyle = CONFIG.TEXT_OUTLINE_COLOR;
+  ctx.lineWidth = CONFIG.MENU_TITLE_STROKE_WIDTH;
+  ctx.strokeText(text, x, y);
+  ctx.fillStyle = CONFIG.GOLD_COLOR;
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
+
 // Draw one dragon's bitmap artwork with a distinct animated Tier 3 aura.
 export function drawDragonSprite(
   ctx,
