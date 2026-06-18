@@ -7,7 +7,7 @@ import { registerCodexEntry } from '../systems/progression.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
 import { buyDragon, cloneDraftState, rerollShop, sellDragon } from '../systems/shop.js';
 import { getBenchSlots, getPrepButtons, getSellZone, getShopCards, getTeamSlots, pointInRect } from '../ui/layout.js';
-import { clear, drawArenaBackdrop, drawButton, drawCircle, drawFitText, drawRect, drawText } from '../ui/renderer.js';
+import { clear, drawButton, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
 // Render and operate the draft/prep phase for Milestone 2.
 export class PrepState {
@@ -34,7 +34,7 @@ export class PrepState {
   // Draw the prep screen.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'prep');
     this.renderHeader(ctx);
     this.renderSlots(ctx, 'team', getTeamSlots(), this.game.run.team, 'YOUR TEAM');
     this.renderSlots(ctx, 'bench', getBenchSlots(), this.game.run.bench, 'BENCH');
@@ -80,9 +80,7 @@ export class PrepState {
   // Draw a compact dragon token for slots and drag previews.
   renderDragonToken(ctx, owned, centerX, centerY, alpha, radius = CONFIG.DRAGON_RADIUS_TEAM) {
     const dragon = getDragon(owned.id);
-    const color = CONFIG.ELEMENT_COLORS[dragon.element];
-    drawCircle(ctx, centerX, centerY, radius, color, alpha, CONFIG.TEXT_PRIMARY);
-    drawText(ctx, dragon.emoji || '?', centerX, centerY, CONFIG.FONT_SIZE_EMOJI);
+    drawDragonSprite(ctx, { ...dragon, tier: owned.tier }, centerX, centerY, radius, alpha);
   }
 
   // Draw shop cards.
@@ -99,6 +97,13 @@ export class PrepState {
       const tier = getDragonTier(id, 1);
       drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, CONFIG.ELEMENT_COLORS[dragon.element]);
       const textWidth = rect.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2);
+      drawDragonSprite(
+        ctx,
+        { ...dragon, tier: 1 },
+        rect.x + (rect.width / 2),
+        rect.y + CONFIG.PREP_CARD_SPRITE_Y_OFFSET,
+        CONFIG.SHOP_DRAGON_SPRITE_SIZE / CONFIG.DRAGON_SPRITE_SCALE,
+      );
       drawFitText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
       drawFitText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_SECONDARY, 'left');
       drawFitText(ctx, `ATK ${tier.atk} HP ${tier.hp} SPD ${tier.spd}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_STAT_Y_OFFSET, CONFIG.FONT_SIZE_STATS, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_PRIMARY, 'left');

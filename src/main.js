@@ -10,12 +10,14 @@ import { MenuState } from './states/menuState.js';
 import { PrepState } from './states/prepState.js';
 import { ResultState } from './states/resultState.js';
 import { load } from './persistence/save.js';
+import { preloadAssets } from './ui/assets.js';
 
 // Boot the canvas application and start the animation loop.
-function main() {
+async function main() {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
 
+  await preloadAssets();
   const stateManager = new StateManager();
   const game = { run: null, saveData: load() };
   stateManager.register('arena', new ArenaState(stateManager));
@@ -52,4 +54,4 @@ function syncCanvasResolution(canvas, ctx) {
   ctx.setTransform(canvas.width / CONFIG.CANVAS_WIDTH, 0, 0, canvas.height / CONFIG.CANVAS_HEIGHT, 0, 0);
 }
 
-main();
+main().catch(error => console.error('[STATE] boot failed', error));

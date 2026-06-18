@@ -35,6 +35,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Dragons
 - Each dragon has a **role** (DPS, Tank, Assassin, or Support), an **element**, and one **ability**.
 - Abilities fire automatically during combat when ready.
+- Every dragon uses bespoke Tier 1 and Tier 2 character artwork. Tier 3 keeps its Tier 2 form and is distinguished by an animated golden aura and orbiting evolution motes.
 
 ### Team
 - Exactly **3 dragons** fight per round. No more, no fewer.
@@ -121,6 +122,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Fight Phase Screen
 - **Landscape arena:** combat uses a 16:9 battlefield view instead of the earlier mobile portrait layout.
+- The arena uses the dedicated full-screen fight background, while menu and prep each use their own full-screen illustrated scene.
 - **Left side:** 3 player dragons staged as a compact column on the left half.
 - **Right side:** 3 enemy dragons staged as a compact column on the right half.
 - **Above each dragon:** HP bar + name.
@@ -129,6 +131,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Each combatant shows whether its special ability is ready or how many actions remain on cooldown. The combat log supports wheel and touch-drag history scrolling, and action labels are displayed as readable words.
 - **After battle ends:** "CONTINUE" button overlays the center.
 - **Pacing:** battle playback should be brisk by default so a full 3v3 fight resolves quickly while attacks and ability flashes remain readable.
+- Combatants lunge, recoil, flash on impact, pulse when casting abilities, and fade on defeat. Buttons scale and glow on hover and compress while pressed.
 
 ### Boss Fight Screen
 - Same as fight phase, but enemies replaced by one large Wyrm sprite center-right.

@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
 import { TweenSystem, createFloatingNumber, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawArenaBackdrop, drawCircle, drawDragon, drawFitText, drawText } from '../ui/renderer.js';
+import { clear, drawCircle, drawDragon, drawFitText, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play a simulated battle log back as animated canvas combat.
@@ -47,6 +47,9 @@ export class FightState {
         baseY: point.y,
         alpha: CONFIG.ARENA_ALIVE_ALPHA,
         glow: 0,
+        hitFlash: 0,
+        hitOffset: 0,
+        scale: CONFIG.ARENA_ALIVE_ALPHA,
       });
     });
   }
@@ -66,7 +69,7 @@ export class FightState {
   // Draw the fight state.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'fight');
     const isFinished = this.eventIndex >= this.events.length;
     if (!isFinished) {
       drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
@@ -128,8 +131,9 @@ export class FightState {
         view.glow * CONFIG.ARENA_ABILITY_GLOW_ALPHA,
       );
     }
-    drawDragon(ctx, dragon, view);
-    this.renderAbilityTimer(ctx, dragon, view);
+    const animatedView = { ...view, x: view.x + view.hitOffset };
+    drawDragon(ctx, dragon, animatedView);
+    this.renderAbilityTimer(ctx, dragon, animatedView);
   }
 
   // Draw readiness or remaining turns for one dragon's special ability.
@@ -250,6 +254,15 @@ export class FightState {
       || event.action.includes('stun');
     if (isAbility) {
       this.tweens.add(view, 'glow', CONFIG.ARENA_FLOAT_ALPHA, 0, CONFIG.ABILITY_GLOW_DURATION, 'linear');
+      this.tweens.add(
+        view,
+        'scale',
+        CONFIG.ARENA_ALIVE_ALPHA,
+        CONFIG.ABILITY_CAST_SCALE,
+        CONFIG.ABILITY_GLOW_DURATION,
+        CONFIG.DEFAULT_EASE,
+        () => this.tweens.add(view, 'scale', CONFIG.ABILITY_CAST_SCALE, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ATTACK_RETURN_DURATION),
+      );
     } else if (event.action.includes('basic_attack')) {
       const direction = actor.team === 'player'
         ? CONFIG.ARENA_LUNGE_DIRECTION_RIGHT
@@ -276,6 +289,18 @@ export class FightState {
       this.floaters.push(createFloatingNumber(`+${event.value}`, view.x, view.y, CONFIG.HEAL_NUMBER_COLOR));
       return;
     }
+    const recoilDirection = target.team === 'player'
+      ? CONFIG.ARENA_LUNGE_DIRECTION_LEFT
+      : CONFIG.ARENA_LUNGE_DIRECTION_RIGHT;
+    this.tweens.add(
+      view,
+      'hitOffset',
+      CONFIG.HIT_RECOIL_DISTANCE * recoilDirection,
+      0,
+      CONFIG.HIT_RECOIL_DURATION,
+      CONFIG.DEFAULT_EASE,
+    );
+    this.tweens.add(view, 'hitFlash', CONFIG.ARENA_ABILITY_GLOW_ALPHA, 0, CONFIG.HIT_FLASH_DURATION, 'linear');
     target.hp = Math.max(0, target.hp - event.value);
     this.floaters.push(createFloatingNumber(`-${event.value}`, view.x, view.y, CONFIG.DAMAGE_NUMBER_COLOR));
   }

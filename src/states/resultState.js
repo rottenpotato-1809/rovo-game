@@ -4,7 +4,7 @@ import { save } from '../persistence/save.js';
 import { calculateXP, checkUnlocks } from '../systems/progression.js';
 import { createRunState } from '../systems/run.js';
 import { getFullResultButtons, pointInRect } from '../ui/layout.js';
-import { clear, drawArenaBackdrop, drawButton, drawFitText, drawText } from '../ui/renderer.js';
+import { clear, drawButton, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
 // Summarize a run and immediately persist its score and progression rewards.
 export class ResultState {
@@ -49,7 +49,13 @@ export class ResultState {
   // Draw complete run rewards and navigation commands.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'menu');
+    drawRect(ctx, {
+      x: CONFIG.RESULT_PANEL_X,
+      y: CONFIG.RESULT_PANEL_Y,
+      width: CONFIG.RESULT_PANEL_WIDTH,
+      height: CONFIG.RESULT_PANEL_HEIGHT,
+    }, CONFIG.UI_PANEL_COLOR);
     drawText(ctx, this.summary.reachedBoss ? 'RUN COMPLETE' : 'RUN OVER', CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_TITLE_Y, CONFIG.FONT_SIZE_TITLE, CONFIG.GOLD_COLOR);
     const lines = [
       `ROUNDS SURVIVED ${this.summary.roundsSurvived}`,

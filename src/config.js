@@ -321,6 +321,27 @@ export const CONFIG = {
   DRAGON_RADIUS_FIGHT: 34,
   // Radius of dragon circles during battle view (px).
 
+  DRAGON_SPRITE_SCALE: 2.7,
+  // Sprite width/height relative to the legacy dragon-token radius.
+
+  SHOP_DRAGON_SPRITE_SIZE: 54,
+  // Dragon artwork size inside one shop card.
+
+  TIER_THREE_AURA_RADIUS_MULTIPLIER: 1.45,
+  // Tier 3 aura radius relative to the dragon token radius.
+
+  TIER_THREE_AURA_LINE_WIDTH: 3,
+  // Stroke width of the animated Tier 3 aura.
+
+  TIER_THREE_AURA_PULSE_MS: 900,
+  // Duration of one Tier 3 aura pulse.
+
+  TIER_THREE_ORB_COUNT: 4,
+  // Number of motes orbiting Tier 3 artwork.
+
+  TIER_THREE_ORB_RADIUS: 2.5,
+  // Radius of each Tier 3 aura mote.
+
   BOSS_RADIUS: 60,
   // Radius of the boss circle in boss fight (px). Bigger = more intimidating.
 
@@ -341,6 +362,30 @@ export const CONFIG = {
 
   BUTTON_BORDER_RADIUS: 8,
   // Corner rounding on buttons and cards (px).
+
+  BUTTON_HOVER_SCALE: 1.04,
+  // Button scale while hovered.
+
+  BUTTON_PRESS_SCALE: 0.96,
+  // Button scale while held down.
+
+  BUTTON_MOTION_DURATION_MS: 110,
+  // Time for button hover and press motion to settle.
+
+  BUTTON_GLOW_BLUR: 14,
+  // Hover glow softness around interactive buttons.
+
+  BUTTON_SHADOW_OFFSET_Y: 5,
+  // Resting button shadow distance.
+
+  BUTTON_SHADOW_COLOR: 'rgba(8, 10, 24, 0.55)',
+  // Shadow color shared by canvas buttons.
+
+  UI_PANEL_COLOR: 'rgba(14, 18, 45, 0.82)',
+  // Translucent panel color that preserves background visibility.
+
+  UI_PANEL_SOFT_COLOR: 'rgba(14, 18, 45, 0.62)',
+  // Lighter panel treatment for labels and stat regions.
 
   // ─── RENDERING — LAYOUT REGIONS ───────────────────────────────
   // Y-positions and dimensions for each screen zone (Prep Phase)
@@ -448,6 +493,18 @@ export const CONFIG = {
 
   SHAKE_DURATION: 200,
   // Milliseconds the shake effect lasts.
+
+  HIT_RECOIL_DISTANCE: 12,
+  // Distance a struck dragon recoils away from the attacker.
+
+  HIT_RECOIL_DURATION: 130,
+  // Duration of the target recoil animation.
+
+  HIT_FLASH_DURATION: 170,
+  // Duration of the damage flash behind a struck dragon.
+
+  ABILITY_CAST_SCALE: 1.16,
+  // Peak caster scale when a special ability activates.
 
   ABILITY_GLOW_DURATION: 180,
   // Milliseconds the ability-cast glow effect lasts on the caster.
@@ -681,16 +738,19 @@ export const CONFIG = {
   PREP_CARD_TEXT_LEFT_PAD: 10,
   // Left text padding inside shop cards.
 
-  PREP_CARD_NAME_Y_OFFSET: 18,
+  PREP_CARD_SPRITE_Y_OFFSET: 28,
+  // Dragon sprite center offset from the shop card top.
+
+  PREP_CARD_NAME_Y_OFFSET: 60,
   // Name text offset from card top.
 
-  PREP_CARD_ROLE_Y_OFFSET: 38,
+  PREP_CARD_ROLE_Y_OFFSET: 78,
   // Role text offset from card top.
 
-  PREP_CARD_STAT_Y_OFFSET: 70,
+  PREP_CARD_STAT_Y_OFFSET: 96,
   // Stat text offset from card top.
 
-  PREP_CARD_COST_Y_OFFSET: 108,
+  PREP_CARD_COST_Y_OFFSET: 117,
   // Cost text offset from card top.
 
   PREP_TEAM_DRAGON_Y_OFFSET: 38,
@@ -728,6 +788,18 @@ export const CONFIG = {
 
   MENU_TITLE_Y: 92,
   // Main menu title baseline.
+
+  MENU_PANEL_X: 250,
+  // Left edge of the translucent menu control panel.
+
+  MENU_PANEL_Y: 48,
+  // Top edge of the translucent menu control panel.
+
+  MENU_PANEL_WIDTH: 460,
+  // Width of the main-menu readability panel.
+
+  MENU_PANEL_HEIGHT: 370,
+  // Height of the main-menu readability panel.
 
   MENU_SCORE_Y: 154,
   // Main menu high-score baseline.
@@ -827,6 +899,18 @@ export const CONFIG = {
 
   RESULT_TITLE_Y: 76,
   // Full results title baseline.
+
+  RESULT_PANEL_X: 250,
+  // Left edge of the result readability panel.
+
+  RESULT_PANEL_Y: 40,
+  // Top edge of the result readability panel.
+
+  RESULT_PANEL_WIDTH: 460,
+  // Width of the result readability panel.
+
+  RESULT_PANEL_HEIGHT: 440,
+  // Height of the result readability panel.
 
   RESULT_LINE_START_Y: 138,
   // First results statistic baseline.

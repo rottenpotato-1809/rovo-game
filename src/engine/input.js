@@ -1,4 +1,5 @@
 import { CONFIG } from '../config.js';
+import { setPointerPosition, setPointerPressed } from '../ui/pointer.js';
 
 // Convert mouse and touch events into logical canvas pointer events.
 export class Input {
@@ -16,6 +17,8 @@ export class Input {
     event.preventDefault();
     if (this.canvas.setPointerCapture) this.canvas.setPointerCapture(event.pointerId);
     const point = this.toCanvasPoint(event);
+    setPointerPosition(point);
+    setPointerPressed(true);
     if (CONFIG.LOG_ENABLED && CONFIG.LOG_INPUT) {
       console.log(`[INPUT] pointer down at ${point.x}, ${point.y}`);
     }
@@ -26,6 +29,7 @@ export class Input {
   onPointerMove(event) {
     event.preventDefault();
     const point = this.toCanvasPoint(event);
+    setPointerPosition(point);
     if (this.stateManager.handlePointerMove) this.stateManager.handlePointerMove(point);
   }
 
@@ -36,13 +40,17 @@ export class Input {
       this.canvas.releasePointerCapture(event.pointerId);
     }
     const point = this.toCanvasPoint(event);
+    setPointerPosition(point);
+    setPointerPressed(false);
     if (this.stateManager.handlePointerUp) this.stateManager.handlePointerUp(point);
   }
 
   // Send wheel movement to scrollable canvas regions.
   onWheel(event) {
     event.preventDefault();
-    this.stateManager.handleWheel(this.toCanvasPoint(event), event.deltaY);
+    const point = this.toCanvasPoint(event);
+    setPointerPosition(point);
+    this.stateManager.handleWheel(point, event.deltaY);
   }
 
   // Translate browser pixels into the fixed logical canvas resolution.

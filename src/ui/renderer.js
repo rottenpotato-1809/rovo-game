@@ -1,9 +1,26 @@
 import { CONFIG } from '../config.js';
+import { getBackgroundImage, getDragonImage } from './assets.js';
+import { getPointerState } from './pointer.js';
+
+const buttonMotion = new Map();
 
 // Clear the full canvas to the configured background color.
 export function clear(ctx) {
   ctx.fillStyle = CONFIG.BG_COLOR;
   ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
+}
+
+// Fill the logical canvas with one phase-specific bitmap background.
+export function drawPhaseBackground(ctx, phase) {
+  const image = getBackgroundImage(phase);
+  if (!image || !image.complete || !image.naturalWidth) {
+    drawArenaBackdrop(ctx);
+    return;
+  }
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(image, 0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
+  ctx.restore();
 }
 
 // Paint a simple landscape battlefield behind the combat UI.
@@ -97,7 +114,32 @@ export function drawBar(ctx, x, y, width, height, ratio, fill) {
 
 // Draw a button-shaped card with centered text.
 export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
+  const pointer = getPointerState();
+  const hovered = pointInRect(pointer, rect);
+  const targetScale = pointer.pressed && hovered
+    ? CONFIG.BUTTON_PRESS_SCALE
+    : hovered
+      ? CONFIG.BUTTON_HOVER_SCALE
+      : CONFIG.ARENA_ALIVE_ALPHA;
+  const key = `${rect.x}:${rect.y}:${rect.width}:${rect.height}`;
+  const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+  const motion = buttonMotion.get(key) || { scale: CONFIG.ARENA_ALIVE_ALPHA, time: now };
+  const elapsed = Math.max(0, now - motion.time);
+  const progress = Math.min(CONFIG.ARENA_ALIVE_ALPHA, elapsed / CONFIG.BUTTON_MOTION_DURATION_MS);
+  motion.scale += (targetScale - motion.scale) * progress;
+  motion.time = now;
+  buttonMotion.set(key, motion);
+  const centerX = rect.x + (rect.width / 2);
+  const centerY = rect.y + (rect.height / 2);
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.scale(motion.scale, motion.scale);
+  ctx.translate(-centerX, -centerY);
+  ctx.shadowColor = hovered ? fill : CONFIG.BUTTON_SHADOW_COLOR;
+  ctx.shadowBlur = hovered ? CONFIG.BUTTON_GLOW_BLUR : 0;
+  ctx.shadowOffsetY = pointer.pressed && hovered ? 0 : CONFIG.BUTTON_SHADOW_OFFSET_Y;
   drawRect(ctx, rect, fill, CONFIG.TEXT_PRIMARY);
+  ctx.shadowColor = 'transparent';
   drawText(
     ctx,
     label,
@@ -105,6 +147,24 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
     rect.y + rect.height / 2,
     CONFIG.FONT_SIZE_BUTTON,
   );
+  ctx.restore();
+}
+
+// Draw one dragon's bitmap artwork with a distinct animated Tier 3 aura.
+export function drawDragonSprite(ctx, dragon, x, y, radius, alpha = CONFIG.ARENA_ALIVE_ALPHA, scale = CONFIG.ARENA_ALIVE_ALPHA) {
+  const image = getDragonImage(dragon.id, dragon.tier);
+  const spriteSize = radius * CONFIG.DRAGON_SPRITE_SCALE * scale;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  if (dragon.tier >= CONFIG.MAX_TIER) drawTierThreeAura(ctx, x, y, radius * scale);
+  if (image && image.complete && image.naturalWidth) {
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(image, x - (spriteSize / 2), y - (spriteSize / 2), spriteSize, spriteSize);
+  } else {
+    const color = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.ACCENT_SECONDARY;
+    drawCircle(ctx, x, y, radius, color, alpha, CONFIG.TEXT_PRIMARY);
+  }
+  ctx.restore();
 }
 
 // Draw a dragon portrait, name, and HP bar for battle playback.
@@ -115,13 +175,14 @@ export function drawDragon(ctx, dragon, view) {
     : hpRatio < CONFIG.ARENA_HP_HIGH_THRESHOLD
       ? CONFIG.HP_BAR_MID
       : CONFIG.HP_BAR_FULL;
-  const color = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.ACCENT_SECONDARY;
   const isPlayer = dragon.team === 'player';
   const infoX = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? 1 : -1));
   const infoAlign = isPlayer ? 'left' : 'right';
   const barX = isPlayer ? infoX : infoX - CONFIG.HP_BAR_WIDTH_TEAM;
-  drawCircle(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, color, view.alpha, CONFIG.TEXT_PRIMARY);
-  drawText(ctx, dragon.emoji || '?', view.x, view.y, CONFIG.FONT_SIZE_EMOJI, CONFIG.TEXT_PRIMARY);
+  if (view.hitFlash > 0) {
+    drawCircle(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT * CONFIG.ARENA_ABILITY_GLOW_RADIUS_MULTIPLIER, CONFIG.HP_BAR_LOW, view.hitFlash);
+  }
+  drawDragonSprite(ctx, dragon, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, view.alpha, view.scale || CONFIG.ARENA_ALIVE_ALPHA);
   drawFitText(
     ctx,
     dragon.name,
@@ -142,4 +203,41 @@ export function drawDragon(ctx, dragon, view) {
     hpRatio,
     hpColor,
   );
+}
+
+// Draw a pulsing ring and orbiting motes around Tier 3 artwork.
+function drawTierThreeAura(ctx, x, y, radius) {
+  ctx.save();
+  const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+  const cycle = (now % CONFIG.TIER_THREE_AURA_PULSE_MS) / CONFIG.TIER_THREE_AURA_PULSE_MS;
+  const pulse = Math.sin(cycle * Math.PI * 2);
+  const auraRadius = radius * CONFIG.TIER_THREE_AURA_RADIUS_MULTIPLIER * (CONFIG.ARENA_ALIVE_ALPHA + (pulse * 0.06));
+  ctx.strokeStyle = CONFIG.GOLD_COLOR;
+  ctx.lineWidth = CONFIG.TIER_THREE_AURA_LINE_WIDTH;
+  ctx.globalAlpha *= 0.55 + ((pulse + CONFIG.ARENA_ALIVE_ALPHA) * 0.18);
+  ctx.beginPath();
+  ctx.arc(x, y, auraRadius, 0, Math.PI * 2);
+  ctx.stroke();
+  for (let index = 0; index < CONFIG.TIER_THREE_ORB_COUNT; index += 1) {
+    const angle = (cycle * Math.PI * 2) + ((Math.PI * 2 * index) / CONFIG.TIER_THREE_ORB_COUNT);
+    ctx.beginPath();
+    ctx.arc(
+      x + (Math.cos(angle) * auraRadius),
+      y + (Math.sin(angle) * auraRadius),
+      CONFIG.TIER_THREE_ORB_RADIUS,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fillStyle = CONFIG.GOLD_COLOR;
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+// Check pointer containment without coupling renderer code to layout helpers.
+function pointInRect(point, rect) {
+  return point.x >= rect.x
+    && point.x <= rect.x + rect.width
+    && point.y >= rect.y
+    && point.y <= rect.y + rect.height;
 }

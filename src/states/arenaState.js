@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { getDragon } from '../data/dragons.js';
 import { createBattleInstance, simulateBattle } from '../systems/battle.js';
-import { clear, drawArenaBackdrop, drawButton, drawText } from '../ui/renderer.js';
+import { clear, drawButton, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getArenaFightButton, pointInRect } from '../ui/layout.js';
 
 // Render the temporary Milestone 1 start screen and launch a hardcoded battle.
@@ -20,7 +20,7 @@ export class ArenaState {
   // Draw the temporary arena screen.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'fight');
     drawText(ctx, 'WYRMPIT', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_TITLE_Y, CONFIG.FONT_SIZE_TITLE);
     drawText(ctx, 'Milestone 1: The Arena', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_SUBTITLE_Y, CONFIG.FONT_SIZE_BODY, CONFIG.TEXT_SECONDARY);
     drawButton(ctx, this.fightButton, 'FIGHT');

@@ -2,7 +2,7 @@ import { CONFIG } from '../config.js';
 import { simulateBossFight } from '../systems/battle.js';
 import { createPlayerBattleTeam } from '../systems/run.js';
 import { createFloatingNumber, TweenSystem, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawArenaBackdrop, drawBar, drawCircle, drawDragon, drawText } from '../ui/renderer.js';
+import { clear, drawBar, drawCircle, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play back the Eternal Wyrm score fight and reveal the final damage total.
@@ -44,6 +44,8 @@ export class BossState {
         y: point.y,
         baseX: point.x,
         alpha: CONFIG.ARENA_ALIVE_ALPHA,
+        scale: CONFIG.ARENA_ALIVE_ALPHA,
+        hitFlash: 0,
       });
     });
   }
@@ -66,7 +68,7 @@ export class BossState {
   // Draw the boss arena, live score, combatants, and final reveal.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'fight');
     const isFinished = this.eventIndex >= this.events.length;
     drawText(ctx, `DAMAGE ${this.score}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_SCORE_Y, CONFIG.FONT_SIZE_SCORE, CONFIG.GOLD_COLOR);
     if (!isFinished) {

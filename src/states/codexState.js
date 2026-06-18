@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { DRAGONS } from '../data/dragons.js';
 import { getCodexBackButton, getCodexCell, pointInRect } from '../ui/layout.js';
-import { clear, drawArenaBackdrop, drawButton, drawCircle, drawFitText, drawRect, drawText } from '../ui/renderer.js';
+import { clear, drawButton, drawCircle, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
 // Display the persistent 8-by-3 dragon discovery collection.
 export class CodexState {
@@ -20,7 +20,7 @@ export class CodexState {
   // Draw every dragon tier as discovered details or a locked silhouette.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'prep');
     drawText(ctx, 'CODEX', CONFIG.CANVAS_WIDTH / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_TITLE, CONFIG.GOLD_COLOR);
     DRAGONS.forEach((dragon, column) => {
       dragon.tiers.forEach((tier, row) => this.renderCell(ctx, dragon, tier, column, row));
@@ -37,8 +37,12 @@ export class CodexState {
     drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, unlocked ? CONFIG.ELEMENT_COLORS[dragon.element] : CONFIG.BENCH_EMPTY_BORDER);
     const centerX = rect.x + rect.width / 2;
     const portraitY = rect.y + CONFIG.CODEX_PORTRAIT_Y_OFFSET;
-    drawCircle(ctx, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, unlocked ? CONFIG.ELEMENT_COLORS[dragon.element] : CONFIG.TEXT_MUTED, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
-    drawText(ctx, unlocked ? dragon.emoji : '?', centerX, portraitY, CONFIG.FONT_SIZE_HEADER);
+    if (unlocked) {
+      drawDragonSprite(ctx, { ...dragon, tier: tier.tier }, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS);
+    } else {
+      drawCircle(ctx, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.TEXT_MUTED, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
+      drawText(ctx, '?', centerX, portraitY, CONFIG.FONT_SIZE_HEADER);
+    }
     drawFitText(ctx, unlocked ? dragon.name : '???', centerX, rect.y + CONFIG.CODEX_NAME_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
     drawText(ctx, unlocked ? `T${tier.tier}` : 'LOCKED', centerX, rect.y + CONFIG.CODEX_TIER_Y_OFFSET, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
   }

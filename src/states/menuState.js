@@ -2,7 +2,7 @@ import { CONFIG } from '../config.js';
 import { getNextUnlockInfo } from '../systems/progression.js';
 import { createRunState } from '../systems/run.js';
 import { getMenuButtons, pointInRect } from '../ui/layout.js';
-import { clear, drawArenaBackdrop, drawBar, drawButton, drawText } from '../ui/renderer.js';
+import { clear, drawBar, drawButton, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
 // Present persistent progression and entry points into a run or codex.
 export class MenuState {
@@ -21,7 +21,13 @@ export class MenuState {
   // Draw title, score, XP progress, and menu commands.
   render(ctx) {
     clear(ctx);
-    drawArenaBackdrop(ctx);
+    drawPhaseBackground(ctx, 'menu');
+    drawRect(ctx, {
+      x: CONFIG.MENU_PANEL_X,
+      y: CONFIG.MENU_PANEL_Y,
+      width: CONFIG.MENU_PANEL_WIDTH,
+      height: CONFIG.MENU_PANEL_HEIGHT,
+    }, CONFIG.UI_PANEL_SOFT_COLOR);
     drawText(ctx, 'WYRMPIT', CONFIG.CANVAS_WIDTH / 2, CONFIG.MENU_TITLE_Y, CONFIG.FONT_SIZE_TITLE, CONFIG.GOLD_COLOR);
     drawText(ctx, `HIGH SCORE ${this.game.saveData.highScore}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.MENU_SCORE_Y, CONFIG.FONT_SIZE_HEADER);
     const nextUnlock = getNextUnlockInfo(this.game.saveData.totalXP);
