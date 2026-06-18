@@ -415,6 +415,9 @@ export const CONFIG = {
   COMBAT_LOG_MAX_LINES: 4,
   // How many lines of combat log to show at once.
 
+  COMBAT_LOG_SCROLL_STEP: 1,
+  // Number of combat-log lines moved by one wheel or touch-scroll step.
+
   // ─── ANIMATION — TIMING ──────────────────────────────────────
   // All animation durations and speeds
 
@@ -543,6 +546,12 @@ export const CONFIG = {
   ARENA_INFO_HP_OFFSET_Y: 8,
   // Vertical offset for the battle HP bar beside a portrait.
 
+  ARENA_ABILITY_TIMER_OFFSET_Y: 27,
+  // Vertical offset for the special-ability cooldown label beside a portrait.
+
+  ARENA_ABILITY_TIMER_WIDTH: 96,
+  // Maximum width for the special-ability cooldown label.
+
   ARENA_VS_X: 480,
   // X position of center "VS" label.
 
@@ -560,6 +569,21 @@ export const CONFIG = {
 
   ARENA_LOG_BG_HEIGHT: 78,
   // Background panel height behind combat log.
+
+  ARENA_LOG_SCROLLBAR_MARGIN: 10,
+  // Right margin for the combat-log scrollbar.
+
+  ARENA_LOG_SCROLLBAR_WIDTH: 5,
+  // Width of the combat-log scrollbar.
+
+  ARENA_LOG_SCROLLBAR_MIN_HEIGHT: 14,
+  // Minimum scrollbar thumb height.
+
+  ARENA_LOG_SCROLLBAR_TRACK_COLOR: '#2e3a55',
+  // Combat-log scrollbar track color.
+
+  ARENA_LOG_SCROLLBAR_THUMB_COLOR: '#d7dee8',
+  // Combat-log scrollbar thumb color.
 
   ARENA_HP_HIGH_THRESHOLD: 0.5,
   // HP ratio at or above this uses healthy green.

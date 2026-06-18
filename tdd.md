@@ -267,6 +267,8 @@ Run Health
 
 - Battle playback is landscape-first and brisk by default; tune TURN_DELAY_MS and animation durations in config.js rather than per-state literals.
 
+- Fight playback reconstructs ability cooldowns from combat events. The canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display.
+
 Animation (ui/animations.js)
 - Tween system: array of active tweens, each with { target, property, from, to, duration, elapsed, easing }.
 

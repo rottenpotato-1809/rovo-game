@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
 import { TweenSystem, createFloatingNumber, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawArenaBackdrop, drawCircle, drawDragon, drawText } from '../ui/renderer.js';
+import { clear, drawArenaBackdrop, drawCircle, drawDragon, drawFitText, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play a simulated battle log back as animated canvas combat.
@@ -17,6 +17,8 @@ export class FightState {
     this.outcome = '';
     this.result = null;
     this.onComplete = null;
+    this.logScrollOffset = 0;
+    this.logDragY = null;
   }
 
   // Load a fresh battle result and create visual state for each combatant.
@@ -31,6 +33,8 @@ export class FightState {
     this.floaters = [];
     this.eventIndex = 0;
     this.eventTimerMs = 0;
+    this.logScrollOffset = 0;
+    this.logDragY = null;
     this.tweens = new TweenSystem();
     this.views = new Map();
     [...this.playerTeam, ...this.enemyTeam].forEach((dragon, index) => {
@@ -81,9 +85,33 @@ export class FightState {
   }
 
   // Continue to the next run state after playback finishes.
-  handlePointerDown() {
+  handlePointerDown(point) {
+    if (this.eventIndex < this.events.length && this.isPointInCombatLog(point)) {
+      this.logDragY = point.y;
+      return;
+    }
     if (this.eventIndex < this.events.length || !this.onComplete) return;
     this.onComplete(this.result);
+  }
+
+  // Scroll the combat log by dragging inside its panel.
+  handlePointerMove(point) {
+    if (this.logDragY === null) return;
+    const delta = point.y - this.logDragY;
+    if (Math.abs(delta) < CONFIG.ARENA_LOG_LINE_HEIGHT) return;
+    this.scrollCombatLog(delta > 0 ? CONFIG.COMBAT_LOG_SCROLL_STEP : -CONFIG.COMBAT_LOG_SCROLL_STEP);
+    this.logDragY = point.y;
+  }
+
+  // Stop a combat-log touch drag.
+  handlePointerUp() {
+    this.logDragY = null;
+  }
+
+  // Scroll the combat log with the mouse wheel when the pointer is over it.
+  handleWheel(point, deltaY) {
+    if (!this.isPointInCombatLog(point)) return;
+    this.scrollCombatLog(deltaY < 0 ? CONFIG.COMBAT_LOG_SCROLL_STEP : -CONFIG.COMBAT_LOG_SCROLL_STEP);
   }
 
   // Draw one combatant with its optional ability glow.
@@ -101,6 +129,25 @@ export class FightState {
       );
     }
     drawDragon(ctx, dragon, view);
+    this.renderAbilityTimer(ctx, dragon, view);
+  }
+
+  // Draw readiness or remaining turns for one dragon's special ability.
+  renderAbilityTimer(ctx, dragon, view) {
+    const isPlayer = dragon.team === 'player';
+    const x = view.x + (CONFIG.ARENA_INFO_OFFSET_X * (isPlayer ? 1 : -1));
+    const label = dragon.cooldownCurrent <= 0 ? 'ABILITY READY' : `ABILITY IN ${dragon.cooldownCurrent}`;
+    drawFitText(
+      ctx,
+      label,
+      x,
+      view.y + CONFIG.ARENA_ABILITY_TIMER_OFFSET_Y,
+      CONFIG.FONT_SIZE_STATS,
+      CONFIG.ARENA_ABILITY_TIMER_WIDTH,
+      CONFIG.FONT_SIZE_SMALL,
+      dragon.cooldownCurrent <= 0 ? CONFIG.GOLD_COLOR : CONFIG.TEXT_SECONDARY,
+      isPlayer ? 'left' : 'right',
+    );
   }
 
   // Draw active floating combat numbers.
@@ -117,7 +164,9 @@ export class FightState {
   renderCombatLog(ctx) {
     ctx.fillStyle = CONFIG.HEADER_BG_COLOR;
     ctx.fillRect(0, CONFIG.COMBAT_LOG_Y - CONFIG.ARENA_LOG_LINE_HEIGHT, CONFIG.CANVAS_WIDTH, CONFIG.ARENA_LOG_BG_HEIGHT);
-    const visible = this.combatLog.slice(-CONFIG.COMBAT_LOG_MAX_LINES);
+    const end = Math.max(0, this.combatLog.length - this.logScrollOffset);
+    const start = Math.max(0, end - CONFIG.COMBAT_LOG_MAX_LINES);
+    const visible = this.combatLog.slice(start, end);
     visible.forEach((line, index) => {
       drawText(
         ctx,
@@ -129,6 +178,26 @@ export class FightState {
         'left',
       );
     });
+    this.renderCombatLogScrollbar(ctx);
+  }
+
+  // Draw a scrollbar thumb that shows the current combat-log history position.
+  renderCombatLogScrollbar(ctx) {
+    if (this.combatLog.length <= CONFIG.COMBAT_LOG_MAX_LINES) return;
+    const trackTop = CONFIG.COMBAT_LOG_Y - CONFIG.ARENA_LOG_LINE_HEIGHT;
+    const trackHeight = CONFIG.ARENA_LOG_BG_HEIGHT;
+    const trackX = CONFIG.CANVAS_WIDTH - CONFIG.ARENA_LOG_SCROLLBAR_MARGIN - CONFIG.ARENA_LOG_SCROLLBAR_WIDTH;
+    const thumbHeight = Math.max(
+      CONFIG.ARENA_LOG_SCROLLBAR_MIN_HEIGHT,
+      trackHeight * (CONFIG.COMBAT_LOG_MAX_LINES / this.combatLog.length),
+    );
+    const maximumOffset = this.combatLog.length - CONFIG.COMBAT_LOG_MAX_LINES;
+    const progress = maximumOffset > 0 ? 1 - (this.logScrollOffset / maximumOffset) : 1;
+    const thumbY = trackTop + ((trackHeight - thumbHeight) * progress);
+    ctx.fillStyle = CONFIG.ARENA_LOG_SCROLLBAR_TRACK_COLOR;
+    ctx.fillRect(trackX, trackTop, CONFIG.ARENA_LOG_SCROLLBAR_WIDTH, trackHeight);
+    ctx.fillStyle = CONFIG.ARENA_LOG_SCROLLBAR_THUMB_COLOR;
+    ctx.fillRect(trackX, thumbY, CONFIG.ARENA_LOG_SCROLLBAR_WIDTH, thumbHeight);
   }
 
   // Apply one battle event to the visible arena.
@@ -138,7 +207,31 @@ export class FightState {
     if (actor) this.animateActor(actor, event);
     if (target && event.value > 0) this.applyValueToTarget(target, event);
     if (event.action === 'kill' && target) this.fadeDragon(target);
+    this.updateAbilityCooldown(actor, event);
+    if (this.logScrollOffset > 0) this.logScrollOffset += 1;
     this.combatLog.push(this.describeEvent(event));
+  }
+
+  // Recreate each actor's ability cooldown from structured playback events.
+  updateAbilityCooldown(actor, event) {
+    if (!actor) return;
+    if (this.isAbilityEvent(event.action)) {
+      actor.cooldownCurrent = actor.cooldownMax;
+      return;
+    }
+    if (event.action === 'basic_attack') {
+      actor.cooldownCurrent = Math.max(0, actor.cooldownCurrent - 1);
+    }
+  }
+
+  // Return whether an event represents an ability activation or effect.
+  isAbilityEvent(action) {
+    return action.includes('ability')
+      || action.includes('heal')
+      || action.includes('taunt')
+      || action.includes('shield')
+      || action.includes('poison')
+      || action.includes('charge');
   }
 
   // Find a combatant by battle instance id.
@@ -200,7 +293,20 @@ export class FightState {
     if (event.action.includes('heal')) return `${event.actorName} heals ${event.targetName} for ${event.value}`;
     if (event.action.includes('ability')) return `${event.actorName} casts on ${event.targetName} for ${event.value}`;
     if (event.action.includes('basic_attack')) return `${event.actorName} hits ${event.targetName} for ${event.value}`;
-    if (event.targetName) return `${event.actorName} ${event.action} ${event.targetName}`;
-    return `${event.actorName} ${event.action}`;
+    const action = event.action.replaceAll('_', ' ');
+    if (event.targetName) return `${event.actorName} ${action} ${event.targetName}`;
+    return `${event.actorName} ${action}`;
+  }
+
+  // Clamp a requested combat-log offset to available history.
+  scrollCombatLog(change) {
+    const maximumOffset = Math.max(0, this.combatLog.length - CONFIG.COMBAT_LOG_MAX_LINES);
+    this.logScrollOffset = Math.max(0, Math.min(maximumOffset, this.logScrollOffset + change));
+  }
+
+  // Check whether a logical pointer position is inside the combat-log panel.
+  isPointInCombatLog(point) {
+    const top = CONFIG.COMBAT_LOG_Y - CONFIG.ARENA_LOG_LINE_HEIGHT;
+    return point.y >= top && point.y <= top + CONFIG.ARENA_LOG_BG_HEIGHT;
   }
 }

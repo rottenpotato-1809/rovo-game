@@ -54,4 +54,11 @@ export class StateManager {
       this.current.handlePointerUp(point);
     }
   }
+
+  // Route wheel movement to the active state.
+  handleWheel(point, deltaY) {
+    if (this.current && this.current.handleWheel) {
+      this.current.handleWheel(point, deltaY);
+    }
+  }
 }

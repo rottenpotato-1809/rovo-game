@@ -126,6 +126,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Above each dragon:** HP bar + name.
 - **Center:** Floating damage/heal numbers animate on hit.
 - **Bottom strip:** Scrolling combat log (one line per action).
+- Each combatant shows whether its special ability is ready or how many actions remain on cooldown. The combat log supports wheel and touch-drag history scrolling, and action labels are displayed as readable words.
 - **After battle ends:** "CONTINUE" button overlays the center.
 - **Pacing:** battle playback should be brisk by default so a full 3v3 fight resolves quickly while attacks and ability flashes remain readable.
 

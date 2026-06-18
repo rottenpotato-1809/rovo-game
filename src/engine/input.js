@@ -8,6 +8,7 @@ export class Input {
     this.canvas.addEventListener('pointerdown', event => this.onPointerDown(event));
     this.canvas.addEventListener('pointermove', event => this.onPointerMove(event));
     this.canvas.addEventListener('pointerup', event => this.onPointerUp(event));
+    this.canvas.addEventListener('wheel', event => this.onWheel(event), { passive: false });
   }
 
   // Send a pointer press to the active state after hit-test coordinate conversion.
@@ -36,6 +37,12 @@ export class Input {
     }
     const point = this.toCanvasPoint(event);
     if (this.stateManager.handlePointerUp) this.stateManager.handlePointerUp(point);
+  }
+
+  // Send wheel movement to scrollable canvas regions.
+  onWheel(event) {
+    event.preventDefault();
+    this.stateManager.handleWheel(this.toCanvasPoint(event), event.deltaY);
   }
 
   // Translate browser pixels into the fixed logical canvas resolution.
