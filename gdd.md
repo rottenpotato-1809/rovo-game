@@ -115,12 +115,13 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ## UI Layout
 
 ### Prep Phase Screen (top → bottom)
-- **Header bar:** Round number (left), Gold count (right).
-- **Team zone:** 3 large slots in a row (the active fighters). Clearly labelled "YOUR TEAM."
-- **Bench zone:** 5 smaller slots below the team. Labelled "BENCH."
+- **Header bar:** Round number in a framed panel on the left, Gold count in a matching panel on the right.
+- **Team zone:** 3 tall, visually dominant slots across the upper-left under a framed "YOUR TEAM" heading.
+- **Bench zone:** 5 shorter reserve slots across the lower-left under a framed "BENCH" heading.
 - The bench occupies the lower-left staging floor instead of crowding the active team row. Prep and codex portraits consistently face left.
-- **Shop zone:** 3 dragon cards side by side + Reroll button + Fight button. Positioned at the bottom.
-- **Sell zone:** Visible drop target (trash icon or "SELL" label) near bench.
+- **Shop zone:** 3 tall dragon cards side by side in the upper-right, with portrait, identity, stats, and price arranged vertically.
+- **Command zone:** Sell, Merge, and Reroll stack below the shop while Fight is a larger standalone call to action.
+- **Sell zone:** Visible drop target (trash icon or "SELL" label) beside the bench.
 - The Sell zone includes a drag instruction and changes to the held dragon's exact sell value while dragging.
 
 ### Fight Phase Screen
@@ -141,9 +142,9 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Prominent damage counter** top-center: "DAMAGE: X" updating in real time.
 
 ### Results Screen
-- Centered card showing: Rounds survived, Boss damage (or "—"), XP earned, Total XP, High Score.
+- A large gold-framed central panel over the island background shows Rounds Survived, Boss Damage (or Not Reached), XP Earned, Total XP, and High Score as separate label/value rows with badges and dividers.
 - Any new codex discoveries listed with fanfare text.
-- Two buttons: "PLAY AGAIN" / "MAIN MENU."
+- Two equally weighted bottom buttons: "PLAY AGAIN" / "MAIN MENU."
 
 ### Codex Screen
 - Uses the dedicated illustrated open-book background; its built-in CODEX heading replaces the former canvas title.

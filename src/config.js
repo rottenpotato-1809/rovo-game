@@ -342,7 +342,7 @@ export const CONFIG = {
   DRAGON_TIER_THREE_SCALE: 1.35,
   // Tier 3 keeps the adult silhouette and adds evolution effects.
 
-  SHOP_DRAGON_SPRITE_SIZE: 54,
+  SHOP_DRAGON_SPRITE_SIZE: 72,
   // Dragon artwork size inside one shop card.
 
   TIER_THREE_AURA_RADIUS_MULTIPLIER: 1.45,
@@ -369,10 +369,10 @@ export const CONFIG = {
   HP_BAR_WIDTH_TEAM: 96,
   // Width of HP bars in team/fight view (px).
 
-  SHOP_CARD_WIDTH: 100,
+  SHOP_CARD_WIDTH: 108,
   // Width of each shop card (px).
 
-  SHOP_CARD_HEIGHT: 132,
+  SHOP_CARD_HEIGHT: 192,
   // Height of each shop card (px).
 
   BUTTON_HEIGHT: 45,
@@ -412,46 +412,46 @@ export const CONFIG = {
   HEADER_HEIGHT: 50,
   // Height of the top bar showing round + gold.
 
-  TEAM_ZONE_Y: 84,
+  TEAM_ZONE_Y: 112,
   // Top edge of the team slots area.
 
-  TEAM_SLOT_WIDTH: 130,
+  TEAM_SLOT_WIDTH: 136,
   // Width of each team slot box.
 
-  TEAM_SLOT_HEIGHT: 118,
+  TEAM_SLOT_HEIGHT: 178,
   // Height of each team slot box.
 
-  TEAM_SLOT_GAP: 18,
+  TEAM_SLOT_GAP: 12,
   // Horizontal gap between team slots.
 
-  BENCH_ZONE_Y: 326,
+  BENCH_ZONE_Y: 376,
   // Top edge of the bench area.
 
-  BENCH_SLOT_WIDTH: 96,
+  BENCH_SLOT_WIDTH: 94,
   // Width of each bench slot.
 
-  BENCH_SLOT_HEIGHT: 140,
+  BENCH_SLOT_HEIGHT: 128,
   // Height of each bench slot.
 
-  BENCH_SLOT_GAP: 12,
+  BENCH_SLOT_GAP: 10,
   // Horizontal gap between bench slots.
 
-  SELL_ZONE_Y: 280,
+  SELL_ZONE_Y: 332,
   // Top edge of the sell/trash drop zone.
 
-  SELL_ZONE_WIDTH: 130,
+  SELL_ZONE_WIDTH: 180,
   // Width of sell zone.
 
-  SELL_ZONE_HEIGHT: 44,
+  SELL_ZONE_HEIGHT: 48,
   // Height of sell zone.
 
-  SHOP_ZONE_Y: 112,
+  SHOP_ZONE_Y: 116,
   // Top edge of the shop cards area.
 
-  SHOP_CARD_GAP: 12,
+  SHOP_CARD_GAP: 10,
   // Horizontal gap between shop cards.
 
-  BUTTON_ZONE_Y: 388,
+  BUTTON_ZONE_Y: 450,
   // Top edge of action buttons row.
 
   // ─── RENDERING — FIGHT LAYOUT ────────────────────────────────
@@ -780,10 +780,10 @@ export const CONFIG = {
   PREP_LEFT_PANEL_X: 36,
   // Left edge for team and bench management.
 
-  PREP_RIGHT_PANEL_X: 600,
+  PREP_RIGHT_PANEL_X: 590,
   // Left edge for shop and command buttons.
 
-  PREP_SECTION_LABEL_OFFSET_Y: 18,
+  PREP_SECTION_LABEL_OFFSET_Y: 24,
   // Vertical offset from a region top to its label.
 
   PREP_SLOT_LABEL_OFFSET_Y: 18,
@@ -792,47 +792,80 @@ export const CONFIG = {
   PREP_CARD_TEXT_LEFT_PAD: 10,
   // Left text padding inside shop cards.
 
-  PREP_CARD_SPRITE_Y_OFFSET: 28,
+  PREP_CARD_SPRITE_Y_OFFSET: 48,
   // Dragon sprite center offset from the shop card top.
 
-  PREP_CARD_NAME_Y_OFFSET: 60,
+  PREP_CARD_NAME_Y_OFFSET: 100,
   // Name text offset from card top.
 
-  PREP_CARD_ROLE_Y_OFFSET: 78,
+  PREP_CARD_ROLE_Y_OFFSET: 123,
   // Role text offset from card top.
 
-  PREP_CARD_STAT_Y_OFFSET: 96,
+  PREP_CARD_STAT_Y_OFFSET: 148,
   // Stat text offset from card top.
 
-  PREP_CARD_COST_Y_OFFSET: 117,
+  PREP_CARD_COST_Y_OFFSET: 176,
   // Cost text offset from card top.
 
-  PREP_TEAM_DRAGON_Y_OFFSET: 38,
+  PREP_TEAM_DRAGON_Y_OFFSET: 72,
   // Dragon circle vertical offset inside a team slot.
 
-  PREP_BENCH_DRAGON_Y_OFFSET: 46,
+  PREP_BENCH_DRAGON_Y_OFFSET: 42,
   // Smaller dragon circle vertical offset inside a bench slot.
 
-  PREP_DRAGON_NAME_BOTTOM_OFFSET: 24,
+  PREP_DRAGON_NAME_BOTTOM_OFFSET: 28,
   // Distance from a prep slot bottom to the dragon name baseline.
 
-  PREP_DRAGON_STATS_BOTTOM_OFFSET: 8,
+  PREP_DRAGON_STATS_BOTTOM_OFFSET: 10,
   // Distance from a prep slot bottom to the tier and HP baseline.
 
-  PREP_BUTTON_WIDTH: 130,
+  PREP_BUTTON_WIDTH: 180,
   // Width of prep buttons.
 
-  PREP_BUTTON_GAP: 18,
+  PREP_BUTTON_GAP: 16,
   // Horizontal gap between prep buttons.
 
-  PREP_MERGE_BUTTON_Y: 334,
+  PREP_MERGE_BUTTON_Y: 392,
   // Y position for the explicit merge button.
 
-  PREP_MESSAGE_Y: 512,
+  PREP_MESSAGE_Y: 522,
   // Y position for temporary prep feedback text.
 
   PREP_DRAG_PREVIEW_ALPHA: 0.8,
   // Opacity for the floating dragon preview while dragging.
+
+  PREP_SECTION_LABEL_WIDTH: 176,
+  // Width of framed Team, Bench, and Shop headings.
+
+  PREP_SECTION_LABEL_HEIGHT: 30,
+  // Height of framed prep-section headings.
+
+  PREP_FRAME_LINE_WIDTH: 3,
+  // Border thickness for prominent prep cards and headings.
+
+  PREP_HEADER_PANEL_MARGIN: 12,
+  // Horizontal inset for the round and gold header panels.
+
+  PREP_HEADER_PANEL_WIDTH: 210,
+  // Width of each compact prep header panel.
+
+  PREP_HEADER_PANEL_HEIGHT: 40,
+  // Height of each compact prep header panel.
+
+  PREP_FIGHT_BUTTON_X: 790,
+  // Left edge of the large Fight call to action.
+
+  PREP_FIGHT_BUTTON_Y: 392,
+  // Top edge of the large Fight call to action.
+
+  PREP_FIGHT_BUTTON_WIDTH: 144,
+  // Width of the large Fight call to action.
+
+  PREP_FIGHT_BUTTON_HEIGHT: 103,
+  // Height of the large Fight call to action.
+
+  FONT_SIZE_PREP_FIGHT: 28,
+  // Label size for the large prep Fight button.
 
   RESULT_BUTTON_X: 380,
   // X position for result screen replay button.
@@ -1035,38 +1068,74 @@ export const CONFIG = {
   BOSS_RESULT_PANEL_HEIGHT: 190,
   // Boss score-reveal panel height.
 
-  RESULT_TITLE_Y: 76,
+  RESULT_TITLE_Y: 84,
   // Full results title baseline.
 
-  RESULT_PANEL_X: 250,
+  RESULT_PANEL_X: 240,
   // Left edge of the result readability panel.
 
-  RESULT_PANEL_Y: 40,
+  RESULT_PANEL_Y: 34,
   // Top edge of the result readability panel.
 
-  RESULT_PANEL_WIDTH: 460,
+  RESULT_PANEL_WIDTH: 480,
   // Width of the result readability panel.
 
-  RESULT_PANEL_HEIGHT: 440,
+  RESULT_PANEL_HEIGHT: 472,
   // Height of the result readability panel.
 
-  RESULT_LINE_START_Y: 138,
+  RESULT_LINE_START_Y: 154,
   // First results statistic baseline.
 
-  RESULT_LINE_GAP: 34,
+  RESULT_LINE_GAP: 42,
   // Vertical gap between results statistics.
 
-  RESULT_NOTICE_Y: 326,
+  RESULT_NOTICE_Y: 382,
   // Discovery or unlock notification baseline.
 
-  RESULT_BUTTON_Y_FULL: 414,
+  RESULT_BUTTON_Y_FULL: 430,
   // Full results button row top edge.
 
-  RESULT_BUTTON_WIDTH: 180,
+  RESULT_BUTTON_WIDTH: 196,
   // Full results button width.
 
-  RESULT_BUTTON_GAP: 24,
+  RESULT_BUTTON_GAP: 20,
   // Gap between full results buttons.
+
+  RESULT_PANEL_INSET: 8,
+  // Inner border inset for the run-over panel.
+
+  RESULT_PANEL_LINE_WIDTH: 3,
+  // Gold frame thickness around the run-over panel.
+
+  RESULT_ROW_BADGE_X: 292,
+  // Horizontal center of result-row badges.
+
+  RESULT_ROW_BADGE_RADIUS: 14,
+  // Radius of each result-row badge.
+
+  RESULT_ROW_LABEL_X: 322,
+  // Left-aligned statistic label column.
+
+  RESULT_ROW_VALUE_X: 664,
+  // Right-aligned statistic value column.
+
+  RESULT_ROW_DIVIDER_LEFT: 280,
+  // Left edge of result-row separators.
+
+  RESULT_ROW_DIVIDER_RIGHT: 680,
+  // Right edge of result-row separators.
+
+  RESULT_ROW_DIVIDER_OFFSET_Y: 21,
+  // Vertical offset from each row baseline to its separator.
+
+  RESULT_ROW_DIVIDER_COLOR: 'rgba(255, 255, 255, 0.18)',
+  // Subtle separator color between result statistics.
+
+  FONT_SIZE_RESULT_TITLE: 46,
+  // Large title size for the run-over panel.
+
+  RESULT_NOTICE_MAX_WIDTH: 390,
+  // Maximum width of the result progression notice.
 
   // ─── PERSISTENCE ──────────────────────────────────────────────
   // LocalStorage configuration

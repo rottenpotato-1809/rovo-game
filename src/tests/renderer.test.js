@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { getCodexCell, getMenuButtons } from '../ui/layout.js';
+import { getBenchSlots, getCodexCell, getMenuButtons, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
 import { drawText, getDragonTierScale } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
@@ -76,7 +76,31 @@ test('bench row fills the lower-left prep staging area', () => {
   const benchBottom = CONFIG.BENCH_ZONE_Y + CONFIG.BENCH_SLOT_HEIGHT;
   assert(CONFIG.BENCH_ZONE_Y > CONFIG.TEAM_ZONE_Y + CONFIG.TEAM_SLOT_HEIGHT, 'Bench must sit below the active team');
   assert(benchBottom < CONFIG.PREP_MESSAGE_Y, 'Bench must leave room for feedback text');
-  assert(CONFIG.BENCH_SLOT_HEIGHT > CONFIG.TEAM_SLOT_HEIGHT, 'Reserve staging should use the available lower field');
+  assert(CONFIG.BENCH_SLOT_HEIGHT < CONFIG.TEAM_SLOT_HEIGHT, 'Active team cards must remain visually dominant');
+});
+
+test('prep regions fit the landscape staging screen without overlap', () => {
+  const team = getTeamSlots();
+  const bench = getBenchSlots();
+  const shop = getShopCards();
+  const buttons = getPrepButtons();
+  const finalBench = bench[bench.length - 1];
+  const finalShop = shop[shop.length - 1];
+  assert(team[team.length - 1].x + CONFIG.TEAM_SLOT_WIDTH < shop[0].x, 'Team and shop columns must remain separate');
+  assert(finalBench.x + finalBench.width < buttons.merge.x, 'Bench must clear the command column');
+  assert(finalShop.x + finalShop.width <= CONFIG.CANVAS_WIDTH, 'Shop must fit the canvas width');
+  assert(buttons.fight.x + buttons.fight.width <= CONFIG.CANVAS_WIDTH, 'Fight button must fit the canvas width');
+  assert(buttons.fight.y + buttons.fight.height < CONFIG.PREP_MESSAGE_Y, 'Fight button must clear prep feedback');
+});
+
+test('result summary rows and buttons remain inside the framed panel', () => {
+  const lastRowY = CONFIG.RESULT_LINE_START_Y + (CONFIG.RESULT_LINE_GAP * 4);
+  const panelRight = CONFIG.RESULT_PANEL_X + CONFIG.RESULT_PANEL_WIDTH;
+  const panelBottom = CONFIG.RESULT_PANEL_Y + CONFIG.RESULT_PANEL_HEIGHT;
+  assert(CONFIG.RESULT_ROW_DIVIDER_LEFT > CONFIG.RESULT_PANEL_X, 'Result rows must start inside the panel');
+  assert(CONFIG.RESULT_ROW_DIVIDER_RIGHT < panelRight, 'Result rows must end inside the panel');
+  assert(lastRowY + CONFIG.RESULT_ROW_DIVIDER_OFFSET_Y < CONFIG.RESULT_NOTICE_Y, 'Result rows must clear the notice');
+  assert(CONFIG.RESULT_BUTTON_Y_FULL + CONFIG.BUTTON_HEIGHT < panelBottom, 'Result buttons must remain inside the panel');
 });
 
 test('team heading clears the fixed header', () => {

@@ -122,7 +122,7 @@ export function drawBar(ctx, x, y, width, height, ratio, fill) {
 }
 
 // Draw a button-shaped card with centered text.
-export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
+export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY, fontSize = CONFIG.FONT_SIZE_BUTTON) {
   const pointer = getPointerState();
   const hovered = pointInRect(pointer, rect);
   const targetScale = pointer.pressed && hovered
@@ -154,7 +154,7 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
     label,
     rect.x + rect.width / 2,
     rect.y + rect.height / 2,
-    CONFIG.FONT_SIZE_BUTTON,
+    fontSize,
   );
   ctx.restore();
 }

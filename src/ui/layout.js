@@ -60,10 +60,10 @@ export function getPrepButtons() {
       height: CONFIG.BUTTON_HEIGHT,
     },
     fight: {
-      x: CONFIG.PREP_RIGHT_PANEL_X + CONFIG.PREP_BUTTON_WIDTH + CONFIG.PREP_BUTTON_GAP,
-      y: CONFIG.BUTTON_ZONE_Y,
-      width: CONFIG.PREP_BUTTON_WIDTH,
-      height: CONFIG.BUTTON_HEIGHT,
+      x: CONFIG.PREP_FIGHT_BUTTON_X,
+      y: CONFIG.PREP_FIGHT_BUTTON_Y,
+      width: CONFIG.PREP_FIGHT_BUTTON_WIDTH,
+      height: CONFIG.PREP_FIGHT_BUTTON_HEIGHT,
     },
     merge: {
       x: CONFIG.PREP_RIGHT_PANEL_X,

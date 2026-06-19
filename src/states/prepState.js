@@ -35,6 +35,7 @@ export class PrepState {
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'prep');
+    ctx.lineWidth = CONFIG.PREP_FRAME_LINE_WIDTH;
     this.renderHeader(ctx);
     this.renderSlots(ctx, 'team', getTeamSlots(), this.game.run.team, 'YOUR TEAM');
     this.renderSlots(ctx, 'bench', getBenchSlots(), this.game.run.bench, 'BENCH');
@@ -48,13 +49,25 @@ export class PrepState {
   renderHeader(ctx) {
     ctx.fillStyle = CONFIG.HEADER_BG_COLOR;
     ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.HEADER_HEIGHT);
-    drawText(ctx, `ROUND ${this.game.run.round}/${CONFIG.TOTAL_ROUNDS}`, CONFIG.PREP_LEFT_PANEL_X, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY, 'left');
-    drawText(ctx, `GOLD ${this.game.run.gold}`, CONFIG.CANVAS_WIDTH - CONFIG.PREP_LEFT_PANEL_X, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR, 'right');
+    const leftPanel = {
+      x: CONFIG.PREP_HEADER_PANEL_MARGIN,
+      y: (CONFIG.HEADER_HEIGHT - CONFIG.PREP_HEADER_PANEL_HEIGHT) / 2,
+      width: CONFIG.PREP_HEADER_PANEL_WIDTH,
+      height: CONFIG.PREP_HEADER_PANEL_HEIGHT,
+    };
+    const rightPanel = {
+      ...leftPanel,
+      x: CONFIG.CANVAS_WIDTH - CONFIG.PREP_HEADER_PANEL_MARGIN - CONFIG.PREP_HEADER_PANEL_WIDTH,
+    };
+    drawRect(ctx, leftPanel, CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_SECONDARY);
+    drawRect(ctx, rightPanel, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
+    drawText(ctx, `ROUND ${this.game.run.round}/${CONFIG.TOTAL_ROUNDS}`, leftPanel.x + leftPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER);
+    drawText(ctx, `GOLD ${this.game.run.gold}`, rightPanel.x + rightPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
   }
 
   // Draw a row of team or bench slots.
   renderSlots(ctx, zone, rects, dragons, label) {
-    drawText(ctx, label, rects[0].x, rects[0].y - CONFIG.PREP_SECTION_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY, 'left');
+    this.renderSectionLabel(ctx, label, rects[0].x, rects[0].y - CONFIG.PREP_SECTION_LABEL_OFFSET_Y);
     rects.forEach((rect, index) => {
       const isSelected = this.selectedSource && this.selectedSource.zone === zone && this.selectedSource.index === index;
       const isDragged = this.dragSource && this.dragSource.zone === zone && this.dragSource.index === index;
@@ -85,8 +98,11 @@ export class PrepState {
 
   // Draw shop cards.
   renderShop(ctx) {
-    drawText(ctx, 'SHOP', CONFIG.PREP_RIGHT_PANEL_X, CONFIG.SHOP_ZONE_Y - CONFIG.PREP_SECTION_LABEL_OFFSET_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY, 'left');
-    getShopCards().forEach((rect, index) => {
+    const cards = getShopCards();
+    const cardsWidth = (CONFIG.SHOP_CARD_WIDTH * CONFIG.SHOP_SIZE) + (CONFIG.SHOP_CARD_GAP * (CONFIG.SHOP_SIZE - 1));
+    const headingX = CONFIG.PREP_RIGHT_PANEL_X + ((cardsWidth - CONFIG.PREP_SECTION_LABEL_WIDTH) / 2);
+    this.renderSectionLabel(ctx, 'SHOP', headingX, CONFIG.SHOP_ZONE_Y - CONFIG.PREP_SECTION_LABEL_OFFSET_Y);
+    cards.forEach((rect, index) => {
       const id = this.game.run.shop[index];
       if (!id) {
         drawRect(ctx, rect, CONFIG.ACCENT_SECONDARY, CONFIG.BENCH_EMPTY_BORDER);
@@ -114,6 +130,18 @@ export class PrepState {
     });
   }
 
+  // Draw a compact framed heading above a prep region.
+  renderSectionLabel(ctx, label, x, centerY) {
+    const rect = {
+      x,
+      y: centerY - (CONFIG.PREP_SECTION_LABEL_HEIGHT / 2),
+      width: CONFIG.PREP_SECTION_LABEL_WIDTH,
+      height: CONFIG.PREP_SECTION_LABEL_HEIGHT,
+    };
+    drawRect(ctx, rect, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
+    drawText(ctx, label, rect.x + rect.width / 2, centerY, CONFIG.FONT_SIZE_HEADER);
+  }
+
   // Draw the floating dragon while the pointer is dragging it.
   renderDragPreview(ctx) {
     if (!this.dragSource || !this.dragPoint) return;
@@ -135,7 +163,7 @@ export class PrepState {
     const mergeAvailable = checkMergeAvailable(this.game.run.team, this.game.run.bench);
     drawButton(ctx, buttons.merge, mergeAvailable ? 'MERGE' : 'NO MERGE', mergeAvailable ? CONFIG.GOLD_COLOR : CONFIG.ACCENT_SECONDARY);
     drawButton(ctx, buttons.reroll, `REROLL ${CONFIG.REROLL_COST}G`, CONFIG.ACCENT_SECONDARY);
-    drawButton(ctx, buttons.fight, 'FIGHT', CONFIG.ACCENT_PRIMARY);
+    drawButton(ctx, buttons.fight, 'FIGHT', CONFIG.ACCENT_PRIMARY, CONFIG.FONT_SIZE_PREP_FIGHT);
   }
 
   // Show drag guidance or the exact value of the dragon currently held.

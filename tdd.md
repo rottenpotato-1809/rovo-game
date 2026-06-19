@@ -258,6 +258,10 @@ Rendering (ui/renderer.js)
 
 - All coordinates and sizes pulled from CONFIG layout constants.
 
+- Prep layout uses separate left staging and right commerce columns: tall team cards, compact bench cards, tall shop cards, stacked utility commands, and an independently sized Fight CTA.
+
+- Result rendering consumes structured summary rows so badges, labels, values, and dividers stay aligned independently of progression values.
+
 - Canvas text is filled over a configurable dark outline for contrast. Fight layout reserves the upper-center result panel and upper-right scrolling log panel above `ARENA_BATTLEFIELD_TOP_Y`. All combat rows sit below that boundary. Player sprites are mirrored toward the center with their name/HP/cooldown column outside on the left; enemy artwork faces left with information outside on the right.
 
 - Main-menu controls use image-aligned rectangular hotspots configured in `config.js`: the tower opens a new run and the ground-dragon group opens the codex. Compact labels remain static inside their artwork without hover tint or glow. The title and progression panel occupy dedicated right-side negative space.
