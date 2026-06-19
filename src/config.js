@@ -40,13 +40,13 @@ export const CONFIG = {
   // Gold the player begins with on round 1.
   // Recommended range: 3-6. Higher = lets round 1 field more than one dragon.
 
-  GOLD_PER_WIN_BASE: 3,
+  GOLD_PER_WIN_BASE: 4,
   // Flat gold earned for winning any round (before scaling).
   // Recommended range: 2–4.
 
   GOLD_PER_WIN_SCALING: 1,
   // Additional gold per round number. Formula: base + (round × scaling).
-  // Round 1 win = 3 + (1×1) = 4g. Round 7 win = 3 + (7×1) = 10g.
+  // Round 1 win = 4 + (1×1) = 5g. Round 7 win = 4 + (7×1) = 11g.
   // Recommended range: 0.5–2. Higher = snowballier.
 
   DRAGON_BUY_COST: 3,
@@ -132,16 +132,16 @@ export const CONFIG = {
   ],
 
   ENEMY_POWER_SCALE: [
-    0.45, // Round 1  — very soft intro
-    0.55, // Round 2  — still forgiving
-    0.65, // Round 3  — first full team, but weakened
-    0.75, // Round 4
-    0.85, // Round 5
-    0.95, // Round 6
-    1.00, // Round 7
-    1.10, // Round 8
-    1.20, // Round 9
-    1.30, // Round 10
+    0.30, // Round 1  — onboarding, not a run-ending check
+    0.35, // Round 2  — complete the starting team
+    0.40, // Round 3  — first full enemy team
+    0.40, // Round 4  — first enemy T2, offset by lower scale
+    0.45, // Round 5
+    0.50, // Round 6
+    0.55, // Round 7  — build check without a hard wall
+    0.60, // Round 8
+    0.50, // Round 9  — T3 introduction raises effective power
+    0.52, // Round 10 — final pre-boss exam
   ],
   // Per-round ATK/HP multiplier for generated enemies.
 

@@ -91,8 +91,8 @@ export const CONFIG = {
   
   // ─── ECONOMY ─────────────────────────────────────────────
   STARTING_GOLD: 6,          // gold at the start of round 1; enough for two dragons
-  GOLD_PER_WIN_BASE: 3,      // flat gold for winning any round
-  GOLD_PER_WIN_SCALING: 1,   // multiplied by round number and added to base (round 4 win = 3 + 4×1 = 7)
+  GOLD_PER_WIN_BASE: 4,      // flat gold for winning any round
+  GOLD_PER_WIN_SCALING: 1,   // multiplied by round number and added to base (round 4 win = 4 + 4×1 = 8)
   DRAGON_BUY_COST: 3,        // cost to purchase any dragon from shop
   SELL_PRICE_T1: 2,          // gold received when selling a Tier 1 dragon
   SELL_PRICE_T2: 4,          // gold received when selling a Tier 2
@@ -124,7 +124,7 @@ export const CONFIG = {
     [0, 2, 1],  // round 9
     [0, 1, 2],  // round 10
   ],
-  ENEMY_POWER_SCALE: [0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.0, 1.1, 1.2, 1.3],
+  ENEMY_POWER_SCALE: [0.30, 0.35, 0.40, 0.40, 0.45, 0.50, 0.55, 0.60, 0.50, 0.52],
 
   // ─── BOSS ─────────────────────────────────────────────────
   BOSS_HP: 99999,            // effectively invincible
@@ -231,6 +231,8 @@ Enemy (systems/enemy.js)
 
 - Applies ENEMY_POWER_SCALE[roundIndex] to generated enemy ATK/HP so early rounds are intentionally weaker than equivalent player dragons.
 
+- Tier transitions use lower raw multipliers to offset the tier's doubled base stats. `scripts/balance-sim.mjs` runs a seeded duplicate-focused draft policy; the campaign target is 65-85% boss reach with at most 1% losses in rounds 1-6.
+
 - Picks from ALL 8 dragon types (including locked ones) — this is the player's preview of what they can unlock.
 
 - Randomly assigns tier upgrades to picked dragons based on the round's tier distribution.
@@ -314,6 +316,8 @@ Testing (src/tests/)
 + shop.test.js — only unlocked dragons appear, shop size matches config.
 
 + progression.test.js — XP formula, unlock thresholds, save/load integrity.
+
++ campaignBalance.test.js — seeded boss-reach target, early-run safety, and final-round difficulty ordering.
 
 - Tests run before every commit. Commit blocked if any test fails.
 

@@ -50,7 +50,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Buying a shop dragon consumes that shop slot until the next reroll or round refresh.
 - Selling returns **2 gold** (Tier 1), **4 gold** (Tier 2), or **8 gold** (Tier 3).
 - Rerolling the shop costs **1 gold** and can be done unlimited times.
-- Starting gold: **6** so round 1 can field two dragons. Gold earned per round won: **3 + current round number** (e.g., winning round 4 gives 7 gold).
+- Starting gold: **6** so round 1 can field two dragons. Gold earned per round won: **4 + current round number** (e.g., winning round 4 gives 8 gold).
 
 ### Merging
 - Place 3 identical dragons together → they fuse into 1 dragon of the next tier.
@@ -69,7 +69,8 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Enemies
 - Enemy teams are pre-generated per round from ALL 8 dragon types (including ones the player hasn't unlocked).
-- Difficulty escalates by team size, tier, and power scale: round 1 has one weakened Tier 1 enemy, round 2 has two weakened Tier 1 enemies, round 3 begins weakened full enemy teams, and later rounds ramp toward stronger Tier 2 and Tier 3 enemies.
+- Difficulty escalates by team size, tier, and power scale. Rounds 1-6 are build-up fights, rounds 7-9 validate the developing composition, and round 10 is the strongest pre-boss exam. Enemy tier upgrades use compensating power scales so a new tier is a controlled step rather than a doubled-stat wall.
+- Balance target: a competent duplicate-focused draft should reach the boss in roughly **65-85%** of seeded simulations. The boss is the run's primary payoff and score test; early losses should be uncommon rather than the expected endpoint.
 
 ### Boss Fight (Eternal Wyrm)
 - Only reached by winning all 10 rounds.
