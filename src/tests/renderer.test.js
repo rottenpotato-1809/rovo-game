@@ -105,6 +105,15 @@ test('main menu regions stay aligned to the illustrated scene', () => {
   assert(CONFIG.MENU_NEW_RUN_LABEL_Y >= buttons.newRun.y && newRunLabelBottom <= buttons.newRun.y + buttons.newRun.height, 'New Run label must stay inside the tower hotspot');
   assert(CONFIG.MENU_CODEX_LABEL_X >= buttons.codex.x && codexLabelRight <= buttons.codex.x + buttons.codex.width, 'Codex label must stay with the ground dragons');
   assert(CONFIG.MENU_CODEX_LABEL_Y >= buttons.codex.y && codexLabelBottom <= buttons.codex.y + buttons.codex.height, 'Codex label must stay inside the dragon hotspot');
+  assert(CONFIG.MENU_TITLE_X + CONFIG.MENU_TITLE_WIDTH <= CONFIG.CANVAS_WIDTH, 'Title artwork must fit the menu width');
+  assert(CONFIG.MENU_TITLE_Y + CONFIG.MENU_TITLE_HEIGHT <= CONFIG.MENU_STATS_PANEL_Y, 'Title artwork must clear the progression panel');
+});
+
+test('loading artwork and progress bar stay inside the canvas', () => {
+  assert(CONFIG.LOADING_TITLE_X >= 0 && CONFIG.LOADING_TITLE_X + CONFIG.LOADING_TITLE_WIDTH <= CONFIG.CANVAS_WIDTH, 'Loading title must fit horizontally');
+  assert(CONFIG.LOADING_TITLE_Y >= 0 && CONFIG.LOADING_TITLE_Y + CONFIG.LOADING_TITLE_HEIGHT <= CONFIG.CANVAS_HEIGHT, 'Loading title must fit vertically');
+  assert(CONFIG.LOADING_BAR_X >= 0 && CONFIG.LOADING_BAR_X + CONFIG.LOADING_BAR_WIDTH <= CONFIG.CANVAS_WIDTH, 'Loading bar must fit horizontally');
+  assert(CONFIG.LOADING_BAR_Y + CONFIG.LOADING_BAR_HEIGHT <= CONFIG.CANVAS_HEIGHT, 'Loading bar must fit vertically');
 });
 
 test('codex grid stays inside the illustrated book pages', () => {

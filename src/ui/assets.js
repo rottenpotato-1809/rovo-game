@@ -1,8 +1,13 @@
 const BACKGROUND_SOURCES = {
+  loading: new URL('../background/loading.png', import.meta.url).href,
   menu: new URL('../background/main_menu.png', import.meta.url).href,
   prep: new URL('../background/prep_phase.png', import.meta.url).href,
   fight: new URL('../background/fight_phase.png', import.meta.url).href,
   codex: new URL('../background/codex.png', import.meta.url).href,
+};
+
+const UI_SOURCES = {
+  gameTitle: new URL('../background/game-name.png', import.meta.url).href,
 };
 
 const DRAGON_ELEMENTS = {
@@ -23,6 +28,11 @@ export function getBackgroundImage(phase) {
   return getImage(BACKGROUND_SOURCES[phase]);
 }
 
+// Return the shared Wyrmpit title artwork.
+export function getGameTitleImage() {
+  return getImage(UI_SOURCES.gameTitle);
+}
+
 // Return a dragon sprite, reusing Tier 2 artwork for Tier 3.
 export function getDragonImage(id, tier) {
   const descriptor = getDragonSpriteDescriptor(id, tier);
@@ -39,16 +49,23 @@ export function getDragonSpriteDescriptor(id, tier) {
 }
 
 // Load all runtime images before the first interactive frame.
-export async function preloadAssets() {
+export async function preloadAssets(onProgress = () => {}) {
   if (typeof Image === 'undefined') return;
   const sources = [
     ...Object.values(BACKGROUND_SOURCES),
+    ...Object.values(UI_SOURCES),
     ...Object.values(DRAGON_ELEMENTS).flatMap(element => [
       new URL(`../sprites/${element}_Dragon_T1.png`, import.meta.url).href,
       new URL(`../sprites/${element}_Dragon_T2.png`, import.meta.url).href,
     ]),
   ];
-  await Promise.all(sources.map(source => loadImage(source)));
+  let completed = 0;
+  onProgress(completed / sources.length);
+  await Promise.all(sources.map(async source => {
+    await loadImage(source);
+    completed += 1;
+    onProgress(completed / sources.length);
+  }));
 }
 
 // Return a cached browser image without creating DOM dependencies in logic tests.

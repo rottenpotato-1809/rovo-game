@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { getBackgroundImage, getDragonImage } from './assets.js';
+import { getBackgroundImage, getDragonImage, getGameTitleImage } from './assets.js';
 import { getPointerState } from './pointer.js';
 
 const buttonMotion = new Map();
@@ -19,6 +19,16 @@ export function drawPhaseBackground(ctx, phase) {
   ctx.save();
   ctx.imageSmoothingEnabled = true;
   ctx.drawImage(image, 0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
+  ctx.restore();
+}
+
+// Draw the shared Wyrmpit title artwork inside a configured rectangle.
+export function drawGameTitle(ctx, rect) {
+  const image = getGameTitleImage();
+  if (!image || !image.complete || !image.naturalWidth) return;
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(image, rect.x, rect.y, rect.width, rect.height);
   ctx.restore();
 }
 
@@ -149,36 +159,9 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
   ctx.restore();
 }
 
-// Draw a static command label over its illustrated-scene hotspot.
+// Draw an animated command button over its illustrated-scene hotspot.
 export function drawMenuHotspot(ctx, labelRect, label) {
-  ctx.save();
-  ctx.globalAlpha = CONFIG.ARENA_ALIVE_ALPHA;
-  drawRect(ctx, labelRect, CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
-  drawText(
-    ctx,
-    label,
-    labelRect.x + (labelRect.width / 2),
-    labelRect.y + (labelRect.height / 2),
-    CONFIG.FONT_SIZE_BUTTON,
-  );
-  ctx.restore();
-}
-
-// Draw the large outlined fantasy title over the menu sky.
-export function drawDisplayTitle(ctx, text, x, y) {
-  ctx.save();
-  ctx.font = `bold ${CONFIG.FONT_SIZE_MENU_TITLE}px ${CONFIG.FONT_FAMILY_DISPLAY}`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.lineJoin = 'round';
-  ctx.shadowColor = CONFIG.MENU_TITLE_SHADOW_COLOR;
-  ctx.shadowBlur = CONFIG.MENU_TITLE_SHADOW_BLUR;
-  ctx.strokeStyle = CONFIG.TEXT_OUTLINE_COLOR;
-  ctx.lineWidth = CONFIG.MENU_TITLE_STROKE_WIDTH;
-  ctx.strokeText(text, x, y);
-  ctx.fillStyle = CONFIG.GOLD_COLOR;
-  ctx.fillText(text, x, y);
-  ctx.restore();
+  drawButton(ctx, labelRect, label, CONFIG.UI_PANEL_COLOR);
 }
 
 // Draw one dragon's bitmap artwork with a distinct animated Tier 3 aura.

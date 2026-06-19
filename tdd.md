@@ -64,12 +64,12 @@ Milestone 3 runtime owns one shared `game.saveData` object loaded at boot. Resul
 | Commits | Conventional commits after every completed feature/fix. Format: `feat: add shop reroll` / `fix: dragon targeting ignoring taunt` / `test: add merge tier-up cases`. Only commit if build passes. |
 | Build check | Before reporting done: confirm `index.html` loads in browser with zero console errors. If dev server can't run in sandbox, flag it explicitly. |
 
-Bitmap assets preload before the game loop starts. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use T2 artwork. The renderer adds Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot, keeping every state consistent without duplicating interaction timing.
+The game loop starts in `LoadingState`, which renders dedicated loading artwork and receives normalized progress from the centralized bitmap preloader. The menu becomes interactive only after every registered image resolves. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas, and loading/menu share one transparent title bitmap. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use enlarged T2 artwork. The renderer adds Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot, including the compact menu command buttons, without highlighting their larger illustrated hotspots.
 
 ---
 
 ## State Machine
-MENU → PREP → FIGHT → (win?) → PREP (next round)
+LOADING → MENU → PREP → FIGHT → (win?) → PREP (next round)
 → (lose?) → RESULT → MENU
 (round 10 won?) → BOSS → RESULT → MENU
 MENU → CODEX → MENU

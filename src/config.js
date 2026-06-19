@@ -231,6 +231,12 @@ export const CONFIG = {
   CANVAS_MAX_PIXEL_RATIO: 2,
   // Maximum backing-store pixel ratio for sharp scaled rendering without huge canvases.
 
+  PERCENT_MULTIPLIER: 100,
+  // Convert normalized progress values into whole display percentages.
+
+  LOADING_MIN_DURATION_MS: 900,
+  // Minimum boot-screen visibility so cached assets do not skip the transition.
+
   // ─── RENDERING — COLORS ───────────────────────────────────────
   // All color values used in the game. Change these to retheme instantly.
 
@@ -251,6 +257,9 @@ export const CONFIG = {
 
   GOLD_COLOR: '#f5c842',
   // Currency display, shop card borders, gold-related UI.
+
+  LOADING_BAR_COLOR: '#b94cff',
+  // Loading progress fill over the illustrated boot screen.
 
   TEXT_PRIMARY: '#ffffff',
   // Main text color.
@@ -327,10 +336,10 @@ export const CONFIG = {
   DRAGON_TIER_ONE_SCALE: 0.86,
   // Baby-dragon artwork scale relative to its slot or battle radius.
 
-  DRAGON_TIER_TWO_SCALE: 1.08,
+  DRAGON_TIER_TWO_SCALE: 1.35,
   // Adult-dragon artwork scale so evolved forms read larger than babies.
 
-  DRAGON_TIER_THREE_SCALE: 1.08,
+  DRAGON_TIER_THREE_SCALE: 1.35,
   // Tier 3 keeps the adult silhouette and adds evolution effects.
 
   SHOP_DRAGON_SPRITE_SIZE: 54,
@@ -548,12 +557,6 @@ export const CONFIG = {
 
   FONT_SIZE_TITLE: 36,
   // Game title on main menu (px).
-
-  FONT_SIZE_MENU_TITLE: 56,
-  // Large fantasy title used only on the illustrated main menu.
-
-  FONT_FAMILY_DISPLAY: 'Georgia, serif',
-  // Display face for the Wyrmpit title.
 
   FONT_SIZE_HEADER: 16,
   // Round number, gold display (px).
@@ -837,20 +840,44 @@ export const CONFIG = {
   RESULT_BUTTON_Y: 360,
   // Y position for result screen replay button.
 
-  MENU_TITLE_X: 720,
-  // Main menu title horizontal center in the upper-right sky.
+  MENU_TITLE_X: 550,
+  // Left edge of the title artwork in the upper-right sky.
 
-  MENU_TITLE_Y: 82,
-  // Main menu title baseline.
+  MENU_TITLE_Y: 22,
+  // Top edge of the title artwork.
 
-  MENU_TITLE_SHADOW_BLUR: 16,
-  // Glow softness behind the main-menu title.
+  MENU_TITLE_WIDTH: 360,
+  // Width of the title artwork on the main menu.
 
-  MENU_TITLE_SHADOW_COLOR: 'rgba(15, 20, 52, 0.9)',
-  // Dark title glow that separates the logo from the sky.
+  MENU_TITLE_HEIGHT: 120,
+  // Height of the title artwork on the main menu.
 
-  MENU_TITLE_STROKE_WIDTH: 5,
-  // Outline width for the main-menu title.
+  LOADING_TITLE_X: 250,
+  // Left edge of the title artwork on the loading screen.
+
+  LOADING_TITLE_Y: 24,
+  // Top edge of the title artwork on the loading screen.
+
+  LOADING_TITLE_WIDTH: 460,
+  // Width of the loading-screen title artwork.
+
+  LOADING_TITLE_HEIGHT: 153,
+  // Height of the loading-screen title artwork.
+
+  LOADING_LABEL_Y: 458,
+  // Loading percentage baseline above the progress bar.
+
+  LOADING_BAR_X: 220,
+  // Loading bar left edge.
+
+  LOADING_BAR_Y: 478,
+  // Loading bar top edge.
+
+  LOADING_BAR_WIDTH: 520,
+  // Loading bar width.
+
+  LOADING_BAR_HEIGHT: 18,
+  // Loading bar height.
 
   MENU_STATS_PANEL_X: 650,
   // Left edge of the progression panel over the lower-right sea.

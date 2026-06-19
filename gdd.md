@@ -36,7 +36,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Each dragon has a **role** (DPS, Tank, Assassin, or Support), an **element**, and one **ability**.
 - Abilities fire automatically during combat when ready.
 - Every dragon uses bespoke Tier 1 and Tier 2 character artwork. Tier 3 keeps its Tier 2 form and is distinguished by an animated golden aura and orbiting evolution motes.
-- Tier 1 baby artwork renders smaller than the Tier 2/Tier 3 adult silhouette so evolution is immediately readable.
+- Tier 1 baby artwork renders substantially smaller than the Tier 2/Tier 3 adult silhouette so evolution is immediately readable even when source art has different transparent padding.
 
 ### Team
 - Exactly **3 dragons** fight per round. No more, no fewer.
@@ -152,10 +152,13 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Footer: "Discovered: X / 24."
 
 ### Main Menu
-- The large "WYRMPIT" title occupies the open upper-right sky without covering the illustrated landmarks.
+- The dedicated Wyrmpit logo artwork occupies the open upper-right sky without covering the illustrated landmarks.
 - High Score and the XP progress bar share a compact lower-right panel over the sea.
-- The tower is the full New Run interaction region, with a static entrance label that does not tint the artwork on hover.
-- The ground-dragon group is the full Codex interaction region, with a static label and no scene highlight.
+- The tower is the full New Run interaction region; only its entrance button animates on hover/press, without tinting the tower artwork.
+- The ground-dragon group is the full Codex interaction region; only its compact button animates, without highlighting the whole scene.
+
+### Loading Screen
+- First boot shows dedicated full-screen loading artwork, the Wyrmpit logo, and live image-preload progress before the menu becomes interactive.
 
 ---
 

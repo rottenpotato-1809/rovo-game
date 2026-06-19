@@ -7,6 +7,7 @@ import { BossState } from './states/bossState.js';
 import { CodexState } from './states/codexState.js';
 import { FightState } from './states/fightState.js';
 import { MenuState } from './states/menuState.js';
+import { LoadingState } from './states/loadingState.js';
 import { PrepState } from './states/prepState.js';
 import { ResultState } from './states/resultState.js';
 import { load } from './persistence/save.js';
@@ -16,12 +17,12 @@ import { preloadAssets } from './ui/assets.js';
 async function main() {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
+  const loadingStartedAt = performance.now();
 
-  preloadAssets()
-    .then(() => console.log('[ASSET] runtime images ready'))
-    .catch(error => console.warn('[ASSET] preload incomplete', error));
   const stateManager = new StateManager();
   const game = { run: null, saveData: load() };
+  const loadingState = new LoadingState();
+  stateManager.register('loading', loadingState);
   stateManager.register('arena', new ArenaState(stateManager));
   stateManager.register('menu', new MenuState(stateManager, game));
   stateManager.register('codex', new CodexState(stateManager, game));
@@ -29,7 +30,7 @@ async function main() {
   stateManager.register('boss', new BossState(stateManager, game));
   stateManager.register('prep', new PrepState(stateManager, game));
   stateManager.register('result', new ResultState(stateManager, game));
-  stateManager.change('menu');
+  stateManager.change('loading');
 
   new Input(canvas, stateManager);
   const loop = new GameLoop(
@@ -40,6 +41,12 @@ async function main() {
     },
   );
   loop.start();
+  await preloadAssets(progress => loadingState.setProgress(progress));
+  const loadingElapsed = performance.now() - loadingStartedAt;
+  const loadingDelay = Math.max(0, CONFIG.LOADING_MIN_DURATION_MS - loadingElapsed);
+  await new Promise(resolve => setTimeout(resolve, loadingDelay));
+  console.log('[ASSET] runtime images ready');
+  stateManager.change('menu');
 }
 
 // Match the canvas backing store to its displayed size for crisp scaled rendering.
