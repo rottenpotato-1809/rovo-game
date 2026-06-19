@@ -14,7 +14,6 @@ export function clear(ctx) {
 export function drawPhaseBackground(ctx, phase) {
   const image = getBackgroundImage(phase);
   if (!image || !image.complete || !image.naturalWidth) {
-    drawArenaBackdrop(ctx);
     return;
   }
   ctx.save();
@@ -150,22 +149,11 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY) {
   ctx.restore();
 }
 
-// Draw a large illustrated-scene hotspot with a compact command label.
-export function drawMenuHotspot(ctx, hotspot, labelRect, label, accent) {
-  const pointer = getPointerState();
-  const hovered = pointInRect(pointer, hotspot);
+// Draw a static command label over its illustrated-scene hotspot.
+export function drawMenuHotspot(ctx, labelRect, label) {
   ctx.save();
-  if (hovered) {
-    ctx.globalAlpha = CONFIG.MENU_HOTSPOT_HOVER_ALPHA;
-    ctx.shadowColor = accent;
-    ctx.shadowBlur = CONFIG.MENU_HOTSPOT_GLOW_BLUR;
-    ctx.lineWidth = CONFIG.MENU_HOTSPOT_BORDER_WIDTH;
-    drawRect(ctx, hotspot, accent, accent);
-  }
   ctx.globalAlpha = CONFIG.ARENA_ALIVE_ALPHA;
-  ctx.shadowColor = hovered ? accent : CONFIG.BUTTON_SHADOW_COLOR;
-  ctx.shadowBlur = hovered ? CONFIG.BUTTON_GLOW_BLUR : 0;
-  drawRect(ctx, labelRect, hovered ? accent : CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
+  drawRect(ctx, labelRect, CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
   drawText(
     ctx,
     label,

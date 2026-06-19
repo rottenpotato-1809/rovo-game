@@ -37,8 +37,8 @@ export class MenuState {
     const ratio = nextUnlock ? nextUnlock.current / nextUnlock.required : 1;
     drawText(ctx, label, CONFIG.MENU_STATS_PANEL_X + (CONFIG.MENU_STATS_PANEL_WIDTH / 2), CONFIG.MENU_XP_LABEL_Y, CONFIG.FONT_SIZE_HEADER);
     drawBar(ctx, CONFIG.MENU_XP_BAR_X, CONFIG.MENU_XP_BAR_Y, CONFIG.MENU_XP_BAR_WIDTH, CONFIG.MENU_XP_BAR_HEIGHT, ratio, CONFIG.GOLD_COLOR);
-    drawMenuHotspot(ctx, this.buttons.newRun, this.getNewRunLabel(), 'NEW RUN', CONFIG.ACCENT_PRIMARY);
-    drawMenuHotspot(ctx, this.buttons.codex, this.getCodexLabel(), 'CODEX', CONFIG.ACCENT_SECONDARY);
+    drawMenuHotspot(ctx, this.getNewRunLabel(), 'NEW RUN');
+    drawMenuHotspot(ctx, this.getCodexLabel(), 'CODEX');
   }
 
   // Return the compact New Run label over the tower entrance.

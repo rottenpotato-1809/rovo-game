@@ -260,7 +260,7 @@ Rendering (ui/renderer.js)
 
 - Canvas text is filled over a configurable dark outline for contrast. Fight layout reserves the upper-center result panel and upper-right scrolling log panel above `ARENA_BATTLEFIELD_TOP_Y`. All combat rows sit below that boundary. Player sprites are mirrored toward the center with their name/HP/cooldown column outside on the left; enemy artwork faces left with information outside on the right.
 
-- Main-menu controls use image-aligned rectangular hotspots configured in `config.js`: the tower opens a new run and the ground-dragon group opens the codex. Hover rendering highlights the complete scene region while compact labels remain inside their associated artwork. The title and progression panel occupy dedicated right-side negative space.
+- Main-menu controls use image-aligned rectangular hotspots configured in `config.js`: the tower opens a new run and the ground-dragon group opens the codex. Compact labels remain static inside their artwork without hover tint or glow. The title and progression panel occupy dedicated right-side negative space.
 
 - The codex uses its own full-screen open-book bitmap. Its 8-by-3 grid is constrained to configurable parchment bounds, while the artwork supplies the screen title and the canvas only renders collection cells, discovery progress, and Back.
 
@@ -277,7 +277,7 @@ Run Health
 
 - Battle playback is landscape-first and brisk by default; tune TURN_DELAY_MS and animation durations in config.js rather than per-state literals.
 
-- Fight playback reconstructs ability cooldowns from combat events. The upper-right canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display. Completed fights only continue from the compact result-panel hit area, leaving log interaction independent.
+- Fight playback reconstructs ability cooldowns from combat events. The upper-right canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display. After playback completes, any canvas pointer press continues; the centered result panel is presentation rather than a restricted hit target.
 
 Animation (ui/animations.js)
 - Tween system: array of active tweens, each with { target, property, from, to, duration, elapsed, easing }.
@@ -330,6 +330,7 @@ Non-Goals (Technical)
 - No sprite sheets; individual bitmap backgrounds and dragon portraits are preloaded through the centralized asset registry.
 
 - Asset preloading is non-blocking. The state machine and render loop start immediately with renderer fallbacks, then automatically show bitmap assets as each cached image becomes available.
+- Missing phase bitmaps leave the configured dark clear color visible; they never draw the legacy neutral arena fallback, preventing a gray first-load flash.
 
 - No mobile-specific viewport hacks beyond basic CSS scaling.
 

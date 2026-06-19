@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { getDragon, getDragonTier } from '../data/dragons.js';
 import { simulateBattle } from '../systems/battle.js';
-import { calculateRoundGold } from '../systems/economy.js';
+import { calculateRoundGold, getSellPrice } from '../systems/economy.js';
 import { checkMergeAvailable, executeMerge } from '../systems/merge.js';
 import { registerCodexEntry } from '../systems/progression.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
@@ -128,11 +128,22 @@ export class PrepState {
     const sellZone = getSellZone();
     const buttons = getPrepButtons();
     drawRect(ctx, sellZone, CONFIG.SELL_ZONE_COLOR, CONFIG.HP_BAR_LOW);
-    drawText(ctx, 'SELL', sellZone.x + sellZone.width / 2, sellZone.y + sellZone.height / 2, CONFIG.FONT_SIZE_BUTTON);
+    const centerX = sellZone.x + sellZone.width / 2;
+    const centerY = sellZone.y + sellZone.height / 2;
+    drawText(ctx, 'SELL', centerX, centerY + CONFIG.PREP_SELL_TITLE_OFFSET_Y, CONFIG.FONT_SIZE_BUTTON);
+    drawFitText(ctx, this.getSellHint(), centerX, centerY + CONFIG.PREP_SELL_HINT_OFFSET_Y, CONFIG.FONT_SIZE_STATS, sellZone.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2), CONFIG.FONT_SIZE_SMALL, CONFIG.TEXT_SECONDARY);
     const mergeAvailable = checkMergeAvailable(this.game.run.team, this.game.run.bench);
     drawButton(ctx, buttons.merge, mergeAvailable ? 'MERGE' : 'NO MERGE', mergeAvailable ? CONFIG.GOLD_COLOR : CONFIG.ACCENT_SECONDARY);
     drawButton(ctx, buttons.reroll, `REROLL ${CONFIG.REROLL_COST}G`, CONFIG.ACCENT_SECONDARY);
     drawButton(ctx, buttons.fight, 'FIGHT', CONFIG.ACCENT_PRIMARY);
+  }
+
+  // Show drag guidance or the exact value of the dragon currently held.
+  getSellHint() {
+    if (!this.dragSource) return 'DRAG HERE TO SELL';
+    const list = this.dragSource.zone === 'team' ? this.game.run.team : this.game.run.bench;
+    const owned = list[this.dragSource.index];
+    return owned ? `DROP TO SELL FOR ${getSellPrice(owned.tier)}G` : 'DRAG HERE TO SELL';
   }
 
   // Handle direct clicks on shop, buttons, or slots.

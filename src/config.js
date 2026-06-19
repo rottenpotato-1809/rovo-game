@@ -448,10 +448,10 @@ export const CONFIG = {
   // ─── RENDERING — FIGHT LAYOUT ────────────────────────────────
   // Positions for the 3v3 battle screen
 
-  FIGHT_PLAYER_X: 260,
+  FIGHT_PLAYER_X: 340,
   // X position for center of player dragons column.
 
-  FIGHT_ENEMY_X: 700,
+  FIGHT_ENEMY_X: 620,
   // X position for center of enemy dragons column.
 
   FIGHT_Y_POSITIONS: [310, 390, 470],
@@ -579,6 +579,9 @@ export const CONFIG = {
   FONT_SIZE_SCORE: 32,
   // Boss damage score display (px).
 
+  FONT_SIZE_FIGHT_RESULT: 44,
+  // Large WIN/LOSE label shown after combat playback.
+
   FONT_SIZE_BODY: 16,
   // General body copy and arena status text (px).
 
@@ -627,23 +630,29 @@ export const CONFIG = {
   ARENA_ABILITY_TIMER_WIDTH: 96,
   // Maximum width for the special-ability cooldown label.
 
-  ARENA_VS_X: 480,
-  // X position of center "VS" label.
-
-  ARENA_RESULT_Y: 35,
+  ARENA_RESULT_Y: 40,
   // Y position for WIN/LOSE result text after combat.
 
-  ARENA_RESULT_PANEL_X: 338,
+  ARENA_RESULT_CONTINUE_Y: 88,
+  // Y position for the click-to-continue prompt.
+
+  ARENA_RESULT_PANEL_X: 310,
   // Left edge of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_Y: 12,
+  ARENA_RESULT_PANEL_Y: 8,
   // Top edge of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_WIDTH: 304,
+  ARENA_RESULT_PANEL_WIDTH: 340,
   // Width of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_HEIGHT: 94,
+  ARENA_RESULT_PANEL_HEIGHT: 112,
   // Height of the completed-fight panel.
+
+  PREP_SELL_TITLE_OFFSET_Y: -8,
+  // Vertical offset for the main Sell label.
+
+  PREP_SELL_HINT_OFFSET_Y: 11,
+  // Vertical offset for drag guidance and the active sell value.
 
   ARENA_LOG_PANEL_X: 662,
   // Left edge of the combat-log panel in the upper-right UI space.
@@ -926,15 +935,6 @@ export const CONFIG = {
 
   MENU_HOTSPOT_LABEL_HEIGHT: 40,
   // Shared command-label height on image hotspots.
-
-  MENU_HOTSPOT_HOVER_ALPHA: 0.16,
-  // Scene tint opacity while hovering an image hotspot.
-
-  MENU_HOTSPOT_BORDER_WIDTH: 3,
-  // Hover outline width around a scene hotspot.
-
-  MENU_HOTSPOT_GLOW_BLUR: 24,
-  // Hover glow softness around the tower and dragon group.
 
   CODEX_START_X: 158,
   // Codex grid left edge.

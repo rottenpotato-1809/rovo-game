@@ -121,6 +121,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - The bench occupies the lower-left staging floor instead of crowding the active team row. Prep and codex portraits consistently face left.
 - **Shop zone:** 3 dragon cards side by side + Reroll button + Fight button. Positioned at the bottom.
 - **Sell zone:** Visible drop target (trash icon or "SELL" label) near bench.
+- The Sell zone includes a drag instruction and changes to the held dragon's exact sell value while dragging.
 
 ### Fight Phase Screen
 - **Landscape arena:** combat uses a 16:9 battlefield view instead of the earlier mobile portrait layout.
@@ -128,10 +129,10 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Brown floor:** all 6 combatants stand entirely on the lower arena floor in two compact columns.
 - **Facing:** player dragons are mirrored to face right; enemy dragons face left.
 - **Outer information:** player names, HP, and cooldowns sit left of player artwork; enemy information sits right of enemy artwork.
-- **Center:** Floating damage/heal numbers animate on hit.
+- **Center:** The two teams stand in close opposing columns without a separate VS label. Floating damage/heal numbers animate on hit.
 - **Upper-right panel:** scrolling combat log, separated from the battlefield.
 - Each combatant shows whether its special ability is ready or how many actions remain on cooldown. The combat log supports wheel and touch-drag history scrolling, and action labels are displayed as readable words.
-- **After battle ends:** WIN/LOSE and the Continue prompt occupy one compact upper-center panel without covering the arena.
+- **After battle ends:** A large WIN/LOSE label and the Continue prompt occupy one centered upper panel. Clicking anywhere advances.
 - **Pacing:** battle playback should be brisk by default so a full 3v3 fight resolves quickly while attacks and ability flashes remain readable.
 - Combatants lunge, recoil, flash on impact, pulse when casting abilities, and fade on defeat. Buttons scale and glow on hover and compress while pressed.
 
@@ -153,8 +154,8 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Main Menu
 - The large "WYRMPIT" title occupies the open upper-right sky without covering the illustrated landmarks.
 - High Score and the XP progress bar share a compact lower-right panel over the sea.
-- The tower is the full New Run interaction region; hovering highlights the whole tower and its entrance label.
-- The ground-dragon group is the full Codex interaction region; hovering highlights the group and its label.
+- The tower is the full New Run interaction region, with a static entrance label that does not tint the artwork on hover.
+- The ground-dragon group is the full Codex interaction region, with a static label and no scene highlight.
 
 ---
 

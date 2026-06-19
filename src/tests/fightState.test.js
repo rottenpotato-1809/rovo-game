@@ -38,10 +38,15 @@ test('combat log hit testing is limited to the upper-right panel', () => {
   assert(!state.isPointInCombatLog({ x: CONFIG.ARENA_RESULT_PANEL_X, y: CONFIG.ARENA_RESULT_PANEL_Y }));
 });
 
-test('continue hit testing is limited to the compact result panel', () => {
+test('completed fights continue from any canvas position', () => {
+  let completed = false;
   const state = new FightState({});
-  assert(state.isPointInResultPanel({ x: CONFIG.CANVAS_WIDTH / 2, y: CONFIG.ARENA_RESULT_Y }));
-  assert(!state.isPointInResultPanel({ x: CONFIG.CANVAS_WIDTH / 2, y: CONFIG.FIGHT_Y_POSITIONS[1] }));
+  state.events = [];
+  state.eventIndex = 0;
+  state.result = { outcome: 'win' };
+  state.onComplete = () => { completed = true; };
+  state.handlePointerDown({ x: 0, y: CONFIG.CANVAS_HEIGHT });
+  assert(completed, 'Any click must continue after playback finishes');
 });
 
 summarize();

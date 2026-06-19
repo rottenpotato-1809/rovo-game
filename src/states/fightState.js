@@ -75,25 +75,25 @@ export class FightState {
       drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
       drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
     }
-    drawText(ctx, 'VS', CONFIG.ARENA_VS_X, CONFIG.FIGHT_Y_POSITIONS[1], CONFIG.FONT_SIZE_TITLE, CONFIG.ACCENT_PRIMARY);
     [...this.playerTeam, ...this.enemyTeam].forEach(dragon => this.renderDragon(ctx, dragon));
     this.renderFloaters(ctx);
     this.renderCombatLog(ctx);
     if (isFinished) {
       drawRect(ctx, this.getResultPanel(), CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
-      drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_SCORE, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
-      drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y + CONFIG.BUTTON_HEIGHT, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
+      drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_FIGHT_RESULT, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
+      drawText(ctx, 'CLICK ANYWHERE TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_CONTINUE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
     }
   }
 
   // Continue to the next run state after playback finishes.
   handlePointerDown(point) {
-    if (this.isPointInCombatLog(point)) {
-      this.logDragY = point.y;
+    if (this.eventIndex >= this.events.length && this.onComplete) {
+      this.onComplete(this.result);
       return;
     }
-    if (this.eventIndex < this.events.length || !this.onComplete) return;
-    if (this.isPointInResultPanel(point)) this.onComplete(this.result);
+    if (this.isPointInCombatLog(point)) {
+      this.logDragY = point.y;
+    }
   }
 
   // Scroll the combat log by dragging inside its panel.
@@ -359,12 +359,4 @@ export class FightState {
     };
   }
 
-  // Check whether a pointer press requests continuation after combat.
-  isPointInResultPanel(point) {
-    const panel = this.getResultPanel();
-    return point.x >= panel.x
-      && point.x <= panel.x + panel.width
-      && point.y >= panel.y
-      && point.y <= panel.y + panel.height;
-  }
 }
