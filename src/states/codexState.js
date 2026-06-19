@@ -20,8 +20,7 @@ export class CodexState {
   // Draw every dragon tier as discovered details or a locked silhouette.
   render(ctx) {
     clear(ctx);
-    drawPhaseBackground(ctx, 'prep');
-    drawText(ctx, 'CODEX', CONFIG.CANVAS_WIDTH / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_TITLE, CONFIG.GOLD_COLOR);
+    drawPhaseBackground(ctx, 'codex');
     DRAGONS.forEach((dragon, column) => {
       dragon.tiers.forEach((tier, row) => this.renderCell(ctx, dragon, tier, column, row));
     });

@@ -936,40 +936,46 @@ export const CONFIG = {
   MENU_HOTSPOT_GLOW_BLUR: 24,
   // Hover glow softness around the tower and dragon group.
 
-  CODEX_START_X: 38,
+  CODEX_START_X: 158,
   // Codex grid left edge.
 
-  CODEX_START_Y: 92,
+  CODEX_START_Y: 110,
   // Codex grid top edge.
 
-  CODEX_CELL_WIDTH: 100,
+  CODEX_CELL_WIDTH: 78,
   // Codex cell width.
 
-  CODEX_CELL_HEIGHT: 102,
+  CODEX_CELL_HEIGHT: 88,
   // Codex cell height.
 
-  CODEX_COLUMN_GAP: 12,
+  CODEX_COLUMN_GAP: 6,
   // Horizontal gap between codex columns.
 
-  CODEX_ROW_GAP: 10,
+  CODEX_ROW_GAP: 7,
   // Vertical gap between codex rows.
 
   CODEX_DRAGON_RADIUS: 18,
   // Portrait radius inside an unlocked codex cell.
 
-  CODEX_PORTRAIT_Y_OFFSET: 28,
+  CODEX_PORTRAIT_Y_OFFSET: 24,
   // Portrait offset inside a codex cell.
 
-  CODEX_NAME_Y_OFFSET: 58,
+  CODEX_NAME_Y_OFFSET: 53,
   // Name offset inside a codex cell.
 
-  CODEX_TIER_Y_OFFSET: 80,
+  CODEX_TIER_Y_OFFSET: 72,
   // Tier label offset inside a codex cell.
 
   CODEX_FOOTER_Y: 464,
   // Discovery count baseline.
 
-  CODEX_BACK_Y: 484,
+  CODEX_BOOK_CONTENT_RIGHT: 832,
+  // Right edge of the writable parchment area.
+
+  CODEX_BOOK_CONTENT_BOTTOM: 410,
+  // Bottom edge of the writable parchment area.
+
+  CODEX_BACK_Y: 486,
   // Codex back-button top edge.
 
   BOSS_SCORE_Y: 62,

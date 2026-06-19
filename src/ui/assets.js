@@ -2,6 +2,7 @@ const BACKGROUND_SOURCES = {
   menu: new URL('../background/main_menu.png', import.meta.url).href,
   prep: new URL('../background/prep_phase.png', import.meta.url).href,
   fight: new URL('../background/fight_phase.png', import.meta.url).href,
+  codex: new URL('../background/codex.png', import.meta.url).href,
 };
 
 const DRAGON_ELEMENTS = {

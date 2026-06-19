@@ -145,6 +145,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Two buttons: "PLAY AGAIN" / "MAIN MENU."
 
 ### Codex Screen
+- Uses the dedicated illustrated open-book background; its built-in CODEX heading replaces the former canvas title.
 - Grid: 8 columns (one per dragon) × 3 rows (T1, T2, T3).
 - Unlocked cells show colored icon + name. Locked cells show dark silhouette + "???".
 - Footer: "Discovered: X / 24."

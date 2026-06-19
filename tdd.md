@@ -262,6 +262,8 @@ Rendering (ui/renderer.js)
 
 - Main-menu controls use image-aligned rectangular hotspots configured in `config.js`: the tower opens a new run and the ground-dragon group opens the codex. Hover rendering highlights the complete scene region while compact labels remain inside their associated artwork. The title and progression panel occupy dedicated right-side negative space.
 
+- The codex uses its own full-screen open-book bitmap. Its 8-by-3 grid is constrained to configurable parchment bounds, while the artwork supplies the screen title and the canvas only renders collection cells, discovery progress, and Back.
+
 - Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
 - Dragon artwork applies centralized per-tier scale multipliers: Tier 1 is smaller, while Tier 2 and Tier 3 share the larger adult silhouette. Prep, shop, drag-preview, and codex rendering mirror sprites to face left. The prep bench row uses the lower-left staging floor with taller reserve slots.

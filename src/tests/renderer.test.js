@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { getMenuButtons } from '../ui/layout.js';
+import { getCodexCell, getMenuButtons } from '../ui/layout.js';
 import { drawText, getDragonTierScale } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
@@ -104,6 +104,13 @@ test('main menu regions stay aligned to the illustrated scene', () => {
   assert(CONFIG.MENU_NEW_RUN_LABEL_Y >= buttons.newRun.y && newRunLabelBottom <= buttons.newRun.y + buttons.newRun.height, 'New Run label must stay inside the tower hotspot');
   assert(CONFIG.MENU_CODEX_LABEL_X >= buttons.codex.x && codexLabelRight <= buttons.codex.x + buttons.codex.width, 'Codex label must stay with the ground dragons');
   assert(CONFIG.MENU_CODEX_LABEL_Y >= buttons.codex.y && codexLabelBottom <= buttons.codex.y + buttons.codex.height, 'Codex label must stay inside the dragon hotspot');
+});
+
+test('codex grid stays inside the illustrated book pages', () => {
+  const finalCell = getCodexCell(7, 2);
+  assert(finalCell.x + finalCell.width <= CONFIG.CODEX_BOOK_CONTENT_RIGHT, 'Codex columns must fit the parchment width');
+  assert(finalCell.y + finalCell.height <= CONFIG.CODEX_BOOK_CONTENT_BOTTOM, 'Codex rows must fit above the book footer');
+  assert(CONFIG.CODEX_FOOTER_Y < CONFIG.CODEX_BACK_Y, 'Discovery count must remain above the back button');
 });
 
 summarize();
