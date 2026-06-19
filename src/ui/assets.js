@@ -51,21 +51,26 @@ export function getDragonSpriteDescriptor(id, tier) {
 // Load all runtime images before the first interactive frame.
 export async function preloadAssets(onProgress = () => {}) {
   if (typeof Image === 'undefined') return;
-  const sources = [
-    ...Object.values(BACKGROUND_SOURCES),
-    ...Object.values(UI_SOURCES),
+  const bootSources = [BACKGROUND_SOURCES.loading, UI_SOURCES.gameTitle];
+  const runtimeSources = [
+    ...Object.entries(BACKGROUND_SOURCES)
+      .filter(([phase]) => phase !== 'loading')
+      .map(([, source]) => source),
     ...Object.values(DRAGON_ELEMENTS).flatMap(element => [
       new URL(`../sprites/${element}_Dragon_T1.png`, import.meta.url).href,
       new URL(`../sprites/${element}_Dragon_T2.png`, import.meta.url).href,
     ]),
   ];
+  const sources = [...bootSources, ...runtimeSources];
   let completed = 0;
   onProgress(completed / sources.length);
-  await Promise.all(sources.map(async source => {
+  const loadTrackedImage = async source => {
     await loadImage(source);
     completed += 1;
     onProgress(completed / sources.length);
-  }));
+  };
+  await Promise.all(bootSources.map(loadTrackedImage));
+  await Promise.all(runtimeSources.map(loadTrackedImage));
 }
 
 // Return a cached browser image without creating DOM dependencies in logic tests.

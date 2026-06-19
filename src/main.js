@@ -17,7 +17,6 @@ import { preloadAssets } from './ui/assets.js';
 async function main() {
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-  const loadingStartedAt = performance.now();
 
   const stateManager = new StateManager();
   const game = { run: null, saveData: load() };
@@ -42,9 +41,7 @@ async function main() {
   );
   loop.start();
   await preloadAssets(progress => loadingState.setProgress(progress));
-  const loadingElapsed = performance.now() - loadingStartedAt;
-  const loadingDelay = Math.max(0, CONFIG.LOADING_MIN_DURATION_MS - loadingElapsed);
-  await new Promise(resolve => setTimeout(resolve, loadingDelay));
+  await new Promise(resolve => setTimeout(resolve, CONFIG.LOADING_MIN_DURATION_MS));
   console.log('[ASSET] runtime images ready');
   stateManager.change('menu');
 }
