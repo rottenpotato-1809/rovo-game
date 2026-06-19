@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { DRAGONS } from '../data/dragons.js';
 import { getCodexBackButton, getCodexCell, pointInRect } from '../ui/layout.js';
-import { clear, drawButton, drawCircle, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
+import { clear, drawButton, drawCircle, drawDragonInspector, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
 // Display the persistent 8-by-3 dragon discovery collection.
 export class CodexState {
@@ -9,10 +9,13 @@ export class CodexState {
     this.stateManager = stateManager;
     this.game = game;
     this.backButton = getCodexBackButton();
+    this.hoveredEntry = null;
   }
 
   // Keep the codex stateless between visits.
-  enter() {}
+  enter() {
+    this.hoveredEntry = null;
+  }
 
   // Keep the codex static.
   update() {}
@@ -24,8 +27,17 @@ export class CodexState {
     DRAGONS.forEach((dragon, column) => {
       dragon.tiers.forEach((tier, row) => this.renderCell(ctx, dragon, tier, column, row));
     });
-    const discovered = Object.values(this.game.saveData.codex).filter(Boolean).length;
-    drawText(ctx, `DISCOVERED ${discovered}/${DRAGONS.length * CONFIG.MAX_TIER}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.CODEX_FOOTER_Y, CONFIG.FONT_SIZE_HEADER);
+    if (this.hoveredEntry) {
+      drawDragonInspector(ctx, {
+        x: CONFIG.CODEX_INSPECTOR_X,
+        y: CONFIG.CODEX_INSPECTOR_Y,
+        width: CONFIG.CODEX_INSPECTOR_WIDTH,
+        height: CONFIG.CODEX_INSPECTOR_HEIGHT,
+      }, this.hoveredEntry.dragon, this.hoveredEntry.tierData);
+    } else {
+      const discovered = Object.values(this.game.saveData.codex).filter(Boolean).length;
+      drawText(ctx, `DISCOVERED ${discovered}/${DRAGONS.length * CONFIG.MAX_TIER}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.CODEX_FOOTER_Y, CONFIG.FONT_SIZE_HEADER);
+    }
     drawButton(ctx, this.backButton, 'BACK', CONFIG.ACCENT_SECONDARY);
   }
 
@@ -49,5 +61,18 @@ export class CodexState {
   // Return to the main menu.
   handlePointerDown(point) {
     if (pointInRect(point, this.backButton)) this.stateManager.change('menu');
+  }
+
+  // Show details only for a discovered codex entry under the pointer.
+  handlePointerMove(point) {
+    this.hoveredEntry = null;
+    DRAGONS.forEach((dragon, column) => {
+      dragon.tiers.forEach((tierData, row) => {
+        if (!pointInRect(point, getCodexCell(column, row))) return;
+        if (this.game.saveData.codex[`${dragon.id}_${tierData.tier}`]) {
+          this.hoveredEntry = { dragon, tierData };
+        }
+      });
+    });
   }
 }

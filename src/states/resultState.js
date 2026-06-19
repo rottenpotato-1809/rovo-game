@@ -30,7 +30,9 @@ export class ResultState {
       totalXP,
       highScore: Math.max(this.game.saveData.highScore, bossDamage),
       unlockedDragons,
+      activeRun: null,
     });
+    this.game.run = null;
     this.summary = {
       roundsSurvived,
       bossDamage,

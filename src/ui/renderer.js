@@ -112,6 +112,18 @@ export function drawFitText(ctx, text, x, y, size, maxWidth, minSize, color = CO
   drawText(ctx, text, x, y, fittedSize, color, align);
 }
 
+// Draw dragon identity, combat stats, and ability details in one hover panel.
+export function drawDragonInspector(ctx, rect, dragon, tierData) {
+  drawRect(ctx, rect, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
+  const left = rect.x + CONFIG.DRAGON_INSPECTOR_PADDING;
+  const right = rect.x + rect.width - CONFIG.DRAGON_INSPECTOR_PADDING;
+  const firstLine = rect.y + CONFIG.DRAGON_INSPECTOR_PADDING;
+  drawFitText(ctx, `${dragon.name} T${tierData.tier}`, left, firstLine, CONFIG.FONT_SIZE_HEADER, rect.width - (CONFIG.DRAGON_INSPECTOR_PADDING * 2), CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
+  drawText(ctx, `ATK ${tierData.atk}  HP ${tierData.hp}  SPD ${tierData.spd}`, left, firstLine + CONFIG.DRAGON_INSPECTOR_LINE_GAP, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY, 'left');
+  drawFitText(ctx, tierData.abilityName, right, firstLine + CONFIG.DRAGON_INSPECTOR_LINE_GAP, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width / 2, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.GOLD_COLOR, 'right');
+  drawFitText(ctx, tierData.abilityDesc, left, firstLine + (CONFIG.DRAGON_INSPECTOR_LINE_GAP * 2), CONFIG.FONT_SIZE_STATS, rect.width - (CONFIG.DRAGON_INSPECTOR_PADDING * 2), CONFIG.FONT_SIZE_SMALL, CONFIG.TEXT_PRIMARY, 'left');
+}
+
 // Draw a horizontal value bar for HP and shields.
 export function drawBar(ctx, x, y, width, height, ratio, fill) {
   const clamped = Math.max(0, Math.min(CONFIG.ARENA_ALIVE_ALPHA, ratio));

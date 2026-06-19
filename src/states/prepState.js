@@ -1,13 +1,14 @@
 import { CONFIG } from '../config.js';
 import { getDragon, getDragonTier } from '../data/dragons.js';
+import { save } from '../persistence/save.js';
 import { simulateBattle } from '../systems/battle.js';
 import { calculateRoundGold, getSellPrice } from '../systems/economy.js';
 import { checkMergeAvailable, executeMerge } from '../systems/merge.js';
 import { registerCodexEntry } from '../systems/progression.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
 import { buyDragon, cloneDraftState, rerollShop, sellDragon } from '../systems/shop.js';
-import { getBenchSlots, getPrepButtons, getSellZone, getShopCards, getTeamSlots, pointInRect } from '../ui/layout.js';
-import { clear, drawButton, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
+import { getBenchSlots, getPrepBackButton, getPrepButtons, getSellZone, getShopCards, getTeamSlots, pointInRect } from '../ui/layout.js';
+import { clear, drawButton, drawDragonInspector, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
 // Render and operate the draft/prep phase for Milestone 2.
 export class PrepState {
@@ -18,6 +19,9 @@ export class PrepState {
     this.dragSource = null;
     this.dragPoint = null;
     this.message = '';
+    this.hoveredDragon = null;
+    this.hoverPoint = null;
+    this.backButton = getPrepBackButton();
   }
 
   // Ensure a run exists before showing prep.
@@ -26,6 +30,10 @@ export class PrepState {
     this.selectedSource = null;
     this.dragSource = null;
     this.dragPoint = null;
+    this.hoveredDragon = null;
+    this.hoverPoint = null;
+    if (!Number.isInteger(this.game.run.tutorialStep)) this.game.run.tutorialStep = 0;
+    this.persistRun();
   }
 
   // Keep prep state static between pointer interactions.
@@ -37,10 +45,13 @@ export class PrepState {
     drawPhaseBackground(ctx, 'prep');
     ctx.lineWidth = CONFIG.PREP_FRAME_LINE_WIDTH;
     this.renderHeader(ctx);
+    drawButton(ctx, this.backButton, 'BACK', CONFIG.ACCENT_SECONDARY);
     this.renderSlots(ctx, 'team', getTeamSlots(), this.game.run.team, 'YOUR TEAM');
     this.renderSlots(ctx, 'bench', getBenchSlots(), this.game.run.bench, 'BENCH');
     this.renderShop(ctx);
     this.renderCommands(ctx);
+    this.renderHoverDetails(ctx);
+    this.renderTutorial(ctx);
     this.renderDragPreview(ctx);
     drawText(ctx, this.message, CONFIG.CANVAS_WIDTH / 2, CONFIG.PREP_MESSAGE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
   }
@@ -164,6 +175,68 @@ export class PrepState {
     drawButton(ctx, buttons.merge, mergeAvailable ? 'MERGE' : 'NO MERGE', mergeAvailable ? CONFIG.GOLD_COLOR : CONFIG.ACCENT_SECONDARY);
     drawButton(ctx, buttons.reroll, `REROLL ${CONFIG.REROLL_COST}G`, CONFIG.ACCENT_SECONDARY);
     drawButton(ctx, buttons.fight, 'FIGHT', CONFIG.ACCENT_PRIMARY, CONFIG.FONT_SIZE_PREP_FIGHT);
+    if (this.hoverPoint && pointInRect(this.hoverPoint, buttons.merge)) this.renderMergeTooltip(ctx);
+  }
+
+  // Draw contextual dragon stats and skill details while hovering.
+  renderHoverDetails(ctx) {
+    if (!this.hoveredDragon || this.isTutorialActive()) return;
+    drawDragonInspector(ctx, {
+      x: CONFIG.PREP_INSPECTOR_X,
+      y: CONFIG.PREP_INSPECTOR_Y,
+      width: CONFIG.PREP_INSPECTOR_WIDTH,
+      height: CONFIG.PREP_INSPECTOR_HEIGHT,
+    }, this.hoveredDragon.dragon, this.hoveredDragon.tierData);
+  }
+
+  // Explain the merge requirement when its command is hovered.
+  renderMergeTooltip(ctx) {
+    const rect = {
+      x: CONFIG.PREP_MERGE_TOOLTIP_X,
+      y: CONFIG.PREP_MERGE_TOOLTIP_Y,
+      width: CONFIG.PREP_MERGE_TOOLTIP_WIDTH,
+      height: CONFIG.PREP_MERGE_TOOLTIP_HEIGHT,
+    };
+    drawRect(ctx, rect, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
+    drawFitText(ctx, 'BUY 3 MATCHING DRAGONS', rect.x + rect.width / 2, rect.y + rect.height / 2, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2), CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_PRIMARY);
+  }
+
+  // Guide a first-time player through buy, place, and fight actions.
+  renderTutorial(ctx) {
+    if (!this.isTutorialActive()) return;
+    const rect = {
+      x: CONFIG.TUTORIAL_PANEL_X,
+      y: CONFIG.TUTORIAL_PANEL_Y,
+      width: CONFIG.TUTORIAL_PANEL_WIDTH,
+      height: CONFIG.TUTORIAL_PANEL_HEIGHT,
+    };
+    drawRect(ctx, rect, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
+    drawText(ctx, `TUTORIAL ${this.game.run.tutorialStep + 1}/3`, rect.x + rect.width / 2, rect.y + CONFIG.TUTORIAL_TITLE_OFFSET_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
+    drawFitText(ctx, this.getTutorialPrompt(), rect.x + rect.width / 2, rect.y + CONFIG.TUTORIAL_BODY_OFFSET_Y, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2), CONFIG.FONT_SIZE_CARD_META_MIN);
+    ctx.lineWidth = CONFIG.TUTORIAL_HIGHLIGHT_LINE_WIDTH;
+    this.getTutorialTargets().forEach(target => drawRect(ctx, target, CONFIG.TUTORIAL_HIGHLIGHT_FILL, CONFIG.GOLD_COLOR));
+    ctx.lineWidth = CONFIG.PREP_FRAME_LINE_WIDTH;
+  }
+
+  // Return the current first-run instruction.
+  getTutorialPrompt() {
+    if (this.game.run.tutorialStep === 0) return 'BUY A DRAGON FROM THE SHOP';
+    if (this.game.run.tutorialStep === 1) return 'DRAG IT FROM BENCH TO YOUR TEAM';
+    return 'PRESS FIGHT TO START THE BATTLE';
+  }
+
+  // Return the regions highlighted by the current tutorial step.
+  getTutorialTargets() {
+    if (this.game.run.tutorialStep === 0) return getShopCards();
+    if (this.game.run.tutorialStep === 1) {
+      return [...getBenchSlots().filter((_, index) => this.game.run.bench[index]), ...getTeamSlots()];
+    }
+    return [getPrepButtons().fight];
+  }
+
+  // Return whether the first-run guide still owns the center panel.
+  isTutorialActive() {
+    return !this.game.saveData.tutorialComplete && this.game.run.tutorialStep < 3;
   }
 
   // Show drag guidance or the exact value of the dragon currently held.
@@ -177,9 +250,16 @@ export class PrepState {
   // Handle direct clicks on shop, buttons, or slots.
   handlePointerDown(point) {
     this.message = '';
+    if (pointInRect(point, this.backButton)) {
+      this.persistRun();
+      this.stateManager.change('menu');
+      return;
+    }
     const shopIndex = getShopCards().findIndex(rect => pointInRect(point, rect));
     if (shopIndex !== -1) {
-      this.applyDraftResult(buyDragon(this.game.run, shopIndex), 'Bought dragon', 'Cannot buy');
+      const result = buyDragon(this.game.run, shopIndex);
+      this.applyDraftResult(result, 'Bought dragon', 'Cannot buy');
+      if (result.success) this.advanceTutorial(1);
       return;
     }
     const buttons = getPrepButtons();
@@ -208,8 +288,9 @@ export class PrepState {
 
   // Track pointer movement for future drag previews.
   handlePointerMove(point) {
-    if (!this.dragSource) return;
-    this.dragPoint = point;
+    this.hoverPoint = point;
+    this.hoveredDragon = this.dragSource ? null : this.getHoveredDragon(point);
+    if (this.dragSource) this.dragPoint = point;
   }
 
   // Drop selected dragons onto slots or sell zone.
@@ -237,6 +318,7 @@ export class PrepState {
     } else {
       this.message = failureMessage;
     }
+    this.persistRun();
   }
 
   // Execute a merge if available.
@@ -249,6 +331,7 @@ export class PrepState {
     this.game.run = result.state;
     this.registerOwnedDiscovery(result.discovery);
     this.message = `Merged ${result.discovery.name} T${result.discovery.tier}`;
+    this.persistRun();
   }
 
   // Move or swap dragons between two slots.
@@ -263,6 +346,8 @@ export class PrepState {
     this.game.run = nextState;
     this.selectedSource = null;
     this.message = 'Moved dragon';
+    if (target.zone === 'team') this.advanceTutorial(2);
+    this.persistRun();
   }
 
   // Start combat against a generated enemy team.
@@ -270,6 +355,10 @@ export class PrepState {
     if (!this.game.run.team.some(Boolean)) {
       this.message = 'Place at least one dragon';
       return;
+    }
+    if (this.game.run.tutorialStep === 2 && !this.game.saveData.tutorialComplete) {
+      this.game.run.tutorialStep = 3;
+      this.game.saveData.tutorialComplete = true;
     }
     this.game.run.team.filter(Boolean).forEach(owned => this.registerOwnedDiscovery({
       id: owned.id,
@@ -281,6 +370,7 @@ export class PrepState {
     const displayPlayerTeam = playerBattleTeam.map(dragon => ({ ...dragon, statuses: [] }));
     const displayEnemyTeam = enemyBattleTeam.map(dragon => ({ ...dragon, statuses: [] }));
     const result = simulateBattle(playerBattleTeam, enemyBattleTeam);
+    this.persistRun();
     this.stateManager.change('fight', {
       result,
       playerTeam: displayPlayerTeam,
@@ -297,11 +387,42 @@ export class PrepState {
     }
     if (this.game.run.round >= CONFIG.TOTAL_ROUNDS) {
       this.game.run = applyWin(this.game.run);
+      this.persistRun();
       this.stateManager.change('boss', { run: this.game.run });
       return;
     }
     this.game.run = applyWin(this.game.run);
+    this.persistRun();
     this.stateManager.change('prep');
+  }
+
+  // Resolve the dragon and tier currently under the pointer.
+  getHoveredDragon(point) {
+    const ownedTarget = this.getSlotTarget(point);
+    if (ownedTarget) {
+      const list = ownedTarget.zone === 'team' ? this.game.run.team : this.game.run.bench;
+      const owned = list[ownedTarget.index];
+      if (owned) return { dragon: getDragon(owned.id), tierData: getDragonTier(owned.id, owned.tier) };
+    }
+    const shopIndex = getShopCards().findIndex(rect => pointInRect(point, rect));
+    const shopId = shopIndex >= 0 ? this.game.run.shop[shopIndex] : null;
+    return shopId ? { dragon: getDragon(shopId), tierData: getDragonTier(shopId, 1) } : null;
+  }
+
+  // Advance the tutorial monotonically and save its checkpoint.
+  advanceTutorial(step) {
+    if (this.game.saveData.tutorialComplete || this.game.run.tutorialStep >= step) return;
+    this.game.run.tutorialStep = step;
+    this.persistRun();
+  }
+
+  // Persist the latest safe prep checkpoint and tutorial state.
+  persistRun() {
+    this.game.saveData = save({
+      ...this.game.saveData,
+      activeRun: this.game.run,
+      tutorialComplete: this.game.saveData.tutorialComplete,
+    });
   }
 
   // Find an occupied source slot at a point.

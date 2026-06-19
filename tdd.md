@@ -238,9 +238,13 @@ Enemy (systems/enemy.js)
 Persistence (persistence/save.js)
 - Key: "wyrmpit_save"
 
-- Structure: { totalXP, highScore, unlockedDragons[], codex{} }
+- Structure: { totalXP, highScore, unlockedDragons[], codex{}, activeRun, tutorialComplete }
 
-- Save after every run ends. Load on game boot.
+- Save progression after every run ends. Save an active prep checkpoint after every successful draft mutation, tutorial step, round win, and Prep Back action.
+
+- `activeRun` stores the complete serializable draft state and is cleared when the result screen is reached. Browser refresh resumes this checkpoint through the menu Continue Run action.
+
+- `tutorialComplete` permanently suppresses onboarding after its first successful Buy -> Place -> Fight sequence; the current tutorial step remains part of `activeRun`.
 
 - If corrupted or missing, reset to defaults silently.
 
@@ -268,6 +272,8 @@ Rendering (ui/renderer.js)
 
 - The codex uses its own full-screen open-book bitmap. Its 8-by-3 grid is constrained to configurable parchment bounds, while the artwork supplies the screen title and the canvas only renders collection cells, discovery progress, and Back.
 
+- Prep and Codex share `drawDragonInspector`, which renders tier stats and ability details for the currently hovered unlocked dragon. Prep also renders centralized tutorial highlights and a Merge hover tooltip.
+
 - Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
 - Dragon artwork applies centralized per-tier scale multipliers: Tier 1 is smaller, while Tier 2 and Tier 3 share the larger adult silhouette. Prep, shop, drag-preview, and codex rendering mirror sprites to face left. The prep bench row uses the lower-left staging floor with taller reserve slots.
@@ -275,6 +281,8 @@ Rendering (ui/renderer.js)
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
 - Game coordinates stay fixed at CANVAS_WIDTH × CANVAS_HEIGHT, but the backing canvas is resized to displayed CSS pixels times device pixel ratio, capped by CANVAS_MAX_PIXEL_RATIO, to avoid blurry scaled rendering.
+
+- Menu conditionally renders Continue Run when `game.run` is present. New Run opens a two-action confirmation overlay before replacing that run, while Prep Back persists and returns to Menu.
 
 Run Health
 - Owned dragon HP is round-based. Battle instances start each fight at full tier HP, and winning a fight returns all owned team/bench dragons to full HP for the next prep phase.

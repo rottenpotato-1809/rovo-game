@@ -21,6 +21,7 @@ export function createRunState(unlockedDragonIds = CONFIG.DEFAULT_SAVE.unlockedD
     shop: generateShop(availableDragonIds, random),
     unlockedDragonIds: availableDragonIds,
     lastDiscoveries: [],
+    tutorialStep: 0,
   };
 }
 

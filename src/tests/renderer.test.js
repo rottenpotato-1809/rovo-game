@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { getBenchSlots, getCodexCell, getMenuButtons, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
+import { getBenchSlots, getCodexCell, getMenuButtons, getMenuConfirmButtons, getMenuContinueButton, getPrepBackButton, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
 import { drawText, getDragonTierScale } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
@@ -131,6 +131,23 @@ test('main menu regions stay aligned to the illustrated scene', () => {
   assert(CONFIG.MENU_CODEX_LABEL_Y >= buttons.codex.y && codexLabelBottom <= buttons.codex.y + buttons.codex.height, 'Codex label must stay inside the dragon hotspot');
   assert(CONFIG.MENU_TITLE_X + CONFIG.MENU_TITLE_WIDTH <= CONFIG.CANVAS_WIDTH, 'Title artwork must fit the menu width');
   assert(CONFIG.MENU_TITLE_Y + CONFIG.MENU_TITLE_HEIGHT <= CONFIG.MENU_STATS_PANEL_Y, 'Title artwork must clear the progression panel');
+});
+
+test('resume, confirmation, and prep navigation controls fit their screens', () => {
+  const continueButton = getMenuContinueButton();
+  const confirmButtons = getMenuConfirmButtons();
+  const backButton = getPrepBackButton();
+  assert(continueButton.x + continueButton.width <= CONFIG.CANVAS_WIDTH, 'Continue must fit the menu');
+  assert(confirmButtons.confirm.x + confirmButtons.confirm.width < CONFIG.MENU_CONFIRM_PANEL_X + CONFIG.MENU_CONFIRM_PANEL_WIDTH, 'Confirmation actions must fit their panel');
+  assert(backButton.x > CONFIG.PREP_HEADER_PANEL_MARGIN + CONFIG.PREP_HEADER_PANEL_WIDTH, 'Prep Back must clear the round panel');
+});
+
+test('dragon inspectors fit between their surrounding UI regions', () => {
+  const finalCodexCell = getCodexCell(7, 2);
+  assert(CONFIG.PREP_INSPECTOR_Y >= CONFIG.TEAM_ZONE_Y + CONFIG.TEAM_SLOT_HEIGHT, 'Prep inspector must clear team cards');
+  assert(CONFIG.PREP_INSPECTOR_Y + CONFIG.PREP_INSPECTOR_HEIGHT <= CONFIG.BENCH_ZONE_Y, 'Prep inspector must clear bench cards');
+  assert(CONFIG.CODEX_INSPECTOR_Y >= finalCodexCell.y + finalCodexCell.height, 'Codex inspector must follow the grid');
+  assert(CONFIG.CODEX_INSPECTOR_Y + CONFIG.CODEX_INSPECTOR_HEIGHT < CONFIG.CODEX_BACK_Y, 'Codex inspector must clear Back');
 });
 
 test('loading artwork and progress bar stay inside the canvas', () => {

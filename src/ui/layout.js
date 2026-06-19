@@ -74,6 +74,16 @@ export function getPrepButtons() {
   };
 }
 
+// Return the prep header Back button rectangle.
+export function getPrepBackButton() {
+  return {
+    x: CONFIG.PREP_BACK_BUTTON_X,
+    y: CONFIG.PREP_BACK_BUTTON_Y,
+    width: CONFIG.PREP_BACK_BUTTON_WIDTH,
+    height: CONFIG.PREP_BACK_BUTTON_HEIGHT,
+  };
+}
+
 // Return the result screen replay button rectangle.
 export function getResultButton() {
   return {
@@ -98,6 +108,36 @@ export function getMenuButtons() {
       y: CONFIG.MENU_CODEX_HOTSPOT_Y,
       width: CONFIG.MENU_CODEX_HOTSPOT_WIDTH,
       height: CONFIG.MENU_CODEX_HOTSPOT_HEIGHT,
+    },
+  };
+}
+
+// Return the conditional Continue Run button rectangle.
+export function getMenuContinueButton() {
+  return {
+    x: CONFIG.MENU_CONTINUE_X,
+    y: CONFIG.MENU_CONTINUE_Y,
+    width: CONFIG.MENU_HOTSPOT_LABEL_WIDTH,
+    height: CONFIG.MENU_HOTSPOT_LABEL_HEIGHT,
+  };
+}
+
+// Return confirmation actions for replacing an active run.
+export function getMenuConfirmButtons() {
+  const totalWidth = (CONFIG.MENU_CONFIRM_BUTTON_WIDTH * 2) + CONFIG.MENU_CONFIRM_BUTTON_GAP;
+  const startX = (CONFIG.CANVAS_WIDTH - totalWidth) / 2;
+  return {
+    cancel: {
+      x: startX,
+      y: CONFIG.MENU_CONFIRM_BUTTON_Y,
+      width: CONFIG.MENU_CONFIRM_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
+    },
+    confirm: {
+      x: startX + CONFIG.MENU_CONFIRM_BUTTON_WIDTH + CONFIG.MENU_CONFIRM_BUTTON_GAP,
+      y: CONFIG.MENU_CONFIRM_BUTTON_Y,
+      width: CONFIG.MENU_CONFIRM_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
     },
   };
 }

@@ -90,6 +90,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - 8 dragons × 3 tiers = **24 entries** total.
 - An entry unlocks when the player **personally fields or merges** that dragon at that tier.
 - Locked entries appear as silhouettes (players see the shape but not the details).
+- Hovering an unlocked entry shows its tier stats, ability name, and ability description.
 
 ---
 
@@ -101,6 +102,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Drag** a dragon to the sell zone (or right-click → sell) to sell.
 - **Click "Reroll"** to refresh the shop.
 - **Click "Fight"** to start the round.
+- **Hover** an owned or shop dragon to inspect its stats and ability.
 - During battle: no input. Click "Continue" when it ends.
 
 ### Mobile
@@ -123,6 +125,9 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Command zone:** Sell, Merge, and Reroll stack below the shop while Fight is a larger standalone call to action.
 - **Sell zone:** Visible drop target (trash icon or "SELL" label) beside the bench.
 - The Sell zone includes a drag instruction and changes to the held dragon's exact sell value while dragging.
+- Hovering Merge explains that three matching dragons must be bought or owned to merge.
+- A Back button saves the current prep checkpoint and returns to the main menu.
+- First-time players receive a three-step tutorial that highlights buying a dragon, dragging it into a team slot, and pressing Fight.
 
 ### Fight Phase Screen
 - **Landscape arena:** combat uses a 16:9 battlefield view instead of the earlier mobile portrait layout.
@@ -157,6 +162,8 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - High Score and the XP progress bar share a compact lower-right panel over the sea.
 - The tower is the full New Run interaction region; only its entrance button animates on hover/press, without tinting the tower artwork.
 - The ground-dragon group is the full Codex interaction region; only its compact button animates, without highlighting the whole scene.
+- Continue Run appears only while a saved run is active and resumes its latest prep checkpoint.
+- Starting New Run while a run is active requires confirmation before replacing it.
 
 ### Loading Screen
 - First boot shows dedicated full-screen loading artwork, the Wyrmpit logo, and live image-preload progress before the menu becomes interactive.
@@ -168,6 +175,7 @@ MAIN MENU → [New Run] → PREP PHASE (round 1) → [Fight] → FIGHT PHASE →
 → IF LOSE → RESULTS SCREEN → [Play Again] or [Main Menu]
 → IF WIN ROUND 10 → BOSS FIGHT → team dies → RESULTS SCREEN
 MAIN MENU → [Codex] → CODEX SCREEN → [Back] → MAIN MENU
+PREP PHASE → [Back] → MAIN MENU → [Continue Run] → PREP PHASE
 
 ---
 

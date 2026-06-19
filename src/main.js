@@ -19,7 +19,8 @@ async function main() {
   const ctx = canvas.getContext('2d');
 
   const stateManager = new StateManager();
-  const game = { run: null, saveData: load() };
+  const saveData = load();
+  const game = { run: saveData.activeRun, saveData };
   const loadingState = new LoadingState();
   stateManager.register('loading', loadingState);
   stateManager.register('arena', new ArenaState(stateManager));

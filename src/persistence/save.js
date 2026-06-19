@@ -7,6 +7,8 @@ export function createDefaultSave() {
     version: CONFIG.SAVE_VERSION,
     unlockedDragons: [...CONFIG.DEFAULT_SAVE.unlockedDragons],
     codex: { ...CONFIG.DEFAULT_SAVE.codex },
+    activeRun: CONFIG.DEFAULT_SAVE.activeRun,
+    tutorialComplete: CONFIG.DEFAULT_SAVE.tutorialComplete,
   };
 }
 
@@ -49,7 +51,43 @@ function normalizeSave(data) {
     highScore: data.highScore,
     unlockedDragons: [...data.unlockedDragons],
     codex: { ...data.codex },
+    activeRun: cloneActiveRun(data.activeRun),
+    tutorialComplete: Boolean(data.tutorialComplete),
   };
+}
+
+// Clone a valid active-run snapshot or discard malformed optional data.
+function cloneActiveRun(activeRun) {
+  if (!isValidActiveRun(activeRun)) return null;
+  return {
+    ...activeRun,
+    team: activeRun.team.map(cloneOwnedDragon),
+    bench: activeRun.bench.map(cloneOwnedDragon),
+    shop: [...activeRun.shop],
+    unlockedDragonIds: [...activeRun.unlockedDragonIds],
+    lastDiscoveries: activeRun.lastDiscoveries.map(discovery => ({ ...discovery })),
+  };
+}
+
+// Clone one nullable owned-dragon record in a run snapshot.
+function cloneOwnedDragon(owned) {
+  return owned ? { ...owned } : null;
+}
+
+// Check the fields required to resume safely from a prep checkpoint.
+function isValidActiveRun(activeRun) {
+  if (activeRun === null || activeRun === undefined) return false;
+  return Number.isInteger(activeRun.round)
+    && activeRun.round >= 1
+    && Number.isFinite(activeRun.gold)
+    && activeRun.gold >= 0
+    && Array.isArray(activeRun.team)
+    && activeRun.team.length === CONFIG.TEAM_SIZE
+    && Array.isArray(activeRun.bench)
+    && activeRun.bench.length === CONFIG.BENCH_SIZE
+    && Array.isArray(activeRun.shop)
+    && Array.isArray(activeRun.unlockedDragonIds)
+    && Array.isArray(activeRun.lastDiscoveries);
 }
 
 // Check the minimum schema needed to safely restore progression.

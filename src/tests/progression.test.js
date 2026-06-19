@@ -53,6 +53,35 @@ test('save and load preserve progression data', () => {
   assert(loaded.codex.ember_2);
 });
 
+test('save and load preserve an active run and tutorial progress', () => {
+  const storage = createStorage();
+  const data = createDefaultSave();
+  data.activeRun = createRunState(['ember'], () => 0);
+  data.activeRun.gold = 4;
+  data.activeRun.tutorialStep = 2;
+  data.tutorialComplete = true;
+  save(data, storage);
+  const loaded = load(storage);
+  assertEqual(loaded.activeRun.gold, 4);
+  assertEqual(loaded.activeRun.tutorialStep, 2);
+  assertEqual(loaded.tutorialComplete, true);
+});
+
+test('older saves normalize new resume fields without losing progression', () => {
+  const storage = createStorage();
+  storage.setItem(CONFIG.SAVE_KEY, JSON.stringify({
+    version: CONFIG.SAVE_VERSION,
+    totalXP: 75,
+    highScore: 10,
+    unlockedDragons: ['ember'],
+    codex: { ember_1: true },
+  }));
+  const loaded = load(storage);
+  assertEqual(loaded.totalXP, 75);
+  assertEqual(loaded.activeRun, null);
+  assertEqual(loaded.tutorialComplete, false);
+});
+
 test('corrupt saves recover to defaults', () => {
   const storage = createStorage();
   storage.setItem(CONFIG.SAVE_KEY, '{broken');

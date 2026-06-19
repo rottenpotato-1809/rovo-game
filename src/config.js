@@ -996,6 +996,105 @@ export const CONFIG = {
   MENU_HOTSPOT_LABEL_HEIGHT: 40,
   // Shared command-label height on image hotspots.
 
+  MENU_CONTINUE_X: 258,
+  // Left edge of Continue Run when a saved run exists.
+
+  MENU_CONTINUE_Y: 270,
+  // Top edge of Continue Run below the tower entrance.
+
+  MENU_CONFIRM_PANEL_X: 300,
+  // Left edge of the overwrite-run confirmation panel.
+
+  MENU_CONFIRM_PANEL_Y: 178,
+  // Top edge of the overwrite-run confirmation panel.
+
+  MENU_CONFIRM_PANEL_WIDTH: 360,
+  // Width of the overwrite-run confirmation panel.
+
+  MENU_CONFIRM_PANEL_HEIGHT: 184,
+  // Height of the overwrite-run confirmation panel.
+
+  MENU_CONFIRM_TITLE_Y: 220,
+  // Confirmation title baseline.
+
+  MENU_CONFIRM_BODY_Y: 258,
+  // Confirmation explanation baseline.
+
+  MENU_CONFIRM_BUTTON_Y: 300,
+  // Top edge of confirmation actions.
+
+  MENU_CONFIRM_BUTTON_WIDTH: 128,
+  // Width of each confirmation action.
+
+  MENU_CONFIRM_BUTTON_GAP: 20,
+  // Gap between confirmation actions.
+
+  PREP_BACK_BUTTON_X: 244,
+  // Left edge of the prep Back button in the header.
+
+  PREP_BACK_BUTTON_Y: 8,
+  // Top edge of the prep Back button in the header.
+
+  PREP_BACK_BUTTON_WIDTH: 92,
+  // Width of the prep Back button.
+
+  PREP_BACK_BUTTON_HEIGHT: 34,
+  // Height of the prep Back button.
+
+  PREP_INSPECTOR_X: 300,
+  // Left edge of the prep dragon inspector.
+
+  PREP_INSPECTOR_Y: 296,
+  // Top edge of the prep dragon inspector between staging rows.
+
+  PREP_INSPECTOR_WIDTH: 280,
+  // Width of the prep dragon inspector.
+
+  PREP_INSPECTOR_HEIGHT: 72,
+  // Height of the prep dragon inspector.
+
+  DRAGON_INSPECTOR_PADDING: 10,
+  // Shared inner padding for dragon detail panels.
+
+  DRAGON_INSPECTOR_LINE_GAP: 17,
+  // Vertical spacing between inspector text rows.
+
+  TUTORIAL_PANEL_X: 300,
+  // Left edge of the first-run tutorial panel.
+
+  TUTORIAL_PANEL_Y: 298,
+  // Top edge of the first-run tutorial panel.
+
+  TUTORIAL_PANEL_WIDTH: 280,
+  // Width of the first-run tutorial panel.
+
+  TUTORIAL_PANEL_HEIGHT: 66,
+  // Height of the first-run tutorial panel.
+
+  TUTORIAL_TITLE_OFFSET_Y: 18,
+  // Tutorial step-label baseline from the panel top.
+
+  TUTORIAL_BODY_OFFSET_Y: 43,
+  // Tutorial instruction baseline from the panel top.
+
+  TUTORIAL_HIGHLIGHT_LINE_WIDTH: 4,
+  // Border thickness around the current tutorial target.
+
+  TUTORIAL_HIGHLIGHT_FILL: 'rgba(245, 200, 66, 0.08)',
+  // Subtle fill over the current tutorial target.
+
+  PREP_MERGE_TOOLTIP_X: 590,
+  // Left edge of the Merge hover tooltip.
+
+  PREP_MERGE_TOOLTIP_Y: 348,
+  // Top edge of the Merge hover tooltip.
+
+  PREP_MERGE_TOOLTIP_WIDTH: 180,
+  // Width of the Merge hover tooltip.
+
+  PREP_MERGE_TOOLTIP_HEIGHT: 36,
+  // Height of the Merge hover tooltip.
+
   CODEX_START_X: 158,
   // Codex grid left edge.
 
@@ -1034,6 +1133,18 @@ export const CONFIG = {
 
   CODEX_BOOK_CONTENT_BOTTOM: 410,
   // Bottom edge of the writable parchment area.
+
+  CODEX_INSPECTOR_X: 250,
+  // Left edge of the codex hover inspector.
+
+  CODEX_INSPECTOR_Y: 394,
+  // Top edge of the codex hover inspector below the collection grid.
+
+  CODEX_INSPECTOR_WIDTH: 460,
+  // Width of the codex hover inspector.
+
+  CODEX_INSPECTOR_HEIGHT: 68,
+  // Height of the codex hover inspector.
 
   CODEX_BACK_Y: 486,
   // Codex back-button top edge.
@@ -1151,6 +1262,8 @@ export const CONFIG = {
     highScore: 0,
     unlockedDragons: ['ember', 'stonescale', 'zephyr', 'tidecaller'],
     codex: {},
+    activeRun: null,
+    tutorialComplete: false,
     // codex entries will be added as: { 'ember_1': true, 'ember_2': true, ... }
   },
   // Initial save state for new players. Also used as fallback if save is corrupted.
