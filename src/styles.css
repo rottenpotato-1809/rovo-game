@@ -40,17 +40,16 @@ canvas {
   font: 700 24px/1 monospace;
   height: 40px;
   justify-content: center;
-  left: 50%;
+  left: max(8px, env(safe-area-inset-left));
   padding: 0;
   position: absolute;
   top: max(8px, env(safe-area-inset-top));
-  transform: translateX(-50%);
   width: 40px;
   z-index: 5;
 }
 
 .fullscreen-button:active {
-  transform: translateX(-50%) scale(0.92);
+  transform: scale(0.92);
 }
 
 .fullscreen-button[hidden] {

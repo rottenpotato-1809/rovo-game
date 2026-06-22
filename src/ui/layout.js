@@ -21,6 +21,16 @@ export function getBattleSpeedButtons() {
   }));
 }
 
+// Return the loading-screen confirmation button rectangle.
+export function getLoadingContinueButton() {
+  return {
+    x: CONFIG.LOADING_CONTINUE_X,
+    y: CONFIG.LOADING_CONTINUE_Y,
+    width: CONFIG.LOADING_CONTINUE_WIDTH,
+    height: CONFIG.LOADING_CONTINUE_HEIGHT,
+  };
+}
+
 // Return team slot rectangles for the landscape prep screen.
 export function getTeamSlots() {
   return Array.from({ length: CONFIG.TEAM_SIZE }, (_, index) => ({
@@ -148,6 +158,42 @@ export function getMenuConfirmButtons() {
       x: startX + CONFIG.MENU_CONFIRM_BUTTON_WIDTH + CONFIG.MENU_CONFIRM_BUTTON_GAP,
       y: CONFIG.MENU_CONFIRM_BUTTON_Y,
       width: CONFIG.MENU_CONFIRM_BUTTON_WIDTH,
+      height: CONFIG.BUTTON_HEIGHT,
+    },
+  };
+}
+
+// Return the menu settings icon and panel controls.
+export function getMenuSettingsControls() {
+  return {
+    icon: {
+      x: CONFIG.MENU_SETTINGS_BUTTON_X,
+      y: CONFIG.MENU_SETTINGS_BUTTON_Y,
+      width: CONFIG.MENU_SETTINGS_BUTTON_SIZE,
+      height: CONFIG.MENU_SETTINGS_BUTTON_SIZE,
+    },
+    name: {
+      x: CONFIG.SETTINGS_CONTROL_X,
+      y: CONFIG.SETTINGS_NAME_Y,
+      width: CONFIG.SETTINGS_CONTROL_WIDTH,
+      height: CONFIG.SETTINGS_CONTROL_HEIGHT,
+    },
+    music: {
+      x: CONFIG.SETTINGS_CONTROL_X,
+      y: CONFIG.SETTINGS_MUSIC_Y - CONFIG.SETTINGS_SLIDER_KNOB_RADIUS,
+      width: CONFIG.SETTINGS_CONTROL_WIDTH,
+      height: CONFIG.SETTINGS_SLIDER_KNOB_RADIUS * 2,
+    },
+    sound: {
+      x: CONFIG.SETTINGS_CONTROL_X,
+      y: CONFIG.SETTINGS_SOUND_Y - CONFIG.SETTINGS_SLIDER_KNOB_RADIUS,
+      width: CONFIG.SETTINGS_CONTROL_WIDTH,
+      height: CONFIG.SETTINGS_SLIDER_KNOB_RADIUS * 2,
+    },
+    close: {
+      x: CONFIG.SETTINGS_CLOSE_X,
+      y: CONFIG.SETTINGS_CLOSE_Y,
+      width: CONFIG.SETTINGS_CLOSE_WIDTH,
       height: CONFIG.BUTTON_HEIGHT,
     },
   };

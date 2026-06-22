@@ -120,6 +120,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Audio
 - Phase music loops after the player's first browser gesture: `Dragon-Menu-Drift` for Menu/Codex, `Ember-Draft` for Prep, `Dragon-Clash` for normal battles, and `Dragon-Ascension` for Boss/Results.
+- The main-menu Settings panel saves the player name plus independent Music and Sound volume levels. Music changes apply immediately; Sound stores the preferred level for effects playback.
 
 ---
 
@@ -173,9 +174,10 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - The ground-dragon group is the full Codex interaction region; only its compact button animates, without highlighting the whole scene.
 - Continue Run appears only while a saved run is active and resumes its latest prep checkpoint.
 - Starting New Run while a run is active requires confirmation before replacing it.
+- A compact gear icon opens Settings for player-name editing and Music/Sound sliders. On mobile, the separate fullscreen icon remains available above the canvas.
 
 ### Loading Screen
-- First boot shows dedicated full-screen loading artwork, the Wyrmpit logo, and live image-preload progress before the menu becomes interactive.
+- First boot shows dedicated full-screen loading artwork, the Wyrmpit logo, and live image-preload progress. At 100%, a `Click to Continue` button waits for an intentional gesture before opening the menu and audio.
 
 ---
 

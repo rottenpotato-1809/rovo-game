@@ -518,6 +518,9 @@ export const CONFIG = {
   // Prevent background-tab frame gaps from jumping AUTO straight to its cap.
 
   MUSIC_VOLUME: 0.32,
+
+  SOUND_VOLUME: 0.65,
+  // Default sound-effect volume reserved for current and future effects.
   // Shared background-music volume. Browser playback begins after first input.
 
   ATTACK_LUNGE_DIST: 36,
@@ -943,6 +946,18 @@ export const CONFIG = {
   LOADING_BAR_HEIGHT: 18,
   // Loading bar height.
 
+  LOADING_CONTINUE_X: 370,
+  // Left edge of the ready-state confirmation button.
+
+  LOADING_CONTINUE_Y: 448,
+  // Top edge of the ready-state confirmation button.
+
+  LOADING_CONTINUE_WIDTH: 220,
+  // Width of the ready-state confirmation button.
+
+  LOADING_CONTINUE_HEIGHT: 48,
+  // Height of the ready-state confirmation button.
+
   MENU_STATS_PANEL_X: 650,
   // Left edge of the progression panel over the lower-right sea.
 
@@ -1059,6 +1074,69 @@ export const CONFIG = {
 
   MENU_CONFIRM_BUTTON_GAP: 20,
   // Gap between confirmation actions.
+
+  MENU_SETTINGS_BUTTON_X: 900,
+  // Left edge of the compact settings icon.
+
+  MENU_SETTINGS_BUTTON_Y: 16,
+  // Top edge of the compact settings icon.
+
+  MENU_SETTINGS_BUTTON_SIZE: 42,
+  // Shared width and height of the settings icon.
+
+  SETTINGS_PANEL_X: 270,
+  // Left edge of the settings panel.
+
+  SETTINGS_PANEL_Y: 92,
+  // Top edge of the settings panel.
+
+  SETTINGS_PANEL_WIDTH: 420,
+  // Width of the settings panel.
+
+  SETTINGS_PANEL_HEIGHT: 356,
+  // Height of the settings panel.
+
+  SETTINGS_TITLE_Y: 130,
+  // Settings heading baseline.
+
+  SETTINGS_LABEL_X: 320,
+  // Left-aligned label position inside settings.
+
+  SETTINGS_NAME_Y: 180,
+  // Player-name control top edge.
+
+  SETTINGS_CONTROL_X: 420,
+  // Left edge of settings value controls.
+
+  SETTINGS_CONTROL_WIDTH: 220,
+  // Width of name and slider controls.
+
+  SETTINGS_CONTROL_HEIGHT: 42,
+  // Height of the name control.
+
+  SETTINGS_MUSIC_Y: 260,
+  // Music slider center line.
+
+  SETTINGS_SOUND_Y: 320,
+  // Sound slider center line.
+
+  SETTINGS_SLIDER_HEIGHT: 10,
+  // Thickness of settings slider tracks.
+
+  SETTINGS_SLIDER_KNOB_RADIUS: 12,
+  // Radius of settings slider handles.
+
+  SETTINGS_CLOSE_X: 370,
+  // Left edge of the settings close action.
+
+  SETTINGS_CLOSE_Y: 376,
+  // Top edge of the settings close action.
+
+  SETTINGS_CLOSE_WIDTH: 220,
+  // Width of the settings close action.
+
+  PLAYER_NAME_MAX_LENGTH: 16,
+  // Maximum saved player-name length.
 
   PREP_BACK_BUTTON_X: 244,
   // Left edge of the prep Back button in the header.
@@ -1313,6 +1391,9 @@ export const CONFIG = {
   // Schema version. If you restructure the save format, bump this to force a reset.
 
   DEFAULT_SAVE: {
+    playerName: 'PLAYER',
+    musicVolume: 0.32,
+    soundVolume: 0.65,
     totalXP: 0,
     highScore: 0,
     unlockedDragons: ['ember', 'stonescale', 'zephyr', 'tidecaller'],

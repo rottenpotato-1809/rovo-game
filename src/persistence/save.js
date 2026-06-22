@@ -9,6 +9,9 @@ export function createDefaultSave() {
     codex: { ...CONFIG.DEFAULT_SAVE.codex },
     activeRun: CONFIG.DEFAULT_SAVE.activeRun,
     tutorialComplete: CONFIG.DEFAULT_SAVE.tutorialComplete,
+    playerName: CONFIG.DEFAULT_SAVE.playerName,
+    musicVolume: CONFIG.DEFAULT_SAVE.musicVolume,
+    soundVolume: CONFIG.DEFAULT_SAVE.soundVolume,
   };
 }
 
@@ -53,7 +56,23 @@ function normalizeSave(data) {
     codex: { ...data.codex },
     activeRun: cloneActiveRun(data.activeRun),
     tutorialComplete: Boolean(data.tutorialComplete),
+    playerName: normalizePlayerName(data.playerName),
+    musicVolume: normalizeVolume(data.musicVolume, CONFIG.DEFAULT_SAVE.musicVolume),
+    soundVolume: normalizeVolume(data.soundVolume, CONFIG.DEFAULT_SAVE.soundVolume),
   };
+}
+
+// Keep player names compact and safe for the fixed canvas layout.
+function normalizePlayerName(playerName) {
+  if (typeof playerName !== 'string') return CONFIG.DEFAULT_SAVE.playerName;
+  const trimmed = playerName.trim().slice(0, CONFIG.PLAYER_NAME_MAX_LENGTH);
+  return trimmed || CONFIG.DEFAULT_SAVE.playerName;
+}
+
+// Clamp optional audio settings while preserving older saves.
+function normalizeVolume(volume, fallback) {
+  if (!Number.isFinite(volume)) return fallback;
+  return Math.max(0, Math.min(CONFIG.ARENA_ALIVE_ALPHA, volume));
 }
 
 // Clone a valid active-run snapshot or discard malformed optional data.

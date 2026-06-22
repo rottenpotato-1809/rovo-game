@@ -80,6 +80,22 @@ test('older saves normalize new resume fields without losing progression', () =>
   assertEqual(loaded.totalXP, 75);
   assertEqual(loaded.activeRun, null);
   assertEqual(loaded.tutorialComplete, false);
+  assertEqual(loaded.playerName, CONFIG.DEFAULT_SAVE.playerName);
+  assertEqual(loaded.musicVolume, CONFIG.DEFAULT_SAVE.musicVolume);
+  assertEqual(loaded.soundVolume, CONFIG.DEFAULT_SAVE.soundVolume);
+});
+
+test('save and load preserve normalized player settings', () => {
+  const storage = createStorage();
+  const data = createDefaultSave();
+  data.playerName = '  Wyrm Rider  ';
+  data.musicVolume = 2;
+  data.soundVolume = -1;
+  save(data, storage);
+  const loaded = load(storage);
+  assertEqual(loaded.playerName, 'Wyrm Rider');
+  assertEqual(loaded.musicVolume, 1);
+  assertEqual(loaded.soundVolume, 0);
 });
 
 test('corrupt saves recover to defaults', () => {

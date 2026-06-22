@@ -44,4 +44,11 @@ test('music waits for input unlock and then follows state changes', () => {
   assertEqual(manager.tracks.get('prep').preload, 'metadata');
 });
 
+test('music volume updates every soundtrack immediately', () => {
+  const manager = new MusicManager(() => createFakeAudio());
+  manager.setVolume(0.25);
+  assertEqual(manager.volume, 0.25);
+  assertEqual([...manager.tracks.values()].every(audio => audio.volume === 0.25), true);
+});
+
 summarize();

@@ -1,7 +1,7 @@
 import { createDefaultSave } from '../persistence/save.js';
 import { createRunState } from '../systems/run.js';
 import { MenuState } from '../states/menuState.js';
-import { getMenuButtons, getMenuContinueButton } from '../ui/layout.js';
+import { getMenuButtons, getMenuContinueButton, getMenuSettingsControls } from '../ui/layout.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
 function createStorage() {
@@ -41,6 +41,38 @@ test('new run without progress starts and saves immediately', () => {
   assert(game.run);
   assert(game.saveData.activeRun);
   assertEqual(transitions[0], 'prep');
+});
+
+test('settings update player name and live music volume', () => {
+  globalThis.localStorage = createStorage();
+  const volumes = [];
+  const game = {
+    run: null,
+    saveData: createDefaultSave(),
+    music: { setVolume: value => volumes.push(value) },
+    requestPlayerName: () => 'Sky Rider',
+  };
+  const state = new MenuState({ change: () => {} }, game);
+  const controls = getMenuSettingsControls();
+  state.handlePointerDown(center(controls.icon));
+  state.handlePointerDown(center(controls.name));
+  state.handlePointerDown({ x: controls.music.x + controls.music.width, y: center(controls.music).y });
+  state.handlePointerUp();
+  assertEqual(game.saveData.playerName, 'Sky Rider');
+  assertEqual(game.saveData.musicVolume, 1);
+  assertEqual(volumes[0], 1);
+});
+
+test('settings sound slider clamps to its track', () => {
+  globalThis.localStorage = createStorage();
+  const game = { run: null, saveData: createDefaultSave() };
+  const state = new MenuState({ change: () => {} }, game);
+  const controls = getMenuSettingsControls();
+  state.handlePointerDown(center(controls.icon));
+  state.handlePointerDown(center(controls.sound));
+  state.handlePointerMove({ x: controls.sound.x - controls.sound.width, y: center(controls.sound).y });
+  state.handlePointerUp();
+  assertEqual(game.saveData.soundVolume, 0);
 });
 
 summarize();

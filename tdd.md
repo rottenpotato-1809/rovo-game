@@ -64,7 +64,7 @@ Milestone 3 runtime owns one shared `game.saveData` object loaded at boot. Resul
 | Commits | Conventional commits after every completed feature/fix. Format: `feat: add shop reroll` / `fix: dragon targeting ignoring taunt` / `test: add merge tier-up cases`. Only commit if build passes. |
 | Build check | Before reporting done: confirm `index.html` loads in browser with zero console errors. If dev server can't run in sandbox, flag it explicitly. |
 
-The game loop starts in `LoadingState`, which renders dedicated loading artwork and receives normalized progress from the centralized bitmap preloader. The preloader resolves the loading background and shared title first, then fetches the remaining runtime images in parallel. The menu becomes interactive only after every registered image resolves and the minimum loading-screen presentation time completes. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas, and loading/menu share one transparent title bitmap. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use enlarged T2 artwork. The renderer adds Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot, including the compact menu command buttons, without highlighting their larger illustrated hotspots.
+The game loop starts in `LoadingState`, which renders dedicated loading artwork and receives normalized progress from the centralized bitmap preloader. The preloader resolves the loading background and shared title first, then fetches the remaining runtime images in parallel. After every registered image and the minimum presentation time complete, LoadingState exposes a canvas confirmation button; only that gesture enters Menu and unlocks browser audio. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas, and loading/menu share one transparent title bitmap. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use enlarged T2 artwork. The renderer adds Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot, including the compact menu command buttons, without highlighting their larger illustrated hotspots.
 
 ---
 
@@ -244,7 +244,9 @@ Enemy (systems/enemy.js)
 Persistence (persistence/save.js)
 - Key: "wyrmpit_save"
 
-- Structure: { totalXP, highScore, unlockedDragons[], codex{}, activeRun, tutorialComplete }
+- Structure: { playerName, musicVolume, soundVolume, totalXP, highScore, unlockedDragons[], codex{}, activeRun, tutorialComplete }
+
+- Optional settings fields normalize to defaults so existing version-1 saves migrate without losing progression. Music volume is applied live to every soundtrack; sound volume is retained for effects playback.
 
 - Save progression after every run ends. Save an active prep checkpoint after every successful draft mutation, tutorial step, round win, and Prep Back action.
 

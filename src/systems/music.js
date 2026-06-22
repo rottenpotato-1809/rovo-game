@@ -24,17 +24,24 @@ export function getMusicTrackForState(stateName) {
 
 // Own looping phase music and defer playback until browser input unlocks audio.
 export class MusicManager {
-  constructor(audioFactory = source => new Audio(source)) {
+  constructor(audioFactory = source => new Audio(source), volume = CONFIG.MUSIC_VOLUME) {
+    this.volume = volume;
     this.tracks = new Map(Object.entries(MUSIC_SOURCES).map(([key, source]) => {
       const audio = audioFactory(source);
       audio.loop = true;
       audio.preload = 'metadata';
-      audio.volume = CONFIG.MUSIC_VOLUME;
+      audio.volume = this.volume;
       return [key, audio];
     }));
     this.desiredTrack = null;
     this.currentTrack = null;
     this.unlocked = false;
+  }
+
+  // Apply a normalized music level to every phase track.
+  setVolume(volume) {
+    this.volume = Math.max(0, Math.min(CONFIG.ARENA_ALIVE_ALPHA, volume));
+    this.tracks.forEach(audio => { audio.volume = this.volume; });
   }
 
   // Register the first player gesture that browsers require for media playback.

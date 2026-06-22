@@ -23,12 +23,17 @@ async function main() {
   const ctx = canvas.getContext('2d');
   setupFullscreenButton(fullscreenButton, gameShell);
 
-  const music = new MusicManager();
+  const saveData = load();
+  const music = new MusicManager(undefined, saveData.musicVolume);
   music.bindUnlock(canvas);
   const stateManager = new StateManager(stateName => music.setState(stateName));
-  const saveData = load();
-  const game = { run: saveData.activeRun, saveData };
-  const loadingState = new LoadingState();
+  const game = {
+    run: saveData.activeRun,
+    saveData,
+    music,
+    requestPlayerName: currentName => globalThis.prompt('Player name', currentName),
+  };
+  const loadingState = new LoadingState(() => stateManager.change('menu'));
   stateManager.register('loading', loadingState);
   stateManager.register('arena', new ArenaState(stateManager));
   stateManager.register('menu', new MenuState(stateManager, game));
@@ -51,7 +56,7 @@ async function main() {
   await preloadAssets(progress => loadingState.setProgress(progress));
   await new Promise(resolve => setTimeout(resolve, CONFIG.LOADING_MIN_DURATION_MS));
   console.log('[ASSET] runtime images ready');
-  stateManager.change('menu');
+  loadingState.markReady();
 }
 
 // Match the canvas backing store to its displayed size for crisp scaled rendering.
