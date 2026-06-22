@@ -4,6 +4,7 @@ import { createPlayerBattleTeam } from '../systems/run.js';
 import { createFloatingNumber, TweenSystem, updateFloatingNumbers } from '../ui/animations.js';
 import { clear, drawBar, drawBossSprite, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
+import { createPlaybackSpeedState, getPlaybackEventDelay, updatePlaybackSpeed } from '../systems/playbackSpeed.js';
 
 // Play back the Eternal Wyrm score fight and reveal the final damage total.
 export class BossState {
@@ -23,6 +24,7 @@ export class BossState {
     this.tweens = new TweenSystem();
     this.result = null;
     this.run = null;
+    this.playbackSpeed = createPlaybackSpeedState();
   }
 
   // Simulate a boss fight and prepare immutable display combatants.
@@ -40,6 +42,7 @@ export class BossState {
     this.turnsUntilBlast = CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
     this.floaters = [];
     this.tweens = new TweenSystem();
+    this.playbackSpeed = createPlaybackSpeedState();
     this.views = new Map();
     this.playerTeam.forEach((dragon, index) => {
       const point = getFightPoint('player', index);
@@ -62,8 +65,9 @@ export class BossState {
       this.score = this.result.totalDamage;
       return;
     }
+    this.playbackSpeed = updatePlaybackSpeed(this.playbackSpeed, dt);
     this.eventTimerMs += dt * 1000;
-    if (this.eventTimerMs < CONFIG.TURN_DELAY_MS) return;
+    if (this.eventTimerMs < getPlaybackEventDelay(this.playbackSpeed)) return;
     this.eventTimerMs = 0;
     this.playEvent(this.events[this.eventIndex]);
     this.eventIndex += 1;

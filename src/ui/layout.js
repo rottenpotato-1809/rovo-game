@@ -10,6 +10,17 @@ export function getArenaFightButton() {
   };
 }
 
+// Return stable rectangles for the arena playback-speed segmented control.
+export function getBattleSpeedButtons() {
+  return CONFIG.BATTLE_SPEED_MODES.map((mode, index) => ({
+    mode,
+    x: CONFIG.BATTLE_SPEED_CONTROL_X + (index * (CONFIG.BATTLE_SPEED_BUTTON_WIDTH + CONFIG.BATTLE_SPEED_BUTTON_GAP)),
+    y: CONFIG.BATTLE_SPEED_CONTROL_Y,
+    width: CONFIG.BATTLE_SPEED_BUTTON_WIDTH,
+    height: CONFIG.BATTLE_SPEED_BUTTON_HEIGHT,
+  }));
+}
+
 // Return team slot rectangles for the landscape prep screen.
 export function getTeamSlots() {
   return Array.from({ length: CONFIG.TEAM_SIZE }, (_, index) => ({

@@ -14,7 +14,7 @@ main.js              ← entry point: boots game, starts loop
 engine/
 loop.js            ← requestAnimationFrame loop, delta time
 input.js           ← unified mouse/touch handler, hit-testing
-audio.js           ← Web Audio API synth (optional, last priority)
+music.js           ← phase soundtrack routing and browser playback unlock
 states/
 stateManager.js    ← finite state machine, transitions
 menuState.js       ← main menu screen
@@ -296,9 +296,11 @@ Rendering (ui/renderer.js)
 Run Health
 - Owned dragon HP is round-based. Battle instances start each fight at full tier HP, and winning a fight returns all owned team/bench dragons to full HP for the next prep phase.
 
-- Battle playback is landscape-first and brisk by default; tune TURN_DELAY_MS and animation durations in config.js rather than per-state literals.
+- Battle playback is landscape-first and readable at 1x. `systems/playbackSpeed.js` owns AUTO acceleration and fixed modes; `TURN_DELAY_MS` is the 1x event interval, AUTO ramps from 1x to a 2.5x cap, and FightState renders AUTO/1x/2x/3x as a segmented control.
 
-- Fight playback reconstructs ability cooldowns from combat events. The upper-right canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display. After playback completes, any canvas pointer press continues; the centered result panel is presentation rather than a restricted hit target.
+- Fight playback reconstructs ability cooldowns from combat events. The upper-right canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display. Pointer-down inside the log is consumed before completed-fight continuation, so hold-drag remains available after the match; presses outside the log continue.
+
+- `systems/music.js` owns looping phase music. StateManager reports transitions to MusicManager; playback is deferred until the first canvas pointer gesture to satisfy browser autoplay policy. Tracks preload metadata rather than full audio payloads, use centralized `MUSIC_VOLUME`, and the local static server serves `.ogg` as `audio/ogg`.
 
 Animation (ui/animations.js)
 - Tween system: array of active tweens, each with { target, property, from, to, duration, elapsed, easing }.

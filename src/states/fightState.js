@@ -1,7 +1,8 @@
 import { CONFIG } from '../config.js';
 import { TweenSystem, createFloatingNumber, updateFloatingNumbers } from '../ui/animations.js';
 import { clear, drawCircle, drawDragon, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
-import { getFightPoint } from '../ui/layout.js';
+import { getBattleSpeedButtons, getFightPoint, pointInRect } from '../ui/layout.js';
+import { createPlaybackSpeedState, getPlaybackEventDelay, getPlaybackMultiplier, setPlaybackSpeedMode, updatePlaybackSpeed } from '../systems/playbackSpeed.js';
 
 // Play a simulated battle log back as animated canvas combat.
 export class FightState {
@@ -19,6 +20,7 @@ export class FightState {
     this.onComplete = null;
     this.logScrollOffset = 0;
     this.logDragY = null;
+    this.playbackSpeed = createPlaybackSpeedState();
   }
 
   // Load a fresh battle result and create visual state for each combatant.
@@ -35,6 +37,7 @@ export class FightState {
     this.eventTimerMs = 0;
     this.logScrollOffset = 0;
     this.logDragY = null;
+    this.playbackSpeed = createPlaybackSpeedState();
     this.tweens = new TweenSystem();
     this.views = new Map();
     [...this.playerTeam, ...this.enemyTeam].forEach((dragon, index) => {
@@ -59,8 +62,9 @@ export class FightState {
     this.tweens.update(dt);
     this.floaters = updateFloatingNumbers(this.floaters, dt);
     if (this.eventIndex >= this.events.length) return;
+    this.playbackSpeed = updatePlaybackSpeed(this.playbackSpeed, dt);
     this.eventTimerMs += dt * 1000;
-    if (this.eventTimerMs < CONFIG.TURN_DELAY_MS) return;
+    if (this.eventTimerMs < getPlaybackEventDelay(this.playbackSpeed)) return;
     this.eventTimerMs = 0;
     this.playEvent(this.events[this.eventIndex]);
     this.eventIndex += 1;
@@ -74,6 +78,7 @@ export class FightState {
     if (!isFinished) {
       drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
       drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
+      this.renderSpeedControl(ctx);
     }
     [...this.playerTeam, ...this.enemyTeam].forEach(dragon => this.renderDragon(ctx, dragon));
     this.renderFloaters(ctx);
@@ -81,19 +86,31 @@ export class FightState {
     if (isFinished) {
       drawRect(ctx, this.getResultPanel(), CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
       drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_FIGHT_RESULT, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
-      drawText(ctx, 'CLICK ANYWHERE TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_CONTINUE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
+      drawFitText(
+        ctx,
+        'CLICK OUTSIDE LOG TO CONTINUE',
+        CONFIG.CANVAS_WIDTH / 2,
+        CONFIG.ARENA_RESULT_CONTINUE_Y,
+        CONFIG.FONT_SIZE_HEADER,
+        CONFIG.ARENA_RESULT_PANEL_WIDTH - (CONFIG.ARENA_LOG_PANEL_PADDING * 2),
+        CONFIG.FONT_SIZE_STATS,
+        CONFIG.TEXT_PRIMARY,
+      );
     }
   }
 
   // Continue to the next run state after playback finishes.
   handlePointerDown(point) {
-    if (this.eventIndex >= this.events.length && this.onComplete) {
-      this.onComplete(this.result);
-      return;
-    }
     if (this.isPointInCombatLog(point)) {
       this.logDragY = point.y;
+      return;
     }
+    if (this.eventIndex < this.events.length) {
+      const speedButton = getBattleSpeedButtons().find(button => pointInRect(point, button));
+      if (speedButton) this.playbackSpeed = setPlaybackSpeedMode(this.playbackSpeed, speedButton.mode);
+      return;
+    }
+    if (this.onComplete) this.onComplete(this.result);
   }
 
   // Scroll the combat log by dragging inside its panel.
@@ -114,6 +131,17 @@ export class FightState {
   handleWheel(point, deltaY) {
     if (!this.isPointInCombatLog(point)) return;
     this.scrollCombatLog(deltaY < 0 ? CONFIG.COMBAT_LOG_SCROLL_STEP : -CONFIG.COMBAT_LOG_SCROLL_STEP);
+  }
+
+  // Draw a segmented AUTO/1x/2x/3x playback selector above the battlefield.
+  renderSpeedControl(ctx) {
+    getBattleSpeedButtons().forEach(button => {
+      const selected = button.mode === this.playbackSpeed.mode;
+      const label = button.mode === 'auto' ? 'AUTO' : `${button.mode}X`;
+      drawRect(ctx, button, selected ? CONFIG.ACCENT_SECONDARY : CONFIG.UI_PANEL_COLOR, selected ? CONFIG.GOLD_COLOR : CONFIG.TEXT_MUTED);
+      drawText(ctx, label, button.x + button.width / 2, button.y + button.height / 2, CONFIG.FONT_SIZE_STATS, selected ? CONFIG.GOLD_COLOR : CONFIG.TEXT_SECONDARY);
+    });
+    drawText(ctx, `${getPlaybackMultiplier(this.playbackSpeed).toFixed(1)}X`, CONFIG.CANVAS_WIDTH / 2, CONFIG.BATTLE_SPEED_READOUT_Y, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
   }
 
   // Draw one combatant with its optional ability glow.

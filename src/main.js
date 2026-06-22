@@ -13,6 +13,7 @@ import { ResultState } from './states/resultState.js';
 import { load } from './persistence/save.js';
 import { preloadAssets } from './ui/assets.js';
 import { setupFullscreenButton } from './ui/fullscreen.js';
+import { MusicManager } from './systems/music.js';
 
 // Boot the canvas application and start the animation loop.
 async function main() {
@@ -22,7 +23,9 @@ async function main() {
   const ctx = canvas.getContext('2d');
   setupFullscreenButton(fullscreenButton, gameShell);
 
-  const stateManager = new StateManager();
+  const music = new MusicManager();
+  music.bindUnlock(canvas);
+  const stateManager = new StateManager(stateName => music.setState(stateName));
   const saveData = load();
   const game = { run: saveData.activeRun, saveData };
   const loadingState = new LoadingState();

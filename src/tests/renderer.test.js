@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { getBenchSlots, getCodexCell, getMenuButtons, getMenuConfirmButtons, getMenuContinueButton, getPrepBackButton, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
+import { getBattleSpeedButtons, getBenchSlots, getCodexCell, getMenuButtons, getMenuConfirmButtons, getMenuContinueButton, getPrepBackButton, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
 import { drawText, getDragonTierScale } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
@@ -49,6 +49,14 @@ test('combat log and result panels remain above the battlefield without overlap'
   assert(logBottom < CONFIG.ARENA_BATTLEFIELD_TOP_Y);
   assert(resultBottom < CONFIG.ARENA_BATTLEFIELD_TOP_Y);
   assert(resultRight < CONFIG.ARENA_LOG_PANEL_X);
+});
+
+test('battle speed controls stay centered and clear of the combat log', () => {
+  const buttons = getBattleSpeedButtons();
+  const controlLeft = buttons[0].x;
+  const controlRight = buttons[buttons.length - 1].x + buttons[buttons.length - 1].width;
+  assert(controlLeft >= CONFIG.ARENA_RESULT_PANEL_X, 'Speed controls must stay in the center UI region');
+  assert(controlRight < CONFIG.ARENA_LOG_PANEL_X, 'Speed controls must not overlap the combat log');
 });
 
 test('prep dragon name and stats have separate baselines', () => {

@@ -499,9 +499,26 @@ export const CONFIG = {
   // ─── ANIMATION — TIMING ──────────────────────────────────────
   // All animation durations and speeds
 
-  TURN_DELAY_MS: 280,
-  // Milliseconds to wait between each combat turn (pacing for readability).
-  // Recommended range: 220-600. Lower = faster battles. Higher = more dramatic.
+  TURN_DELAY_MS: 520,
+  // Base event interval at 1x playback speed.
+
+  BATTLE_SPEED_MODES: ['auto', 1, 2, 3],
+  // Player-selectable playback modes shown as a segmented arena control.
+
+  BATTLE_AUTO_SPEED_START: 1,
+  // AUTO always opens at normal speed.
+
+  BATTLE_AUTO_SPEED_CAP: 2.5,
+  // Maximum AUTO multiplier so late playback stays readable.
+
+  BATTLE_AUTO_SPEED_RAMP_PER_SECOND: 0.08,
+  // Linear AUTO acceleration; reaches the cap after roughly 19 seconds.
+
+  BATTLE_AUTO_MAX_FRAME_DELTA_SECONDS: 0.25,
+  // Prevent background-tab frame gaps from jumping AUTO straight to its cap.
+
+  MUSIC_VOLUME: 0.32,
+  // Shared background-music volume. Browser playback begins after first input.
 
   ATTACK_LUNGE_DIST: 36,
   // Pixels a dragon moves toward its target during an attack animation.
@@ -1198,6 +1215,24 @@ export const CONFIG = {
 
   BOSS_RESULT_PANEL_HEIGHT: 190,
   // Boss score-reveal panel height.
+
+  BATTLE_SPEED_CONTROL_X: 328,
+  // Left edge of the arena playback-speed segmented control.
+
+  BATTLE_SPEED_CONTROL_Y: 12,
+  // Top edge of the arena playback-speed segmented control.
+
+  BATTLE_SPEED_BUTTON_WIDTH: 72,
+  // Stable width of each playback-speed segment.
+
+  BATTLE_SPEED_BUTTON_HEIGHT: 36,
+  // Stable height of each playback-speed segment.
+
+  BATTLE_SPEED_BUTTON_GAP: 6,
+  // Horizontal gap between playback-speed segments.
+
+  BATTLE_SPEED_READOUT_Y: 62,
+  // AUTO's live multiplier readout below the segmented control.
 
   RESULT_TITLE_Y: 84,
   // Full results title baseline.

@@ -49,4 +49,20 @@ test('completed fights continue from any canvas position', () => {
   assert(completed, 'Any click must continue after playback finishes');
 });
 
+test('completed fights reserve combat-log drags instead of continuing', () => {
+  let completed = false;
+  const state = new FightState({});
+  state.events = [];
+  state.eventIndex = 0;
+  state.result = { outcome: 'win' };
+  state.onComplete = () => { completed = true; };
+  state.combatLog = Array(CONFIG.COMBAT_LOG_MAX_LINES + 3).fill('event');
+  const point = { x: CONFIG.ARENA_LOG_PANEL_X + 10, y: CONFIG.ARENA_LOG_PANEL_Y + 10 };
+  state.handlePointerDown(point);
+  state.handlePointerMove({ ...point, y: point.y + CONFIG.ARENA_LOG_LINE_HEIGHT + 1 });
+  state.handlePointerUp();
+  assertEqual(completed, false);
+  assertEqual(state.logScrollOffset, 1);
+});
+
 summarize();

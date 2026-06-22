@@ -14,6 +14,7 @@ const MIME_TYPES = {
   '.mjs': 'text/javascript; charset=utf-8',
   '.png': 'image/png',
   '.webp': 'image/webp',
+  '.ogg': 'audio/ogg',
 };
 
 createServer(async (request, response) => {

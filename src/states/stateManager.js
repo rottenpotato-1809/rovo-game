@@ -2,10 +2,11 @@ import { CONFIG } from '../config.js';
 
 // Own the active state and route lifecycle calls through a small finite state machine.
 export class StateManager {
-  constructor() {
+  constructor(onChange = () => {}) {
     this.states = new Map();
     this.current = null;
     this.currentName = '';
+    this.onChange = onChange;
   }
 
   // Register a state object by name.
@@ -18,6 +19,7 @@ export class StateManager {
     if (this.current && this.current.exit) this.current.exit();
     this.current = this.states.get(name);
     this.currentName = name;
+    this.onChange(name);
     if (CONFIG.LOG_ENABLED && CONFIG.LOG_STATE) {
       console.log(`[STATE] transition to ${name}`);
     }

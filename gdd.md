@@ -107,15 +107,19 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Click "Fight"** to start the round.
 - **Hover** an owned or shop dragon to inspect its stats and ability.
 - Inspector content sits within one element-colored frame matching the hovered dragon's card.
-- During battle: no input. Click "Continue" when it ends.
+- During battle, use AUTO / 1x / 2x / 3x to control playback. AUTO begins at 1x and gradually accelerates to a 2.5x cap.
+- The battle log supports wheel and hold-drag scrolling after the match. Gestures beginning inside the log do not continue; click elsewhere to advance.
 
 ### Mobile
 - **Tap** a shop dragon to buy.
 - **Tap** a bench dragon, then **tap** a team slot to place (or swap).
 - **Long-press** a dragon to sell (confirmation prompt).
 - **Tap "Reroll"** / **Tap "Fight"** buttons.
-- During battle: no input. Tap "Continue" when it ends.
+- During battle, tap AUTO / 1x / 2x / 3x to control playback. Hold-drag the battle log after the match, or tap outside it to continue.
 - A compact fullscreen control requests landscape fullscreen so browser chrome does not crop the 16:9 game canvas.
+
+### Audio
+- Phase music loops after the player's first browser gesture: `Dragon-Menu-Drift` for Menu/Codex, `Ember-Draft` for Prep, `Dragon-Clash` for normal battles, and `Dragon-Ascension` for Boss/Results.
 
 ---
 
@@ -143,8 +147,8 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Center:** The two teams stand in close opposing columns without a separate VS label. Floating damage/heal numbers animate on hit.
 - **Upper-right panel:** scrolling combat log, separated from the battlefield.
 - Each combatant shows whether its special ability is ready or how many actions remain on cooldown. The combat log supports wheel and touch-drag history scrolling, and action labels are displayed as readable words.
-- **After battle ends:** A large WIN/LOSE label and the Continue prompt occupy one centered upper panel. Clicking anywhere advances.
-- **Pacing:** battle playback should be brisk by default so a full 3v3 fight resolves quickly while attacks and ability flashes remain readable.
+- **After battle ends:** A large WIN/LOSE label and the Continue prompt occupy one centered upper panel. The log remains draggable; clicking outside it advances.
+- **Pacing:** playback starts at readable 1x speed. AUTO gradually accelerates to a 2.5x cap, while fixed 1x, 2x, and 3x modes remain selectable.
 - Combatants lunge, recoil, flash on impact, pulse when casting abilities, and fade on defeat. Buttons scale and glow on hover and compress while pressed.
 
 ### Boss Fight Screen
