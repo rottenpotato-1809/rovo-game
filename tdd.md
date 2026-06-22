@@ -129,7 +129,8 @@ export const CONFIG = {
   // ─── BOSS ─────────────────────────────────────────────────
   BOSS_HP: 99999,            // effectively invincible
   BOSS_ATK_START: 20,        // boss damage on turn 1
-  BOSS_ATK_ESCALATION: 15,   // added to boss ATK each turn
+  BOSS_ATK_ESCALATION: 15,   // added to stored boss power each turn
+  BOSS_ATTACK_INTERVAL_TURNS: 3, // release one team-wide blast after charging
   BOSS_SPEED: 5,             // lowest speed = always acts last
 
   // ─── PROGRESSION ──────────────────────────────────────────
@@ -191,7 +192,7 @@ Gold earned on win : GOLD_PER_WIN_BASE + (current_round × GOLD_PER_WIN_SCALING)
 
 XP earned per run : (rounds_survived × XP_PER_ROUND_SURVIVED) + (boss_damage ÷ XP_BOSS_DAMAGE_DIVISOR) — rounded down
 
-Boss ATK on turn N : BOSS_ATK_START + (N × BOSS_ATK_ESCALATION)
+Boss power on turn N : BOSS_ATK_START + (N × BOSS_ATK_ESCALATION); apply it as AoE when N is divisible by BOSS_ATTACK_INTERVAL_TURNS
 
 Turn order : All 6 dragons sorted by SPD descending. Ties broken randomly.
 
@@ -216,6 +217,8 @@ Shop (systems/shop.js)
 - Returns an array of dragon IDs. The prep state renders them as cards.
 
 - Buying a dragon sets that shop slot to null. Null shop slots render as sold and cannot be bought again until reroll or next round.
+
+- Purchases fill the first empty Team slot before Bench. Merge removal happens first, then the upgraded dragon fills the first empty Team slot; it remains on Bench only if Team is full.
 
 Merge (systems/merge.js)
 - Scans bench + team for groups of MERGE_COUNT same-id, same-tier dragons.
@@ -274,7 +277,7 @@ Rendering (ui/renderer.js)
 
 - The codex uses its own full-screen open-book bitmap. Its 8-by-3 grid is constrained to configurable parchment bounds, while the artwork supplies the screen title and the canvas only renders collection cells, discovery progress, and Back.
 
-- Prep and Codex share `drawDragonInspector`, which renders tier stats and ability details for the currently hovered unlocked dragon. Prep also renders centralized tutorial highlights and a Merge hover tooltip.
+- Prep and Codex share `drawDragonInspector`, which renders vertically centered tier stats and ability details in a border derived from the dragon's element color. Prep also renders centralized tutorial highlights and a Merge hover tooltip.
 
 - Owned-dragon portraits, names, and stats render directly on one slot background. Team and bench use separate configurable portrait sizes and offsets, while text baselines anchor from the slot bottom. Prep section offsets reserve clearance from the header, and the arena backdrop uses configurable neutral wall, floor, and line colors.
 
@@ -283,6 +286,8 @@ Rendering (ui/renderer.js)
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
 - Game coordinates stay fixed at CANVAS_WIDTH × CANVAS_HEIGHT, but the backing canvas is resized to displayed CSS pixels times device pixel ratio, capped by CANVAS_MAX_PIXEL_RATIO, to avoid blurry scaled rendering.
+
+- `ui/fullscreen.js` owns the mobile fullscreen control and vendor-prefixed feature detection. The 16:9 shell uses dynamic viewport height and requests landscape orientation after a user tap when supported.
 
 - Menu conditionally renders Continue Run when `game.run` is present. New Run opens a two-action confirmation overlay before replacing that run, while Prep Back persists and returns to Menu.
 
@@ -299,6 +304,8 @@ Animation (ui/animations.js)
 - Updated every frame in the game loop.
 
 - Used for: attack lunges, floating damage numbers, screen shake, fade transitions.
+
+- Runtime art uses WebP backgrounds and sprites to reduce download size without changing canvas dimensions. Boss rendering preloads `sprites/boss.webp`; its pulse amplitude follows the current blast charge while `boss_buff` events update the visible power/countdown.
 
 - Easing: linear and ease-out-quad are sufficient.
 

@@ -47,13 +47,14 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Shop & Economy
 - The shop displays **3 random dragons** each round from the player's unlocked pool.
 - All dragons cost **3 gold** to buy.
-- Buying a shop dragon consumes that shop slot until the next reroll or round refresh.
+- Buying a shop dragon consumes that shop slot until the next reroll or round refresh. New purchases auto-equip into the first empty Team slot; Bench is used only when all 3 Team slots are full.
 - Selling returns **2 gold** (Tier 1), **4 gold** (Tier 2), or **8 gold** (Tier 3).
 - Rerolling the shop costs **1 gold** and can be done unlimited times.
 - Starting gold: **6** so round 1 can field two dragons. Gold earned per round won: **4 + current round number** (e.g., winning round 4 gives 8 gold).
 
 ### Merging
 - Place 3 identical dragons together → they fuse into 1 dragon of the next tier.
+- A newly merged dragon occupies the first available Team slot, falling back to Bench only when the active team is full.
 - Tier 1 → Tier 2 → Tier 3. No tier beyond 3.
 - Merged dragons gain new stats and an upgraded ability.
 - First time a player creates a Tier 2 or Tier 3 dragon, it registers in the codex.
@@ -75,7 +76,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Boss Fight (Eternal Wyrm)
 - Only reached by winning all 10 rounds.
 - The Wyrm has **99,999 HP** (functionally invincible).
-- It attacks **all 3 player dragons every turn** with escalating damage (starts moderate, grows each turn).
+- Its crystal core visibly gathers power every turn. Every **3 turns**, it releases an escalating attack against all living player dragons.
 - It always acts last each turn (lowest speed).
 - Fight ends when all player dragons die. Total damage dealt to the Wyrm = the player's **SCORE**.
 
@@ -104,6 +105,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Click "Reroll"** to refresh the shop.
 - **Click "Fight"** to start the round.
 - **Hover** an owned or shop dragon to inspect its stats and ability.
+- Inspector content sits within one element-colored frame matching the hovered dragon's card.
 - During battle: no input. Click "Continue" when it ends.
 
 ### Mobile
@@ -112,6 +114,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Long-press** a dragon to sell (confirmation prompt).
 - **Tap "Reroll"** / **Tap "Fight"** buttons.
 - During battle: no input. Tap "Continue" when it ends.
+- A compact fullscreen control requests landscape fullscreen so browser chrome does not crop the 16:9 game canvas.
 
 ---
 

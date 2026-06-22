@@ -221,7 +221,7 @@ export class PrepState {
   // Return the current first-run instruction.
   getTutorialPrompt() {
     if (this.game.run.tutorialStep === 0) return 'BUY A DRAGON FROM THE SHOP';
-    if (this.game.run.tutorialStep === 1) return 'DRAG IT FROM BENCH TO YOUR TEAM';
+    if (this.game.run.tutorialStep === 1) return 'AUTO-EQUIPPED - DRAG TO REARRANGE';
     return 'PRESS FIGHT TO START THE BATTLE';
   }
 
@@ -229,7 +229,7 @@ export class PrepState {
   getTutorialTargets() {
     if (this.game.run.tutorialStep === 0) return getShopCards();
     if (this.game.run.tutorialStep === 1) {
-      return [...getBenchSlots().filter((_, index) => this.game.run.bench[index]), ...getTeamSlots()];
+      return getTeamSlots();
     }
     return [getPrepButtons().fight];
   }

@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Wyrmpit</title>
   <link rel="stylesheet" href="./src/styles.css">
 </head>
 <body>
-  <canvas id="game"></canvas>
+  <main id="game-shell" class="game-shell">
+    <canvas id="game"></canvas>
+    <button id="fullscreen-button" class="fullscreen-button" type="button" aria-label="Enter fullscreen" title="Enter fullscreen" hidden>⛶</button>
+  </main>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>

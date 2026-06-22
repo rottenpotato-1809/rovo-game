@@ -14,7 +14,7 @@ test('shop only contains unlocked dragons', () => {
   assert(shop.every(id => ['ember', 'stonescale'].includes(id)));
 });
 
-test('buying spends gold and fills bench', () => {
+test('buying spends gold and fills the team before the bench', () => {
   const state = {
     gold: CONFIG.DRAGON_BUY_COST,
     team: Array(CONFIG.TEAM_SIZE).fill(null),
@@ -25,7 +25,8 @@ test('buying spends gold and fills bench', () => {
   const result = buyDragon(state, 0);
   assertEqual(result.success, true);
   assertEqual(result.state.gold, 0);
-  assertEqual(result.state.bench[0].id, 'ember');
+  assertEqual(result.state.team[0].id, 'ember');
+  assertEqual(result.target.zone, 'team');
   assertEqual(result.state.shop[0], null);
 });
 
@@ -41,7 +42,7 @@ test('bought shop slot cannot be bought again', () => {
   const secondBuy = buyDragon(firstBuy.state, 0);
   assertEqual(firstBuy.success, true);
   assertEqual(secondBuy.success, false);
-  assertEqual(secondBuy.state.bench.filter(Boolean).length, 1);
+  assertEqual([...secondBuy.state.team, ...secondBuy.state.bench].filter(Boolean).length, 1);
 });
 
 test('starting gold buys two round one dragons', () => {
@@ -58,7 +59,21 @@ test('starting gold buys two round one dragons', () => {
   assertEqual(firstBuy.success, true);
   assertEqual(secondBuy.success, true);
   assertEqual(secondBuy.state.gold, CONFIG.STARTING_GOLD - (CONFIG.DRAGON_BUY_COST * expectedOpeningBuys));
-  assertEqual(secondBuy.state.bench.filter(Boolean).length, expectedOpeningBuys);
+  assertEqual(secondBuy.state.team.filter(Boolean).length, expectedOpeningBuys);
+});
+
+test('buying uses the bench only after the team is full', () => {
+  const state = {
+    gold: CONFIG.DRAGON_BUY_COST,
+    team: ['ember', 'ember', 'ember'].map(id => ({ id })),
+    bench: Array(CONFIG.BENCH_SIZE).fill(null),
+    shop: ['stonescale'],
+    unlockedDragonIds: ['ember', 'stonescale'],
+  };
+  const result = buyDragon(state, 0);
+  assertEqual(result.success, true);
+  assertEqual(result.state.bench[0].id, 'stonescale');
+  assertEqual(result.target.zone, 'bench');
 });
 
 test('reroll spends gold and refreshes offerings', () => {

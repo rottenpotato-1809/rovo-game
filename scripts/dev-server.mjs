@@ -13,6 +13,7 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
   '.png': 'image/png',
+  '.webp': 'image/webp',
 };
 
 createServer(async (request, response) => {

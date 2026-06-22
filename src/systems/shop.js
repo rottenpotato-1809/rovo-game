@@ -16,23 +16,25 @@ export function generateShop(unlockedDragonIds, random = Math.random) {
   return shop;
 }
 
-// Buy a dragon if there is gold and bench space.
+// Buy a dragon into the active team first, then use the bench as overflow.
 export function buyDragon(state, shopIndex) {
   const dragonId = state.shop[shopIndex];
   if (!dragonId || !canAfford(state.gold, CONFIG.DRAGON_BUY_COST)) {
     return { state, success: false };
   }
+  const teamIndex = state.team.findIndex(slot => slot === null);
   const benchIndex = state.bench.findIndex(slot => slot === null);
-  if (benchIndex === -1) return { state, success: false };
+  if (teamIndex === -1 && benchIndex === -1) return { state, success: false };
   const paid = spend(state.gold, CONFIG.DRAGON_BUY_COST);
   const nextState = cloneDraftState(state);
   nextState.gold = paid.gold;
-  nextState.bench[benchIndex] = createOwnedDragon(dragonId);
+  const target = teamIndex >= 0 ? { zone: 'team', index: teamIndex } : { zone: 'bench', index: benchIndex };
+  nextState[target.zone][target.index] = createOwnedDragon(dragonId);
   nextState.shop[shopIndex] = null;
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_SHOP) {
     console.log(`[SHOP] bought ${dragonId}`);
   }
-  return { state: nextState, success: true, benchIndex };
+  return { state: nextState, success: true, target };
 }
 
 // Sell a dragon from a team or bench slot.

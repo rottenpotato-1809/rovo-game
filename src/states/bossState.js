@@ -2,7 +2,7 @@ import { CONFIG } from '../config.js';
 import { simulateBossFight } from '../systems/battle.js';
 import { createPlayerBattleTeam } from '../systems/run.js';
 import { createFloatingNumber, TweenSystem, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawBar, drawCircle, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
+import { clear, drawBar, drawBossSprite, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play back the Eternal Wyrm score fight and reveal the final damage total.
@@ -17,6 +17,8 @@ export class BossState {
     this.eventTimerMs = 0;
     this.score = 0;
     this.bossHp = CONFIG.BOSS_HP;
+    this.bossPower = CONFIG.BOSS_ATK_START;
+    this.turnsUntilBlast = CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
     this.floaters = [];
     this.tweens = new TweenSystem();
     this.result = null;
@@ -34,6 +36,8 @@ export class BossState {
     this.eventTimerMs = 0;
     this.score = 0;
     this.bossHp = CONFIG.BOSS_HP;
+    this.bossPower = CONFIG.BOSS_ATK_START;
+    this.turnsUntilBlast = CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
     this.floaters = [];
     this.tweens = new TweenSystem();
     this.views = new Map();
@@ -74,8 +78,8 @@ export class BossState {
     if (!isFinished) {
       drawText(ctx, 'ETERNAL WYRM', CONFIG.FIGHT_BOSS_X, CONFIG.BOSS_NAME_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.BOSS_HP_COLOR);
       drawBar(ctx, CONFIG.BOSS_HP_BAR_X, CONFIG.BOSS_HP_BAR_Y, CONFIG.BOSS_HP_BAR_WIDTH, CONFIG.BOSS_HP_BAR_HEIGHT, this.bossHp / CONFIG.BOSS_HP, CONFIG.BOSS_HP_COLOR);
-      drawCircle(ctx, CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, CONFIG.BOSS_RADIUS, CONFIG.BOSS_HP_COLOR, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
-      drawText(ctx, 'WYRM', CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_PRIMARY);
+      drawText(ctx, `POWER ${this.bossPower} | BLAST IN ${this.turnsUntilBlast}`, CONFIG.FIGHT_BOSS_X, CONFIG.BOSS_STATUS_Y, CONFIG.FONT_SIZE_DRAGON_NAME, CONFIG.GOLD_COLOR);
+      drawBossSprite(ctx, CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, this.getBossPulseScale());
       this.playerTeam.forEach(dragon => {
         const view = this.views.get(dragon.instanceId);
         if (view) drawDragon(ctx, dragon, view);
@@ -107,6 +111,13 @@ export class BossState {
 
   // Apply a structured boss event to the playback display.
   playEvent(event) {
+    if (event.actorId === 'boss_wyrm' && event.action === 'boss_buff') {
+      this.bossPower = event.value;
+      this.turnsUntilBlast = CONFIG.BOSS_ATTACK_INTERVAL_TURNS - (event.turn % CONFIG.BOSS_ATTACK_INTERVAL_TURNS);
+    }
+    if (event.actorId === 'boss_wyrm' && event.action === 'apocalypse_breath') {
+      this.turnsUntilBlast = CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
+    }
     const actorView = this.views.get(event.actorId);
     if (actorView && event.targetId === 'boss_wyrm') {
       const lungeX = actorView.baseX + CONFIG.ATTACK_LUNGE_DIST;
@@ -129,5 +140,13 @@ export class BossState {
       const view = this.views.get(target.instanceId);
       this.tweens.add(view, 'alpha', CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_DEAD_ALPHA, CONFIG.DEATH_FADE_DURATION);
     }
+  }
+
+  // Pulse harder as the next team-wide blast approaches.
+  getBossPulseScale() {
+    const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+    const charge = (CONFIG.BOSS_ATTACK_INTERVAL_TURNS - this.turnsUntilBlast) / CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
+    const wave = (Math.sin(now / CONFIG.BOSS_SPRITE_PULSE_SPEED_MS) + 1) / 2;
+    return CONFIG.ARENA_ALIVE_ALPHA + (wave * charge * CONFIG.BOSS_SPRITE_PULSE_SCALE);
   }
 }

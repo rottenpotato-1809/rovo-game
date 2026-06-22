@@ -718,8 +718,9 @@ function _event(turn, actor, action, target, value) {
  * Simulate the boss fight (Eternal Wyrm).
  * Same core loop but boss has special rules:
  *   - Always acts last (lowest SPD)
- *   - Hits ALL player dragons every turn
- *   - Escalating damage per turn
+ *   - Buffs itself every turn
+ *   - Hits ALL player dragons after each charge interval
+ *   - Blast damage escalates throughout the fight
  *   - Fight ends when all player dragons die
  * 
  * @param {Array} playerTeam - player's surviving team
@@ -799,14 +800,18 @@ export function simulateBossFight(playerTeam) {
       }
 
       if (dragon.instanceId === 'boss_wyrm') {
-        // Boss action: hit all player dragons
-        const alivePlayers = playerTeam.filter(d => d.isAlive);
-        alivePlayers.forEach(target => {
-          const damage = boss.atk;
-          _applyDamage(target, damage, boss, turnNumber, log, 'boss_attack');
-        });
-        log.push(_event(turnNumber, boss, 'apocalypse_breath', null, boss.atk));
-        if (CONFIG.LOG_BATTLE) console.log(`[BATTLE] Eternal Wyrm uses Apocalypse Breath for ${boss.atk} to all`);
+        log.push(_event(turnNumber, boss, 'boss_buff', null, boss.atk));
+        if (turnNumber % CONFIG.BOSS_ATTACK_INTERVAL_TURNS === 0) {
+          const alivePlayers = playerTeam.filter(d => d.isAlive);
+          alivePlayers.forEach(target => {
+            const damage = boss.atk;
+            _applyDamage(target, damage, boss, turnNumber, log, 'boss_attack');
+          });
+          log.push(_event(turnNumber, boss, 'apocalypse_breath', null, boss.atk));
+          if (CONFIG.LOG_BATTLE) console.log(`[BATTLE] Eternal Wyrm releases Apocalypse Breath for ${boss.atk} to all`);
+        } else if (CONFIG.LOG_BATTLE) {
+          console.log(`[BATTLE] Eternal Wyrm gathers power: ${boss.atk}`);
+        }
       } else {
         // Player dragon acts normally
         if (dragon.isCharging) {

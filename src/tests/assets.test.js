@@ -1,5 +1,5 @@
 import { DRAGONS } from '../data/dragons.js';
-import { getDragonSpriteDescriptor } from '../ui/assets.js';
+import { getBossSpriteDescriptor, getDragonSpriteDescriptor } from '../ui/assets.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
 test('all eight dragons have Tier 1 and Tier 2 artwork mappings', () => {
@@ -17,6 +17,10 @@ test('Tier 3 reuses Tier 2 artwork for effect-based evolution', () => {
 
 test('unknown dragons do not resolve to unrelated artwork', () => {
   assertEqual(getDragonSpriteDescriptor('unknown', 1), null);
+});
+
+test('boss encounter has a standalone sprite mapping', () => {
+  assertEqual(getBossSpriteDescriptor().file, 'boss.webp');
 });
 
 summarize();

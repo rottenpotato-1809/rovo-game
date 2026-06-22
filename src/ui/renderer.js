@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { getBackgroundImage, getDragonImage, getGameTitleImage } from './assets.js';
+import { getBackgroundImage, getBossImage, getDragonImage, getGameTitleImage } from './assets.js';
 import { getPointerState } from './pointer.js';
 
 const buttonMotion = new Map();
@@ -29,6 +29,21 @@ export function drawGameTitle(ctx, rect) {
   ctx.save();
   ctx.imageSmoothingEnabled = true;
   ctx.drawImage(image, rect.x, rect.y, rect.width, rect.height);
+  ctx.restore();
+}
+
+// Draw the animated crystal core used by the Eternal Wyrm boss encounter.
+export function drawBossSprite(ctx, x, y, scale = CONFIG.ARENA_ALIVE_ALPHA) {
+  const image = getBossImage();
+  const size = CONFIG.BOSS_SPRITE_SIZE * scale;
+  if (!image || !image.complete || !image.naturalWidth) {
+    drawCircle(ctx, x, y, CONFIG.BOSS_RADIUS * scale, CONFIG.BOSS_HP_COLOR, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
+    return;
+  }
+  ctx.save();
+  ctx.imageSmoothingEnabled = true;
+  ctx.translate(x, y);
+  ctx.drawImage(image, -(size / 2), -(size / 2), size, size);
   ctx.restore();
 }
 
@@ -114,13 +129,14 @@ export function drawFitText(ctx, text, x, y, size, maxWidth, minSize, color = CO
 
 // Draw dragon identity, combat stats, and ability details in one hover panel.
 export function drawDragonInspector(ctx, rect, dragon, tierData) {
-  drawRect(ctx, rect, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
+  const elementColor = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.GOLD_COLOR;
+  drawRect(ctx, rect, CONFIG.UI_PANEL_COLOR, elementColor);
   const left = rect.x + CONFIG.DRAGON_INSPECTOR_PADDING;
   const right = rect.x + rect.width - CONFIG.DRAGON_INSPECTOR_PADDING;
-  const firstLine = rect.y + CONFIG.DRAGON_INSPECTOR_PADDING;
+  const firstLine = rect.y + CONFIG.DRAGON_INSPECTOR_CONTENT_OFFSET_Y;
   drawFitText(ctx, `${dragon.name} T${tierData.tier}`, left, firstLine, CONFIG.FONT_SIZE_HEADER, rect.width - (CONFIG.DRAGON_INSPECTOR_PADDING * 2), CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
   drawText(ctx, `ATK ${tierData.atk}  HP ${tierData.hp}  SPD ${tierData.spd}`, left, firstLine + CONFIG.DRAGON_INSPECTOR_LINE_GAP, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY, 'left');
-  drawFitText(ctx, tierData.abilityName, right, firstLine + CONFIG.DRAGON_INSPECTOR_LINE_GAP, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width / 2, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.GOLD_COLOR, 'right');
+  drawFitText(ctx, tierData.abilityName, right, firstLine + CONFIG.DRAGON_INSPECTOR_LINE_GAP, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width / 2, CONFIG.FONT_SIZE_CARD_META_MIN, elementColor, 'right');
   drawFitText(ctx, tierData.abilityDesc, left, firstLine + (CONFIG.DRAGON_INSPECTOR_LINE_GAP * 2), CONFIG.FONT_SIZE_STATS, rect.width - (CONFIG.DRAGON_INSPECTOR_PADDING * 2), CONFIG.FONT_SIZE_SMALL, CONFIG.TEXT_PRIMARY, 'left');
 }
 

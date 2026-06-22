@@ -33,4 +33,19 @@ test('merge consumes three dragons and creates next tier', () => {
   assertEqual(result.discovery.id, 'ember');
 });
 
+test('a bench merge moves the upgraded dragon into an empty team slot', () => {
+  const state = {
+    gold: 0,
+    team: [null, createOwnedDragon('stonescale'), null],
+    bench: [createOwnedDragon('ember'), createOwnedDragon('ember'), createOwnedDragon('ember'), null, null],
+    shop: [],
+    unlockedDragonIds: ['ember', 'stonescale'],
+  };
+  const result = executeMerge(state);
+  assertEqual(result.success, true);
+  assertEqual(result.state.team[0].id, 'ember');
+  assertEqual(result.state.team[0].tier, 2);
+  assertEqual(result.state.bench.filter(Boolean).length, 0);
+});
+
 summarize();

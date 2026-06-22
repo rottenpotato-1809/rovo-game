@@ -696,27 +696,35 @@ test('Boss fight returns totalDamage dealt', () => {
   assert(result.totalTurns > 0, 'Should last at least 1 turn');
 });
 
-test('Boss hits all player dragons every turn', () => {
+test('Boss hits all player dragons after charging', () => {
   const playerTeam = makeTeam('player', { hp: 300, atk: 20, spd: 12 });
   const result = simulateBossFight(playerTeam);
 
-  // Look for boss attack events — should hit multiple targets per turn
   const bossAttacks = result.log.filter(e => e.actorId === 'boss_wyrm' && e.action === 'boss_attack');
-  // On turn 1, boss should hit all 3 alive dragons
-  const turn1attacks = bossAttacks.filter(e => e.turn === 1);
-  assertEqual(turn1attacks.length, 3, 'Boss should hit all 3 player dragons on turn 1');
+  const earlyAttacks = bossAttacks.filter(e => e.turn < CONFIG.BOSS_ATTACK_INTERVAL_TURNS);
+  const firstBlast = bossAttacks.filter(e => e.turn === CONFIG.BOSS_ATTACK_INTERVAL_TURNS);
+  assertEqual(earlyAttacks.length, 0, 'Boss should charge before its first blast');
+  assertEqual(firstBlast.length, 3, 'First blast should hit all 3 player dragons');
 });
 
-test('Boss damage escalates each turn', () => {
+test('Boss damage escalates between blasts', () => {
   const playerTeam = makeTeam('player', { hp: 9999, atk: 5, spd: 12 });
   const result = simulateBossFight(playerTeam);
 
-  // Check turn 1 vs turn 3 damage
-  const turn1hit = result.log.find(e => e.actorId === 'boss_wyrm' && e.action === 'boss_attack' && e.turn === 1);
-  const turn3hit = result.log.find(e => e.actorId === 'boss_wyrm' && e.action === 'boss_attack' && e.turn === 3);
-  assert(turn1hit !== undefined, 'Should have turn 1 boss attack');
-  assert(turn3hit !== undefined, 'Should have turn 3 boss attack');
-  assertGreaterThan(turn3hit.value, turn1hit.value, 'Boss damage should increase over turns');
+  const firstBlastTurn = CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
+  const secondBlastTurn = CONFIG.BOSS_ATTACK_INTERVAL_TURNS * 2;
+  const firstBlast = result.log.find(e => e.actorId === 'boss_wyrm' && e.action === 'boss_attack' && e.turn === firstBlastTurn);
+  const secondBlast = result.log.find(e => e.actorId === 'boss_wyrm' && e.action === 'boss_attack' && e.turn === secondBlastTurn);
+  assert(firstBlast !== undefined, 'Should have a first charged blast');
+  assert(secondBlast !== undefined, 'Should have a second charged blast');
+  assertGreaterThan(secondBlast.value, firstBlast.value, 'Boss blast damage should keep increasing');
+});
+
+test('Boss logs a power buff on every turn', () => {
+  const playerTeam = makeTeam('player', { hp: 500, atk: 20, spd: 12 });
+  const result = simulateBossFight(playerTeam);
+  const buffTurns = new Set(result.log.filter(e => e.actorId === 'boss_wyrm' && e.action === 'boss_buff').map(e => e.turn));
+  assertEqual(buffTurns.size, result.totalTurns, 'Every boss turn should expose its increasing power');
 });
 
 test('Boss fight ends when all player dragons die', () => {

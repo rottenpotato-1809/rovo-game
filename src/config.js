@@ -164,6 +164,9 @@ export const CONFIG = {
   // Turn N damage = BOSS_ATK_START + (N × BOSS_ATK_ESCALATION).
   // Recommended range: 10–25. Higher = faster wipe = lower scores.
 
+  BOSS_ATTACK_INTERVAL_TURNS: 3,
+  // Boss gathers power each turn and releases one team-wide blast on this cadence.
+
   BOSS_SPEED: 5,
   // Boss SPD value — intentionally lowest so boss always acts last each turn.
   // This gives player dragons one round of damage before taking hits.
@@ -362,6 +365,15 @@ export const CONFIG = {
 
   BOSS_RADIUS: 60,
   // Radius of the boss circle in boss fight (px). Bigger = more intimidating.
+
+  BOSS_SPRITE_SIZE: 220,
+  // Square draw size for the transparent boss crystal sprite.
+
+  BOSS_SPRITE_PULSE_SCALE: 0.06,
+  // Maximum extra scale while the boss charges its next blast.
+
+  BOSS_SPRITE_PULSE_SPEED_MS: 420,
+  // Crystal pulse period during boss playback.
 
   HP_BAR_HEIGHT: 6,
   // Height of HP bars above dragons (px).
@@ -1056,6 +1068,9 @@ export const CONFIG = {
   DRAGON_INSPECTOR_PADDING: 10,
   // Shared inner padding for dragon detail panels.
 
+  DRAGON_INSPECTOR_CONTENT_OFFSET_Y: 16,
+  // First text baseline so inspector content sits vertically inside its frame.
+
   DRAGON_INSPECTOR_LINE_GAP: 17,
   // Vertical spacing between inspector text rows.
 
@@ -1154,6 +1169,9 @@ export const CONFIG = {
 
   BOSS_NAME_Y: 146,
   // Eternal Wyrm name baseline.
+
+  BOSS_STATUS_Y: 182,
+  // Boss power and blast countdown baseline.
 
   BOSS_HP_BAR_X: 590,
   // Boss HP bar left edge.

@@ -23,14 +23,15 @@ export function executeMerge(state) {
   const mergeGroup = checkMergeAvailable(state.team, state.bench);
   if (!mergeGroup) return { state, success: false, discovery: null };
   const nextState = cloneDraftState(state);
-  const keeper = mergeGroup[0];
-  const sourceDragon = nextState[keeper.zone][keeper.index];
+  const sourceDragon = nextState[mergeGroup[0].zone][mergeGroup[0].index];
   const nextTier = sourceDragon.tier + 1;
   const mergedDragon = createOwnedDragon(sourceDragon.id, nextTier);
   mergeGroup.forEach(entry => {
     nextState[entry.zone][entry.index] = null;
   });
-  nextState[keeper.zone][keeper.index] = mergedDragon;
+  const teamIndex = nextState.team.findIndex(slot => slot === null);
+  if (teamIndex >= 0) nextState.team[teamIndex] = mergedDragon;
+  else nextState.bench[mergeGroup[0].index] = mergedDragon;
   const discovery = { id: mergedDragon.id, tier: mergedDragon.tier, name: getDragon(mergedDragon.id).name };
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_MERGE) {
     console.log(`[MERGE] ${mergedDragon.id} reached T${mergedDragon.tier}`);

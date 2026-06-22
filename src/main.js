@@ -12,11 +12,15 @@ import { PrepState } from './states/prepState.js';
 import { ResultState } from './states/resultState.js';
 import { load } from './persistence/save.js';
 import { preloadAssets } from './ui/assets.js';
+import { setupFullscreenButton } from './ui/fullscreen.js';
 
 // Boot the canvas application and start the animation loop.
 async function main() {
   const canvas = document.getElementById('game');
+  const gameShell = document.getElementById('game-shell');
+  const fullscreenButton = document.getElementById('fullscreen-button');
   const ctx = canvas.getContext('2d');
+  setupFullscreenButton(fullscreenButton, gameShell);
 
   const stateManager = new StateManager();
   const saveData = load();

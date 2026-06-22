@@ -1,13 +1,14 @@
 const BACKGROUND_SOURCES = {
-  loading: new URL('../background/loading.png', import.meta.url).href,
-  menu: new URL('../background/main_menu.png', import.meta.url).href,
-  prep: new URL('../background/prep_phase.png', import.meta.url).href,
-  fight: new URL('../background/fight_phase.png', import.meta.url).href,
-  codex: new URL('../background/codex.png', import.meta.url).href,
+  loading: new URL('../background/loading.webp', import.meta.url).href,
+  menu: new URL('../background/main_menu.webp', import.meta.url).href,
+  prep: new URL('../background/prep_phase.webp', import.meta.url).href,
+  fight: new URL('../background/fight_phase.webp', import.meta.url).href,
+  codex: new URL('../background/codex.webp', import.meta.url).href,
 };
 
 const UI_SOURCES = {
-  gameTitle: new URL('../background/game-name.png', import.meta.url).href,
+  gameTitle: new URL('../background/game-name.webp', import.meta.url).href,
+  boss: new URL('../sprites/boss.webp', import.meta.url).href,
 };
 
 const DRAGON_ELEMENTS = {
@@ -33,11 +34,21 @@ export function getGameTitleImage() {
   return getImage(UI_SOURCES.gameTitle);
 }
 
+// Return the Eternal Wyrm crystal-core sprite.
+export function getBossImage() {
+  return getImage(UI_SOURCES.boss);
+}
+
+// Describe the standalone boss asset without requiring browser Image APIs.
+export function getBossSpriteDescriptor() {
+  return { file: 'boss.webp' };
+}
+
 // Return a dragon sprite, reusing Tier 2 artwork for Tier 3.
 export function getDragonImage(id, tier) {
   const descriptor = getDragonSpriteDescriptor(id, tier);
   if (!descriptor) return null;
-  const source = new URL(`../sprites/${descriptor.element}_Dragon_T${descriptor.artworkTier}.png`, import.meta.url).href;
+  const source = new URL(`../sprites/${descriptor.element}_Dragon_T${descriptor.artworkTier}.webp`, import.meta.url).href;
   return getImage(source);
 }
 
@@ -53,12 +64,13 @@ export async function preloadAssets(onProgress = () => {}) {
   if (typeof Image === 'undefined') return;
   const bootSources = [BACKGROUND_SOURCES.loading, UI_SOURCES.gameTitle];
   const runtimeSources = [
+    UI_SOURCES.boss,
     ...Object.entries(BACKGROUND_SOURCES)
       .filter(([phase]) => phase !== 'loading')
       .map(([, source]) => source),
     ...Object.values(DRAGON_ELEMENTS).flatMap(element => [
-      new URL(`../sprites/${element}_Dragon_T1.png`, import.meta.url).href,
-      new URL(`../sprites/${element}_Dragon_T2.png`, import.meta.url).href,
+      new URL(`../sprites/${element}_Dragon_T1.webp`, import.meta.url).href,
+      new URL(`../sprites/${element}_Dragon_T2.webp`, import.meta.url).href,
     ]),
   ];
   const sources = [...bootSources, ...runtimeSources];
