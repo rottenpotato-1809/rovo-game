@@ -124,7 +124,7 @@ export const CONFIG = {
     [0, 2, 1],  // round 9
     [0, 1, 2],  // round 10
   ],
-  ENEMY_POWER_SCALE: [0.30, 0.35, 0.40, 0.40, 0.45, 0.50, 0.55, 0.60, 0.50, 0.52],
+  ENEMY_POWER_SCALE: [0.40, 0.44, 0.50, 0.59, 0.65, 0.70, 0.68, 0.73, 0.56, 0.61],
 
   // ─── BOSS ─────────────────────────────────────────────────
   BOSS_HP: 99999,            // effectively invincible
@@ -211,6 +211,7 @@ Battle (systems/battle.js)
 
 Shop (systems/shop.js)
 - Draws from the player's unlocked pool only.
+- Excludes any dragon family currently owned at `MAX_TIER`; rerolls and automatic round refreshes both derive this exclusion from Team + Bench. If all unlocked families are maxed, the shop returns null slots.
 
 - Weighted random is NOT needed for prototype — pure uniform random from unlocked list.
 
@@ -234,7 +235,7 @@ Enemy (systems/enemy.js)
 
 - Applies ENEMY_POWER_SCALE[roundIndex] to generated enemy ATK/HP so early rounds are intentionally weaker than equivalent player dragons.
 
-- Tier transitions use lower raw multipliers to offset the tier's doubled base stats. `scripts/balance-sim.mjs` runs a seeded duplicate-focused draft policy; the campaign target is 65-85% boss reach with at most 1% losses in rounds 1-6.
+- Tier transitions use lower raw multipliers to offset the tier's doubled base stats. `scripts/balance-sim.mjs` runs a seeded duplicate-focused draft policy and reports conditional loss rates. The target funnel is 58-64% boss reach, 2-4.5% aggregate losses in Rounds 1-6, 4-8% aggregate losses in Rounds 7-8, 8-13% on Round 9, and 22-28% on Round 10.
 
 - Picks from ALL 8 dragon types (including locked ones) — this is the player's preview of what they can unlock.
 
@@ -268,6 +269,7 @@ Rendering (ui/renderer.js)
 - All coordinates and sizes pulled from CONFIG layout constants.
 
 - Prep layout uses separate left staging and right commerce columns: tall team cards, compact bench cards, tall shop cards, stacked utility commands, and an independently sized Fight CTA.
+- `run.round === TOTAL_ROUNDS + 1` represents the final Boss Prep checkpoint. It renders `BOSS PREP` / `FIGHT BOSS`; pressing the CTA transitions directly to `bossState`, while refresh and Continue restore the saved prep state.
 
 - Result rendering consumes structured summary rows so badges, labels, values, and dividers stay aligned independently of progression values.
 

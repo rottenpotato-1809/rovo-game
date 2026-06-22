@@ -2,12 +2,15 @@ import { CONFIG } from '../config.js';
 import { getDragon } from '../data/dragons.js';
 import { canAfford, getSellPrice, spend } from './economy.js';
 
-// Generate a random shop from the unlocked dragon pool.
-export function generateShop(unlockedDragonIds, random = Math.random) {
-  const pool = unlockedDragonIds.filter(id => getDragon(id));
+// Generate a random shop, excluding dragon families already owned at max tier.
+export function generateShop(unlockedDragonIds, random = Math.random, ownedDragons = []) {
+  const maxedDragonIds = new Set(
+    ownedDragons.filter(dragon => dragon?.tier >= CONFIG.MAX_TIER).map(dragon => dragon.id),
+  );
+  const pool = unlockedDragonIds.filter(id => getDragon(id) && !maxedDragonIds.has(id));
   const shop = [];
   for (let index = 0; index < CONFIG.SHOP_SIZE; index++) {
-    const dragonId = pool[Math.floor(random() * pool.length)];
+    const dragonId = pool.length > 0 ? pool[Math.floor(random() * pool.length)] : null;
     shop.push(dragonId);
   }
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_SHOP) {
@@ -57,7 +60,7 @@ export function rerollShop(state, random = Math.random) {
   if (!paid.success) return { state, success: false };
   const nextState = cloneDraftState(state);
   nextState.gold = paid.gold;
-  nextState.shop = generateShop(nextState.unlockedDragonIds, random);
+  nextState.shop = generateShop(nextState.unlockedDragonIds, random, [...nextState.team, ...nextState.bench]);
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_SHOP) console.log('[SHOP] rerolled');
   return { state: nextState, success: true };
 }

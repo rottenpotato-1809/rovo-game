@@ -270,7 +270,7 @@ Add the boss fight (Eternal Wyrm — invincible, escalating damage, score = tota
 
 ### End-User Test Checklist
 - [ ] Main menu shows: title "WYRMPIT", high score, XP progress bar, NEW RUN button, CODEX button
-- [ ] After winning round 10, boss fight starts automatically — NOT a prep phase
+- [ ] After winning round 10, a final Boss Prep phase appears before the boss fight
 - [ ] Boss is visually large and distinct (bigger circle, ominous color)
 - [ ] Boss hits ALL player dragons every turn (damage numbers on all 3)
 - [ ] Boss damage visibly increases each turn (numbers get bigger)
@@ -347,7 +347,7 @@ WHEN DONE — tell the user to run through this test checklist:
 
 [ ] Main menu shows title, high score, XP bar, NEW RUN and CODEX buttons
 
-[ ] Winning round 10 transitions to boss fight (not prep)
+[ ] Winning round 10 transitions to Boss Prep; FIGHT BOSS then starts the boss encounter
 
 [ ] Boss is large and visually distinct
 

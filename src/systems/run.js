@@ -53,7 +53,7 @@ export function applyWin(runState, random = Math.random) {
   };
   nextState.gold += calculateRoundGold(runState.round);
   nextState.round += 1;
-  nextState.shop = generateShop(nextState.unlockedDragonIds, random);
+  nextState.shop = generateShop(nextState.unlockedDragonIds, random, [...nextState.team, ...nextState.bench]);
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_STATE) {
     console.log(`[STATE] advanced to round ${nextState.round}`);
   }

@@ -2,11 +2,9 @@ import { CONFIG } from '../config.js';
 import { simulateCampaign } from '../../scripts/balance-sim.mjs';
 import { assert, test, summarize } from './testHarness.js';
 
-const BALANCE_SAMPLE_RUNS = 1000;
-const MIN_BOSS_REACH_RATE = 0.65;
-const MAX_BOSS_REACH_RATE = 0.85;
-const EARLY_GAME_ROUNDS = 6;
-const MAX_EARLY_LOSS_RATE = 0.01;
+const BALANCE_SAMPLE_RUNS = 5000;
+const MIN_BOSS_REACH_RATE = 0.58;
+const MAX_BOSS_REACH_RATE = 0.64;
 
 const report = simulateCampaign(BALANCE_SAMPLE_RUNS);
 
@@ -15,9 +13,11 @@ test('competent drafting reaches the boss at the target campaign rate', () => {
   assert(report.bossReachRate <= MAX_BOSS_REACH_RATE, `Boss reach rate ${(report.bossReachRate * 100).toFixed(1)}% leaves too little pre-boss pressure`);
 });
 
-test('build-up rounds rarely end a competent run', () => {
-  const earlyLosses = report.lossesByRound.slice(0, EARLY_GAME_ROUNDS).reduce((total, losses) => total + losses, 0);
-  assert(earlyLosses / BALANCE_SAMPLE_RUNS <= MAX_EARLY_LOSS_RATE, `Early loss rate ${((earlyLosses / BALANCE_SAMPLE_RUNS) * 100).toFixed(1)}% is too high`);
+test('campaign losses follow the intended phase funnel', () => {
+  assert(report.earlyLossRate >= 0.02 && report.earlyLossRate <= 0.045, `Round 1-6 loss rate ${(report.earlyLossRate * 100).toFixed(1)}% is outside target`);
+  assert(report.midLossRate >= 0.04 && report.midLossRate <= 0.08, `Round 7-8 loss rate ${(report.midLossRate * 100).toFixed(1)}% is outside target`);
+  assert(report.conditionalLossRates[8] >= 0.08 && report.conditionalLossRates[8] <= 0.13, `Round 9 loss rate ${(report.conditionalLossRates[8] * 100).toFixed(1)}% is outside target`);
+  assert(report.conditionalLossRates[9] >= 0.22 && report.conditionalLossRates[9] <= 0.28, `Round 10 loss rate ${(report.conditionalLossRates[9] * 100).toFixed(1)}% is outside target`);
 });
 
 test('round ten remains stronger than round nine after tier scaling', () => {

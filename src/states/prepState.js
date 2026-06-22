@@ -72,7 +72,8 @@ export class PrepState {
     };
     drawRect(ctx, leftPanel, CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_SECONDARY);
     drawRect(ctx, rightPanel, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
-    drawText(ctx, `ROUND ${this.game.run.round}/${CONFIG.TOTAL_ROUNDS}`, leftPanel.x + leftPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER);
+    const phaseLabel = this.isBossPrep() ? 'BOSS PREP' : `ROUND ${this.game.run.round}/${CONFIG.TOTAL_ROUNDS}`;
+    drawText(ctx, phaseLabel, leftPanel.x + leftPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER);
     drawText(ctx, `GOLD ${this.game.run.gold}`, rightPanel.x + rightPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
   }
 
@@ -174,7 +175,8 @@ export class PrepState {
     const mergeAvailable = checkMergeAvailable(this.game.run.team, this.game.run.bench);
     drawButton(ctx, buttons.merge, mergeAvailable ? 'MERGE' : 'NO MERGE', mergeAvailable ? CONFIG.GOLD_COLOR : CONFIG.ACCENT_SECONDARY);
     drawButton(ctx, buttons.reroll, `REROLL ${CONFIG.REROLL_COST}G`, CONFIG.ACCENT_SECONDARY);
-    drawButton(ctx, buttons.fight, 'FIGHT', CONFIG.ACCENT_PRIMARY, CONFIG.FONT_SIZE_PREP_FIGHT);
+    const fightFontSize = this.isBossPrep() ? CONFIG.FONT_SIZE_PREP_BOSS_FIGHT : CONFIG.FONT_SIZE_PREP_FIGHT;
+    drawButton(ctx, buttons.fight, this.isBossPrep() ? 'FIGHT BOSS' : 'FIGHT', CONFIG.ACCENT_PRIMARY, fightFontSize);
     if (this.hoverPoint && pointInRect(this.hoverPoint, buttons.merge)) this.renderMergeTooltip(ctx);
   }
 
@@ -365,6 +367,11 @@ export class PrepState {
       tier: owned.tier,
       name: getDragon(owned.id).name,
     }));
+    if (this.isBossPrep()) {
+      this.persistRun();
+      this.stateManager.change('boss', { run: this.game.run });
+      return;
+    }
     const playerBattleTeam = createPlayerBattleTeam(this.game.run.team);
     const enemyBattleTeam = createRoundEnemyTeam(this.game.run.round);
     const displayPlayerTeam = playerBattleTeam.map(dragon => ({ ...dragon, statuses: [] }));
@@ -388,12 +395,17 @@ export class PrepState {
     if (this.game.run.round >= CONFIG.TOTAL_ROUNDS) {
       this.game.run = applyWin(this.game.run);
       this.persistRun();
-      this.stateManager.change('boss', { run: this.game.run });
+      this.stateManager.change('prep');
       return;
     }
     this.game.run = applyWin(this.game.run);
     this.persistRun();
     this.stateManager.change('prep');
+  }
+
+  // Round TOTAL_ROUNDS + 1 is a final draft checkpoint, not another enemy round.
+  isBossPrep() {
+    return this.game.run.round > CONFIG.TOTAL_ROUNDS;
   }
 
   // Resolve the dragon and tier currently under the pointer.

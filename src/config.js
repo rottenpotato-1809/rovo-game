@@ -132,16 +132,16 @@ export const CONFIG = {
   ],
 
   ENEMY_POWER_SCALE: [
-    0.30, // Round 1  — onboarding, not a run-ending check
-    0.35, // Round 2  — complete the starting team
-    0.40, // Round 3  — first full enemy team
-    0.40, // Round 4  — first enemy T2, offset by lower scale
-    0.45, // Round 5
-    0.50, // Round 6
-    0.55, // Round 7  — build check without a hard wall
-    0.60, // Round 8
-    0.50, // Round 9  — T3 introduction raises effective power
-    0.52, // Round 10 — final pre-boss exam
+    0.40, // Round 1  — onboarding, not a run-ending check
+    0.44, // Round 2  — complete the starting team
+    0.50, // Round 3  — first full enemy team
+    0.59, // Round 4  — first meaningful composition check
+    0.65, // Round 5
+    0.70, // Round 6
+    0.68, // Round 7  — controlled late-run pressure
+    0.73, // Round 8
+    0.56, // Round 9  — T3 introduction raises effective power
+    0.61, // Round 10 — final pre-boss exam
   ],
   // Per-round ATK/HP multiplier for generated enemies.
 
@@ -877,6 +877,8 @@ export const CONFIG = {
   // Height of the large Fight call to action.
 
   FONT_SIZE_PREP_FIGHT: 28,
+  // Smaller label size keeps the longer final-prep command inside the Fight CTA.
+  FONT_SIZE_PREP_BOSS_FIGHT: 20,
   // Label size for the large prep Fight button.
 
   RESULT_BUTTON_X: 380,

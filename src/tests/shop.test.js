@@ -14,6 +14,18 @@ test('shop only contains unlocked dragons', () => {
   assert(shop.every(id => ['ember', 'stonescale'].includes(id)));
 });
 
+test('shop excludes dragon families already owned at Tier 3', () => {
+  const owned = [{ id: 'ember', tier: CONFIG.MAX_TIER }];
+  const shop = generateShop(['ember', 'stonescale'], () => 0, owned);
+  assert(shop.every(id => id === 'stonescale'));
+});
+
+test('shop returns empty slots when every unlocked family is Tier 3', () => {
+  const owned = [{ id: 'ember', tier: CONFIG.MAX_TIER }];
+  const shop = generateShop(['ember'], () => 0, owned);
+  assert(shop.every(id => id === null));
+});
+
 test('buying spends gold and fills the team before the bench', () => {
   const state = {
     gold: CONFIG.DRAGON_BUY_COST,

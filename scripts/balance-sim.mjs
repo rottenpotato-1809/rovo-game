@@ -42,11 +42,23 @@ export function simulateCampaign(runCount = DEFAULT_RUNS) {
     const resultRound = simulateRun(index + 1);
     lossesByRound[resultRound > CONFIG.TOTAL_ROUNDS ? 0 : resultRound]++;
   }
+  const roundLossCounts = lossesByRound.slice(1);
+  let remainingRuns = runCount;
+  const conditionalLossRates = roundLossCounts.map(losses => {
+    const rate = remainingRuns > 0 ? losses / remainingRuns : 0;
+    remainingRuns -= losses;
+    return rate;
+  });
+  const earlyLosses = roundLossCounts.slice(0, 6).reduce((total, losses) => total + losses, 0);
+  const midLosses = roundLossCounts.slice(6, 8).reduce((total, losses) => total + losses, 0);
   return {
     runCount,
     bossReached: lossesByRound[0],
     bossReachRate: lossesByRound[0] / runCount,
-    lossesByRound: lossesByRound.slice(1),
+    lossesByRound: roundLossCounts,
+    conditionalLossRates,
+    earlyLossRate: earlyLosses / runCount,
+    midLossRate: midLosses / (runCount - earlyLosses),
   };
 }
 
@@ -160,4 +172,6 @@ if (typeof process !== 'undefined' && process.argv?.[1]?.replaceAll('\\', '/').e
   console.log(`Runs: ${report.runCount}`);
   console.log(`Boss reached: ${report.bossReached} (${(report.bossReachRate * 100).toFixed(1)}%)`);
   console.log(`Losses by round: ${report.lossesByRound.map((count, index) => `R${index + 1}=${count}`).join(', ')}`);
+  console.log(`Conditional loss rates: ${report.conditionalLossRates.map((rate, index) => `R${index + 1}=${(rate * 100).toFixed(1)}%`).join(', ')}`);
+  console.log(`Phase loss rates: R1-6=${(report.earlyLossRate * 100).toFixed(1)}%, R7-8=${(report.midLossRate * 100).toFixed(1)}%`);
 }

@@ -45,7 +45,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Dragon HP is round-based: every owned dragon starts each new round at full health, even if it died in the previous winning fight.
 
 ### Shop & Economy
-- The shop displays **3 random dragons** each round from the player's unlocked pool.
+- The shop displays **3 random dragons** each round from the player's unlocked pool. A dragon family is removed from the roll pool while the player owns its Tier 3 evolution; if every unlocked family is maxed, unavailable shop slots remain empty.
 - All dragons cost **3 gold** to buy.
 - Buying a shop dragon consumes that shop slot until the next reroll or round refresh. New purchases auto-equip into the first empty Team slot; Bench is used only when all 3 Team slots are full.
 - Selling returns **2 gold** (Tier 1), **4 gold** (Tier 2), or **8 gold** (Tier 3).
@@ -71,7 +71,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Enemies
 - Enemy teams are pre-generated per round from ALL 8 dragon types (including ones the player hasn't unlocked).
 - Difficulty escalates by team size, tier, and power scale. Rounds 1-6 are build-up fights, rounds 7-9 validate the developing composition, and round 10 is the strongest pre-boss exam. Enemy tier upgrades use compensating power scales so a new tier is a controlled step rather than a doubled-stat wall.
-- Balance target: a competent duplicate-focused draft should reach the boss in roughly **65-85%** of seeded simulations. The boss is the run's primary payoff and score test; early losses should be uncommon rather than the expected endpoint.
+- Balance target for a competent duplicate-focused draft: roughly **60% reach the boss**. Funnel losses are approximately **3% across Rounds 1-6**, **6% across Rounds 7-8**, **10% on Round 9**, and **25% on Round 10**. Phase and per-round rates are measured against players who enter that phase or round.
 
 ### Boss Fight (Eternal Wyrm)
 - Only reached by winning all 10 rounds.
@@ -82,6 +82,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Win / Lose
 - **Win condition (run):** Survive all 10 rounds to reach the boss.
+- Winning Round 10 opens one final **Boss Prep** phase. The player may spend the last reward, reroll, merge, sell, and rearrange the team before choosing **Fight Boss**.
 - **Lose condition (run):** All 3 dragons die during any round (run ends immediately).
 - **Score:** Only generated if the player reaches the boss. Score = damage dealt to Eternal Wyrm.
 - **XP earned:** Rounds survived × 5, plus boss damage ÷ 10 (if reached). Earned on every run, win or lose.
