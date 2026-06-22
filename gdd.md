@@ -148,17 +148,19 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Center:** The two teams stand in close opposing columns without a separate VS label. Floating damage/heal numbers animate on hit.
 - **Upper-right panel:** scrolling combat log, separated from the battlefield.
 - Each combatant shows whether its special ability is ready or how many actions remain on cooldown. The combat log supports wheel and touch-drag history scrolling, and action labels are displayed as readable words.
-- **After battle ends:** A large WIN/LOSE label and the Continue prompt occupy one centered upper panel. The log remains draggable; clicking outside it advances.
+- **After battle ends:** A large WIN/LOSE label occupies one compact centered upper panel without redundant instruction copy. The log remains draggable; clicking outside it advances.
 - **Pacing:** playback starts at readable 1x speed. AUTO gradually accelerates to a 2.5x cap, while fixed 1x, 2x, and 3x modes remain selectable.
 - Combatants lunge, recoil, flash on impact, pulse when casting abilities, and fade on defeat. Buttons scale and glow on hover and compress while pressed.
 
 ### Boss Fight Screen
 - Same as fight phase, but enemies replaced by one large Wyrm sprite center-right.
 - **Prominent damage counter** top-center: "DAMAGE: X" updating in real time.
+- The boss enters with a one-second dramatic reveal, followed by an accelerating damage montage where the score climbs and player dragons fall one by one. A full-screen flash bridges into a counting Final Score reveal, with `NEW RECORD!` when applicable. Clicking after the count-up opens the normal Run Complete summary.
 
 ### Results Screen
 - A large gold-framed central panel over the island background shows Rounds Survived, Boss Damage (or Not Reached), XP Earned, Total XP, and High Score as separate label/value rows with badges and dividers.
 - Any new codex discoveries listed with fanfare text.
+- Progression notices are omitted once every dragon family is unlocked, leaving the completed summary uncluttered.
 - Two equally weighted bottom buttons: "PLAY AGAIN" / "MAIN MENU."
 
 ### Codex Screen

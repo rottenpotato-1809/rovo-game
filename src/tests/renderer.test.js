@@ -120,7 +120,7 @@ test('team heading clears the fixed header', () => {
 test('completed fight messaging stays inside its result panel', () => {
   const panelCenterX = CONFIG.ARENA_RESULT_PANEL_X + (CONFIG.ARENA_RESULT_PANEL_WIDTH / 2);
   assertEqual(panelCenterX, CONFIG.CANVAS_WIDTH / 2, 'Fight result panel must be horizontally centered');
-  assert(CONFIG.ARENA_RESULT_CONTINUE_Y < CONFIG.ARENA_RESULT_PANEL_Y + CONFIG.ARENA_RESULT_PANEL_HEIGHT, 'Continue prompt must remain inside the result panel');
+  assert(CONFIG.FONT_SIZE_FIGHT_RESULT < CONFIG.ARENA_RESULT_PANEL_HEIGHT, 'Fight result text must fit inside its compact panel');
 });
 
 test('main menu regions stay aligned to the illustrated scene', () => {

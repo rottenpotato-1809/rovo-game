@@ -614,8 +614,11 @@ export const CONFIG = {
   FONT_SIZE_SCORE: 32,
   // Boss damage score display (px).
 
-  FONT_SIZE_FIGHT_RESULT: 44,
+  FONT_SIZE_FIGHT_RESULT: 56,
   // Large WIN/LOSE label shown after combat playback.
+
+  FONT_SIZE_BOSS_REVEAL_SCORE: 72,
+  // Final boss score size during the cinematic count-up.
 
   FONT_SIZE_BODY: 16,
   // General body copy and arena status text (px).
@@ -665,11 +668,8 @@ export const CONFIG = {
   ARENA_ABILITY_TIMER_WIDTH: 96,
   // Maximum width for the special-ability cooldown label.
 
-  ARENA_RESULT_Y: 40,
+  ARENA_RESULT_Y: 48,
   // Y position for WIN/LOSE result text after combat.
-
-  ARENA_RESULT_CONTINUE_Y: 88,
-  // Y position for the click-to-continue prompt.
 
   ARENA_RESULT_PANEL_X: 310,
   // Left edge of the compact completed-fight panel.
@@ -680,7 +680,7 @@ export const CONFIG = {
   ARENA_RESULT_PANEL_WIDTH: 340,
   // Width of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_HEIGHT: 112,
+  ARENA_RESULT_PANEL_HEIGHT: 80,
   // Height of the completed-fight panel.
 
   PREP_SELL_TITLE_OFFSET_Y: -8,
@@ -1293,6 +1293,45 @@ export const CONFIG = {
 
   BOSS_RESULT_PANEL_HEIGHT: 190,
   // Boss score-reveal panel height.
+
+  BOSS_INTRO_DURATION_MS: 1000,
+  // Dramatic pause before the boss montage begins.
+
+  BOSS_INTRO_START_SCALE: 0.68,
+  // Initial boss sprite scale during its entrance.
+
+  BOSS_INTRO_TITLE_Y: 104,
+  // Eternal Wyrm entrance title baseline.
+
+  BOSS_MONTAGE_START_DELAY_MS: 480,
+  // Readable delay between early boss montage events.
+
+  BOSS_MONTAGE_END_DELAY_MS: 150,
+  // Fastest delay between late boss montage events.
+
+  BOSS_FLASH_DURATION_MS: 420,
+  // White wipe duration between the team defeat and score reveal.
+
+  BOSS_REVEAL_DURATION_MS: 1300,
+  // Duration of the final score count-up.
+
+  BOSS_REVEAL_LABEL_Y: 190,
+  // Final Score label baseline.
+
+  BOSS_REVEAL_SCORE_Y: 278,
+  // Animated final score baseline.
+
+  BOSS_REVEAL_RECORD_Y: 342,
+  // New Record notice baseline.
+
+  BOSS_REVEAL_CONTINUE_Y: 430,
+  // Continue prompt baseline after score count-up.
+
+  BOSS_REVEAL_OVERLAY_COLOR: 'rgba(10, 14, 35, 0.84)',
+  // Arena dimmer behind the score reveal.
+
+  BOSS_FLASH_COLOR: '#ffffff',
+  // Full-screen wipe color after the team is defeated.
 
   BATTLE_SPEED_CONTROL_X: 328,
   // Left edge of the arena playback-speed segmented control.

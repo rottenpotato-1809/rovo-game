@@ -86,16 +86,6 @@ export class FightState {
     if (isFinished) {
       drawRect(ctx, this.getResultPanel(), CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
       drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_FIGHT_RESULT, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
-      drawFitText(
-        ctx,
-        'CLICK OUTSIDE LOG TO CONTINUE',
-        CONFIG.CANVAS_WIDTH / 2,
-        CONFIG.ARENA_RESULT_CONTINUE_Y,
-        CONFIG.FONT_SIZE_HEADER,
-        CONFIG.ARENA_RESULT_PANEL_WIDTH - (CONFIG.ARENA_LOG_PANEL_PADDING * 2),
-        CONFIG.FONT_SIZE_STATS,
-        CONFIG.TEXT_PRIMARY,
-      );
     }
   }
 

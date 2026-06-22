@@ -66,6 +66,8 @@ Milestone 3 runtime owns one shared `game.saveData` object loaded at boot. Resul
 
 The game loop starts in `LoadingState`, which renders dedicated loading artwork and receives normalized progress from the centralized bitmap preloader. The preloader resolves the loading background and shared title first, then fetches the remaining runtime images in parallel. After every registered image and the minimum presentation time complete, LoadingState exposes a canvas confirmation button; only that gesture enters Menu and unlocks browser audio. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas, and loading/menu share one transparent title bitmap. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use enlarged T2 artwork. The renderer adds Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot, including the compact menu command buttons, without highlighting their larger illustrated hotspots.
 
+`BossState` owns an explicit intro -> montage -> flash -> reveal -> complete cinematic state machine. The montage derives event delay from normalized playback progress so tempo accelerates deterministically, while the reveal counts to the simulated score before accepting input. `ResultState` remains the only owner of XP/high-score persistence and suppresses its optional notice when progression has no remaining dragon unlock.
+
 ---
 
 ## State Machine

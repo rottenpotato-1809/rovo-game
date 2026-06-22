@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { getDragon } from '../data/dragons.js';
 import { save } from '../persistence/save.js';
-import { calculateXP, checkUnlocks } from '../systems/progression.js';
+import { calculateXP, checkUnlocks, getNextUnlockInfo } from '../systems/progression.js';
 import { createRunState } from '../systems/run.js';
 import { getFullResultButtons, pointInRect } from '../ui/layout.js';
 import { clear, drawButton, drawCircle, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
@@ -69,7 +69,7 @@ export class ResultState {
     drawText(ctx, this.summary.reachedBoss ? 'RUN COMPLETE' : 'RUN OVER', CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_TITLE_Y, CONFIG.FONT_SIZE_RESULT_TITLE, CONFIG.GOLD_COLOR);
     this.getSummaryRows().forEach((row, index) => this.renderSummaryRow(ctx, row, index));
     const notice = this.getNotice();
-    drawFitText(ctx, notice, CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_NOTICE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.RESULT_NOTICE_MAX_WIDTH, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.GOLD_COLOR);
+    if (notice) drawFitText(ctx, notice, CONFIG.CANVAS_WIDTH / 2, CONFIG.RESULT_NOTICE_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.RESULT_NOTICE_MAX_WIDTH, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.GOLD_COLOR);
     drawButton(ctx, this.buttons.playAgain, 'PLAY AGAIN', CONFIG.ACCENT_PRIMARY);
     drawButton(ctx, this.buttons.menu, 'MAIN MENU', CONFIG.ACCENT_SECONDARY);
   }
@@ -102,6 +102,7 @@ export class ResultState {
 
   // Return the highest-priority progression notification.
   getNotice() {
+    if (!getNextUnlockInfo(this.summary.totalXP)) return '';
     if (this.summary.newlyUnlocked.length > 0) {
       return `UNLOCKED: ${this.summary.newlyUnlocked.map(id => getDragon(id).name).join(', ')}`;
     }

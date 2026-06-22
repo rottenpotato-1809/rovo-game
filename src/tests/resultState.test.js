@@ -1,4 +1,5 @@
 import { ResultState } from '../states/resultState.js';
+import { CONFIG } from '../config.js';
 import { assertEqual, summarize, test } from './testHarness.js';
 
 // Build a result state without invoking persistence side effects.
@@ -11,6 +12,8 @@ function createResultState(reachedBoss) {
     earnedXP: 25,
     totalXP: 65,
     newHighScore: false,
+    newlyUnlocked: [],
+    discoveries: [],
   };
   return state;
 }
@@ -26,6 +29,13 @@ test('result rows separate labels from their values', () => {
 test('result rows explain when the boss was not reached', () => {
   const rows = createResultState(false).getSummaryRows();
   assertEqual(rows[1].value, 'NOT REACHED');
+});
+
+test('result notice disappears after every dragon is unlocked', () => {
+  const state = createResultState(true);
+  state.summary.totalXP = Math.max(...CONFIG.UNLOCK_THRESHOLDS);
+  state.summary.discoveries = [{ name: 'Solflare', tier: 1 }];
+  assertEqual(state.getNotice(), '');
 });
 
 summarize();

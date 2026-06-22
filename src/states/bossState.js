@@ -1,12 +1,11 @@
 import { CONFIG } from '../config.js';
 import { simulateBossFight } from '../systems/battle.js';
 import { createPlayerBattleTeam } from '../systems/run.js';
-import { createFloatingNumber, TweenSystem, updateFloatingNumbers } from '../ui/animations.js';
+import { createFloatingNumber, ease, TweenSystem, updateFloatingNumbers } from '../ui/animations.js';
 import { clear, drawBar, drawBossSprite, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
-import { createPlaybackSpeedState, getPlaybackEventDelay, updatePlaybackSpeed } from '../systems/playbackSpeed.js';
 
-// Play back the Eternal Wyrm score fight and reveal the final damage total.
+// Play the Eternal Wyrm intro, accelerating defeat montage, and score reveal.
 export class BossState {
   constructor(stateManager, game) {
     this.stateManager = stateManager;
@@ -24,7 +23,10 @@ export class BossState {
     this.tweens = new TweenSystem();
     this.result = null;
     this.run = null;
-    this.playbackSpeed = createPlaybackSpeedState();
+    this.phase = 'intro';
+    this.phaseElapsedMs = 0;
+    this.revealScore = 0;
+    this.newRecord = false;
   }
 
   // Simulate a boss fight and prepare immutable display combatants.
@@ -42,7 +44,10 @@ export class BossState {
     this.turnsUntilBlast = CONFIG.BOSS_ATTACK_INTERVAL_TURNS;
     this.floaters = [];
     this.tweens = new TweenSystem();
-    this.playbackSpeed = createPlaybackSpeedState();
+    this.phase = 'intro';
+    this.phaseElapsedMs = 0;
+    this.revealScore = 0;
+    this.newRecord = this.result.totalDamage > this.game.saveData.highScore;
     this.views = new Map();
     this.playerTeam.forEach((dragon, index) => {
       const point = getFightPoint('player', index);
@@ -61,13 +66,32 @@ export class BossState {
   update(dt) {
     this.tweens.update(dt);
     this.floaters = updateFloatingNumbers(this.floaters, dt);
-    if (this.eventIndex >= this.events.length) {
-      this.score = this.result.totalDamage;
+    this.phaseElapsedMs += dt * 1000;
+    if (this.phase === 'intro') {
+      if (this.phaseElapsedMs >= CONFIG.BOSS_INTRO_DURATION_MS) this.startPhase('montage');
       return;
     }
-    this.playbackSpeed = updatePlaybackSpeed(this.playbackSpeed, dt);
+    if (this.phase === 'flash') {
+      if (this.phaseElapsedMs >= CONFIG.BOSS_FLASH_DURATION_MS) this.startPhase('reveal');
+      return;
+    }
+    if (this.phase === 'reveal') {
+      const progress = Math.min(CONFIG.ARENA_ALIVE_ALPHA, this.phaseElapsedMs / CONFIG.BOSS_REVEAL_DURATION_MS);
+      this.revealScore = Math.round(this.result.totalDamage * ease(progress, CONFIG.DEFAULT_EASE));
+      if (progress >= CONFIG.ARENA_ALIVE_ALPHA) {
+        this.revealScore = this.result.totalDamage;
+        this.startPhase('complete');
+      }
+      return;
+    }
+    if (this.phase !== 'montage') return;
+    if (this.eventIndex >= this.events.length) {
+      this.score = this.result.totalDamage;
+      this.startPhase('flash');
+      return;
+    }
     this.eventTimerMs += dt * 1000;
-    if (this.eventTimerMs < getPlaybackEventDelay(this.playbackSpeed)) return;
+    if (this.eventTimerMs < this.getMontageEventDelay()) return;
     this.eventTimerMs = 0;
     this.playEvent(this.events[this.eventIndex]);
     this.eventIndex += 1;
@@ -77,13 +101,18 @@ export class BossState {
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'fight');
-    const isFinished = this.eventIndex >= this.events.length;
-    drawText(ctx, `DAMAGE ${this.score}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_SCORE_Y, CONFIG.FONT_SIZE_SCORE, CONFIG.GOLD_COLOR);
-    if (!isFinished) {
-      drawText(ctx, 'ETERNAL WYRM', CONFIG.FIGHT_BOSS_X, CONFIG.BOSS_NAME_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.BOSS_HP_COLOR);
-      drawBar(ctx, CONFIG.BOSS_HP_BAR_X, CONFIG.BOSS_HP_BAR_Y, CONFIG.BOSS_HP_BAR_WIDTH, CONFIG.BOSS_HP_BAR_HEIGHT, this.bossHp / CONFIG.BOSS_HP, CONFIG.BOSS_HP_COLOR);
-      drawText(ctx, `POWER ${this.bossPower} | BLAST IN ${this.turnsUntilBlast}`, CONFIG.FIGHT_BOSS_X, CONFIG.BOSS_STATUS_Y, CONFIG.FONT_SIZE_DRAGON_NAME, CONFIG.GOLD_COLOR);
-      drawBossSprite(ctx, CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, this.getBossPulseScale());
+    if (this.phase === 'reveal' || this.phase === 'complete') {
+      this.renderScoreReveal(ctx);
+      return;
+    }
+    if (this.phase !== 'intro') drawText(ctx, `DAMAGE ${this.score}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_SCORE_Y, CONFIG.FONT_SIZE_SCORE, CONFIG.GOLD_COLOR);
+    if (this.phase === 'intro' || this.phase === 'montage' || this.phase === 'flash') {
+      if (this.phase !== 'intro') {
+        drawText(ctx, 'ETERNAL WYRM', CONFIG.FIGHT_BOSS_X, CONFIG.BOSS_NAME_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.BOSS_HP_COLOR);
+        drawBar(ctx, CONFIG.BOSS_HP_BAR_X, CONFIG.BOSS_HP_BAR_Y, CONFIG.BOSS_HP_BAR_WIDTH, CONFIG.BOSS_HP_BAR_HEIGHT, this.bossHp / CONFIG.BOSS_HP, CONFIG.BOSS_HP_COLOR);
+        drawText(ctx, `POWER ${this.bossPower} | BLAST IN ${this.turnsUntilBlast}`, CONFIG.FIGHT_BOSS_X, CONFIG.BOSS_STATUS_Y, CONFIG.FONT_SIZE_DRAGON_NAME, CONFIG.GOLD_COLOR);
+      }
+      drawBossSprite(ctx, CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, this.phase === 'intro' ? this.getBossIntroScale() : this.getBossPulseScale());
       this.playerTeam.forEach(dragon => {
         const view = this.views.get(dragon.instanceId);
         if (view) drawDragon(ctx, dragon, view);
@@ -95,22 +124,57 @@ export class BossState {
         ctx.restore();
       });
     }
-    if (isFinished) {
-      ctx.fillStyle = CONFIG.HEADER_BG_COLOR;
-      ctx.fillRect(0, CONFIG.BOSS_RESULT_PANEL_Y, CONFIG.CANVAS_WIDTH, CONFIG.BOSS_RESULT_PANEL_HEIGHT);
-      drawText(ctx, `YOUR SCORE ${this.result.totalDamage}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_RESULT_Y, CONFIG.FONT_SIZE_SCORE, CONFIG.GOLD_COLOR);
-      drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_CONTINUE_Y, CONFIG.FONT_SIZE_HEADER);
+    if (this.phase === 'intro') {
+      drawText(ctx, 'ETERNAL WYRM', CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_INTRO_TITLE_Y, CONFIG.FONT_SIZE_TITLE, CONFIG.GOLD_COLOR);
+    }
+    if (this.phase === 'flash') {
+      const progress = Math.min(CONFIG.ARENA_ALIVE_ALPHA, this.phaseElapsedMs / CONFIG.BOSS_FLASH_DURATION_MS);
+      ctx.save();
+      ctx.globalAlpha = CONFIG.ARENA_ALIVE_ALPHA - progress;
+      ctx.fillStyle = CONFIG.BOSS_FLASH_COLOR;
+      ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
+      ctx.restore();
     }
   }
 
   // Continue to full results after the score reveal.
   handlePointerDown() {
-    if (this.eventIndex < this.events.length) return;
+    if (this.phase !== 'complete') return;
     this.stateManager.change('result', {
       run: this.run,
       bossDamage: this.result.totalDamage,
       reachedBoss: true,
     });
+  }
+
+  // Reset elapsed timing when the cinematic advances to its next beat.
+  startPhase(phase) {
+    this.phase = phase;
+    this.phaseElapsedMs = 0;
+  }
+
+  // Accelerate event playback as the boss montage approaches the wipe.
+  getMontageEventDelay() {
+    const progress = this.events.length > 0 ? this.eventIndex / this.events.length : CONFIG.ARENA_ALIVE_ALPHA;
+    return CONFIG.BOSS_MONTAGE_START_DELAY_MS
+      + ((CONFIG.BOSS_MONTAGE_END_DELAY_MS - CONFIG.BOSS_MONTAGE_START_DELAY_MS) * progress);
+  }
+
+  // Draw the final count-up over a clean, centered arena reveal.
+  renderScoreReveal(ctx) {
+    ctx.fillStyle = CONFIG.BOSS_REVEAL_OVERLAY_COLOR;
+    ctx.fillRect(0, 0, CONFIG.CANVAS_WIDTH, CONFIG.CANVAS_HEIGHT);
+    drawText(ctx, 'FINAL SCORE', CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_REVEAL_LABEL_Y, CONFIG.FONT_SIZE_TITLE, CONFIG.TEXT_PRIMARY);
+    drawText(ctx, `${this.revealScore}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_REVEAL_SCORE_Y, CONFIG.FONT_SIZE_BOSS_REVEAL_SCORE, CONFIG.GOLD_COLOR);
+    if (this.newRecord) drawText(ctx, 'NEW RECORD!', CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_REVEAL_RECORD_Y, CONFIG.FONT_SIZE_SCORE, CONFIG.ACCENT_PRIMARY);
+    if (this.phase === 'complete') drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.BOSS_REVEAL_CONTINUE_Y, CONFIG.FONT_SIZE_HEADER);
+  }
+
+  // Grow the boss into frame during the one-second entrance.
+  getBossIntroScale() {
+    const progress = Math.min(CONFIG.ARENA_ALIVE_ALPHA, this.phaseElapsedMs / CONFIG.BOSS_INTRO_DURATION_MS);
+    return CONFIG.BOSS_INTRO_START_SCALE
+      + ((CONFIG.ARENA_ALIVE_ALPHA - CONFIG.BOSS_INTRO_START_SCALE) * ease(progress, CONFIG.DEFAULT_EASE));
   }
 
   // Apply a structured boss event to the playback display.
