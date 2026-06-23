@@ -71,7 +71,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 ### Enemies
 - Enemy teams are pre-generated per round from ALL 8 dragon types (including ones the player hasn't unlocked).
 - Difficulty escalates by team size, tier, and power scale. Rounds 1-6 are build-up fights, rounds 7-9 validate the developing composition, and round 10 is the strongest pre-boss exam. Enemy tier upgrades use compensating power scales so a new tier is a controlled step rather than a doubled-stat wall.
-- Balance target for a competent duplicate-focused draft: roughly **60% reach the boss**. Funnel losses are approximately **3% across Rounds 1-6**, **6% across Rounds 7-8**, **10% on Round 9**, and **25% on Round 10**. Phase and per-round rates are measured against players who enter that phase or round.
+- Balance is measured across three draft profiles with `src/tests/balance.js`: **Random** buys left-to-right, never rerolls, and keeps purchase order; target boss reach **15-20%** with most deaths around rounds 5-6. **Competent** prioritizes duplicates, rerolls lightly when close to a merge, and builds around damage plus Tank/Support; target boss reach **50-60%** with most deaths around rounds 7-8. **Perfect** optimizes merge paths, rerolls aggressively, sells dead ends, and fields ideal comps; target boss reach **80-90%**.
 
 ### Boss Fight (Eternal Wyrm)
 - Only reached by winning all 10 rounds.

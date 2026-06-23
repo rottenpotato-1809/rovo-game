@@ -237,7 +237,7 @@ Enemy (systems/enemy.js)
 
 - Applies ENEMY_POWER_SCALE[roundIndex] to generated enemy ATK/HP so early rounds are intentionally weaker than equivalent player dragons.
 
-- Tier transitions use lower raw multipliers to offset the tier's doubled base stats. `scripts/balance-sim.mjs` runs a seeded duplicate-focused draft policy and reports conditional loss rates. The target funnel is 58-64% boss reach, 2-4.5% aggregate losses in Rounds 1-6, 4-8% aggregate losses in Rounds 7-8, 8-13% on Round 9, and 22-28% on Round 10.
+- Tier transitions use lower raw multipliers to offset the tier's doubled base stats. `src/tests/balance.js` is the current balance decision harness and reports RANDOM, COMPETENT, and PERFECT profile outcomes. Targets: RANDOM reaches boss 15-20%, COMPETENT reaches boss 50-60%, and PERFECT reaches boss 80-90%. `scripts/balance-sim.mjs` remains a legacy duplicate-focused smoke check.
 
 - Picks from ALL 8 dragon types (including locked ones) — this is the player's preview of what they can unlock.
 
@@ -334,7 +334,7 @@ Testing (src/tests/)
 
 + campaignBalance.test.js — seeded boss-reach target, early-run safety, and final-round difficulty ordering.
 
-+ balance.js — CLI simulation harness for random-floor balance reports: no-reroll random drafting, boss scoring, economy pacing, fight duration, composition win rates, and progression estimates.
++ balance.js — CLI simulation harness for three profile reports: RANDOM left-to-right no-reroll drafting, COMPETENT duplicate-aware drafting, PERFECT merge-path drafting, boss scoring, economy pacing, fight duration, composition win rates, and progression estimates.
 
 - Tests run before every commit. Commit blocked if any test fails.
 
