@@ -334,6 +334,8 @@ Testing (src/tests/)
 
 + campaignBalance.test.js — seeded boss-reach target, early-run safety, and final-round difficulty ordering.
 
++ balance.js — CLI simulation harness for random-floor balance reports: no-reroll random drafting, boss scoring, economy pacing, fight duration, composition win rates, and progression estimates.
+
 - Tests run before every commit. Commit blocked if any test fails.
 
 Development Workflow (for the coding agent)
