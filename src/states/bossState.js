@@ -1,8 +1,9 @@
 import { CONFIG } from '../config.js';
+import { playAbility, playBossAppear, playDeath, playHit } from '../engine/audio.js';
 import { simulateBossFight } from '../systems/battle.js';
 import { createPlayerBattleTeam } from '../systems/run.js';
 import { createFloatingNumber, ease, TweenSystem, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawBar, drawBossSprite, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
+import { clear, drawBar, drawBossFog, drawBossSprite, drawDragon, drawPhaseBackground, drawText } from '../ui/renderer.js';
 import { getFightPoint } from '../ui/layout.js';
 
 // Play the Eternal Wyrm intro, accelerating defeat montage, and score reveal.
@@ -49,6 +50,7 @@ export class BossState {
     this.revealScore = 0;
     this.newRecord = this.result.totalDamage > this.game.saveData.highScore;
     this.views = new Map();
+    playBossAppear();
     this.playerTeam.forEach((dragon, index) => {
       const point = getFightPoint('player', index);
       this.views.set(dragon.instanceId, {
@@ -101,6 +103,7 @@ export class BossState {
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'fight');
+    drawBossFog(ctx);
     if (this.phase === 'reveal' || this.phase === 'complete') {
       this.renderScoreReveal(ctx);
       return;
@@ -120,7 +123,15 @@ export class BossState {
       this.floaters.forEach(number => {
         ctx.save();
         ctx.globalAlpha = number.alpha;
-        drawText(ctx, number.text, number.x, number.y, CONFIG.DAMAGE_FLOAT_FONT_SIZE, number.color);
+        ctx.font = `${number.bold ? 'bold ' : ''}${number.size}px ${CONFIG.FONT_FAMILY}`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = CONFIG.TEXT_OUTLINE_COLOR;
+        ctx.lineWidth = CONFIG.TEXT_OUTLINE_WIDTH;
+        ctx.strokeText(number.text, number.x, number.y);
+        ctx.fillStyle = number.color;
+        ctx.fillText(number.text, number.x, number.y);
         ctx.restore();
       });
     }
@@ -195,18 +206,27 @@ export class BossState {
     if (event.targetId === 'boss_wyrm' && event.value > 0) {
       this.score += event.value;
       this.bossHp = Math.max(0, this.bossHp - event.value);
-      this.floaters.push(createFloatingNumber(`-${event.value}`, CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, CONFIG.DAMAGE_NUMBER_COLOR));
+      const actor = this.playerTeam.find(dragon => dragon.instanceId === event.actorId);
+      const elementColor = actor ? CONFIG.ELEMENT_COLORS[actor.element] || CONFIG.DAMAGE_NUMBER_COLOR : CONFIG.DAMAGE_NUMBER_COLOR;
+      this.floaters.push(createFloatingNumber(`-${event.value}`, CONFIG.FIGHT_BOSS_X, CONFIG.FIGHT_BOSS_Y, elementColor, {
+        size: event.action.includes('ability') ? CONFIG.DAMAGE_FONT_ABILITY : CONFIG.DAMAGE_FONT_BASIC,
+        bold: event.action.includes('ability'),
+      }));
+      if (event.action.includes('ability')) playAbility(actor?.element);
+      else playHit();
       return;
     }
     const target = this.playerTeam.find(dragon => dragon.instanceId === event.targetId);
     if (target && event.value > 0 && event.action === 'boss_attack') {
       target.hp = Math.max(0, target.hp - event.value);
       const view = this.views.get(target.instanceId);
-      this.floaters.push(createFloatingNumber(`-${event.value}`, view.x, view.y, CONFIG.DAMAGE_NUMBER_COLOR));
+      this.floaters.push(createFloatingNumber(`-${event.value}`, view.x, view.y, CONFIG.BOSS_HP_COLOR, { size: CONFIG.DAMAGE_FONT_ABILITY, bold: true }));
+      playAbility('shadow');
     }
     if (target && event.action === 'kill') {
       const view = this.views.get(target.instanceId);
       this.tweens.add(view, 'alpha', CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_DEAD_ALPHA, CONFIG.DEATH_FADE_DURATION);
+      playDeath();
     }
   }
 

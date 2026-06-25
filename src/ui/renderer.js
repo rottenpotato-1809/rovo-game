@@ -150,10 +150,12 @@ export function drawBar(ctx, x, y, width, height, ratio, fill) {
 }
 
 // Draw a button-shaped card with centered text.
-export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY, fontSize = CONFIG.FONT_SIZE_BUTTON) {
+export function drawButton(ctx, rect, label, accent = CONFIG.GOLD_COLOR, fontSize = CONFIG.FONT_SIZE_BUTTON, options = {}) {
   const pointer = getPointerState();
-  const hovered = pointInRect(pointer, rect);
-  const targetScale = pointer.pressed && hovered
+  const disabled = options.disabled || false;
+  const hovered = !disabled && pointInRect(pointer, rect);
+  const pressed = pointer.pressed && hovered;
+  const targetScale = pressed
     ? CONFIG.BUTTON_PRESS_SCALE
     : hovered
       ? CONFIG.BUTTON_HOVER_SCALE
@@ -168,21 +170,45 @@ export function drawButton(ctx, rect, label, fill = CONFIG.ACCENT_PRIMARY, fontS
   buttonMotion.set(key, motion);
   const centerX = rect.x + (rect.width / 2);
   const centerY = rect.y + (rect.height / 2);
+  const yOffset = pressed ? 1 : hovered ? -1 : 0;
+  const buttonRect = { ...rect, y: rect.y + yOffset };
+  const borderAlpha = hovered ? CONFIG.BUTTON_BORDER_HOVER_ALPHA : CONFIG.BUTTON_BORDER_REST_ALPHA;
+  const borderColor = disabled
+    ? CONFIG.BUTTON_BORDER_DISABLED
+    : colorWithAlpha(CONFIG.BUTTON_BORDER_COLOR, pressed ? CONFIG.BUTTON_BORDER_HOVER_ALPHA : borderAlpha);
+  const fill = disabled
+    ? CONFIG.BUTTON_FILL_DISABLED
+    : hovered
+      ? CONFIG.BUTTON_FILL_HOVER
+      : CONFIG.BUTTON_FILL_COLOR;
+  const textColor = disabled ? CONFIG.BUTTON_TEXT_DISABLED : CONFIG.TEXT_PRIMARY;
   ctx.save();
   ctx.translate(centerX, centerY);
   ctx.scale(motion.scale, motion.scale);
   ctx.translate(-centerX, -centerY);
-  ctx.shadowColor = hovered ? fill : CONFIG.BUTTON_SHADOW_COLOR;
+  ctx.shadowColor = hovered ? colorWithAlpha(accent, CONFIG.BUTTON_BORDER_HOVER_ALPHA) : CONFIG.BUTTON_SHADOW_COLOR;
   ctx.shadowBlur = hovered ? CONFIG.BUTTON_GLOW_BLUR : 0;
-  ctx.shadowOffsetY = pointer.pressed && hovered ? 0 : CONFIG.BUTTON_SHADOW_OFFSET_Y;
-  drawRect(ctx, rect, fill, CONFIG.TEXT_PRIMARY);
+  ctx.shadowOffsetY = pressed ? CONFIG.BUTTON_PRESS_SHADOW_OFFSET_Y : CONFIG.BUTTON_SHADOW_OFFSET_Y;
+  ctx.lineWidth = pressed ? CONFIG.BUTTON_PRESS_BORDER_WIDTH : CONFIG.BUTTON_BORDER_WIDTH;
+  drawRect(ctx, buttonRect, fill, borderColor);
   ctx.shadowColor = 'transparent';
+  if (hovered) {
+    ctx.globalAlpha = CONFIG.BUTTON_INNER_GLOW_ALPHA;
+    drawRect(ctx, {
+      x: buttonRect.x + CONFIG.BUTTON_INNER_GLOW_INSET,
+      y: buttonRect.y + CONFIG.BUTTON_INNER_GLOW_INSET,
+      width: buttonRect.width - (CONFIG.BUTTON_INNER_GLOW_INSET * 2),
+      height: Math.max(1, buttonRect.height - (CONFIG.BUTTON_INNER_GLOW_INSET * 2)),
+    }, colorWithAlpha(accent, CONFIG.BUTTON_BORDER_HOVER_ALPHA));
+    ctx.globalAlpha = CONFIG.ARENA_ALIVE_ALPHA;
+  }
   drawText(
     ctx,
     label,
-    rect.x + rect.width / 2,
-    rect.y + rect.height / 2,
+    buttonRect.x + buttonRect.width / 2,
+    buttonRect.y + buttonRect.height / 2,
     fontSize,
+    textColor,
   );
   ctx.restore();
 }
@@ -206,26 +232,28 @@ export function drawDragonSprite(
   const image = getDragonImage(dragon.id, dragon.tier);
   const tierScale = getDragonTierScale(dragon.tier);
   const spriteSize = radius * CONFIG.DRAGON_SPRITE_SCALE * scale * tierScale;
+  const glowRadius = radius * scale * tierScale;
+  const elementColor = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.ACCENT_SECONDARY;
   ctx.save();
   ctx.globalAlpha = alpha;
-  if (dragon.tier >= CONFIG.MAX_TIER) drawTierThreeAura(ctx, x, y, radius * scale * tierScale);
+  if (dragon.tier >= 2) drawTierGlow(ctx, x, y, glowRadius, elementColor, dragon.tier);
+  if (dragon.tier >= CONFIG.MAX_TIER) drawTierThreeAura(ctx, x, y, glowRadius, elementColor);
   if (image && image.complete && image.naturalWidth) {
     ctx.imageSmoothingEnabled = true;
     ctx.translate(x, y);
     ctx.scale(mirrored ? -1 : 1, 1);
     ctx.drawImage(image, -(spriteSize / 2), -(spriteSize / 2), spriteSize, spriteSize);
   } else {
-    const color = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.ACCENT_SECONDARY;
-    drawCircle(ctx, x, y, radius, color, alpha, CONFIG.TEXT_PRIMARY);
+    drawCircle(ctx, x, y, radius * tierScale, elementColor, alpha, CONFIG.TEXT_PRIMARY);
   }
   ctx.restore();
 }
 
 // Keep baby forms smaller while Tier 2 and Tier 3 use the adult silhouette scale.
 export function getDragonTierScale(tier) {
-  if (tier >= CONFIG.MAX_TIER) return CONFIG.DRAGON_TIER_THREE_SCALE;
-  if (tier >= 2) return CONFIG.DRAGON_TIER_TWO_SCALE;
-  return CONFIG.DRAGON_TIER_ONE_SCALE;
+  if (tier >= CONFIG.MAX_TIER) return CONFIG.TIER_SCALE_T3;
+  if (tier >= 2) return CONFIG.TIER_SCALE_T2;
+  return CONFIG.TIER_SCALE_T1;
 }
 
 // Draw a dragon portrait, name, and HP bar for battle playback.
@@ -275,14 +303,28 @@ export function drawDragon(ctx, dragon, view) {
   );
 }
 
+// Draw a soft evolved-dragon element glow using cheap layered circles.
+function drawTierGlow(ctx, x, y, radius, color, tier) {
+  ctx.save();
+  const alpha = tier >= CONFIG.MAX_TIER ? CONFIG.TIER_GLOW_T3_ALPHA : CONFIG.TIER_GLOW_T2_ALPHA;
+  for (let index = CONFIG.TIER_GLOW_SPREAD; index > 0; index -= 1) {
+    ctx.globalAlpha *= alpha / (index + 1);
+    ctx.beginPath();
+    ctx.arc(x, y, radius + (index * CONFIG.TIER_GLOW_SPREAD), 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 // Draw a pulsing ring and orbiting motes around Tier 3 artwork.
-function drawTierThreeAura(ctx, x, y, radius) {
+function drawTierThreeAura(ctx, x, y, radius, color) {
   ctx.save();
   const now = globalThis.performance ? globalThis.performance.now() : Date.now();
   const cycle = (now % CONFIG.TIER_THREE_AURA_PULSE_MS) / CONFIG.TIER_THREE_AURA_PULSE_MS;
   const pulse = Math.sin(cycle * Math.PI * 2);
   const auraRadius = radius * CONFIG.TIER_THREE_AURA_RADIUS_MULTIPLIER * (CONFIG.ARENA_ALIVE_ALPHA + (pulse * 0.06));
-  ctx.strokeStyle = CONFIG.GOLD_COLOR;
+  ctx.strokeStyle = color;
   ctx.lineWidth = CONFIG.TIER_THREE_AURA_LINE_WIDTH;
   ctx.globalAlpha *= 0.55 + ((pulse + CONFIG.ARENA_ALIVE_ALPHA) * 0.18);
   ctx.beginPath();
@@ -298,10 +340,89 @@ function drawTierThreeAura(ctx, x, y, radius) {
       0,
       Math.PI * 2,
     );
-    ctx.fillStyle = CONFIG.GOLD_COLOR;
+    ctx.fillStyle = color;
     ctx.fill();
   }
   ctx.restore();
+}
+
+// Create a small stable field of ambient particles for one screen.
+export function createAmbientParticles(count) {
+  return Array.from({ length: count }, (_, index) => ({
+    x: ((index + Math.random()) / count) * CONFIG.CANVAS_WIDTH,
+    y: Math.random() * CONFIG.CANVAS_HEIGHT,
+    radius: CONFIG.AMBIENT_PARTICLE_MIN_RADIUS + (Math.random() * CONFIG.AMBIENT_PARTICLE_RADIUS_RANGE),
+    phase: Math.random() * Math.PI * 2,
+    alpha: CONFIG.ARENA_HP_HIGH_THRESHOLD + (Math.random() * CONFIG.ARENA_HP_HIGH_THRESHOLD),
+  }));
+}
+
+// Update ambient particles and wrap them when they drift past the top.
+export function updateAmbientParticles(particles, dt, speed) {
+  particles.forEach(particle => {
+    particle.y -= speed * dt;
+    particle.phase += dt;
+    if (particle.y < -particle.radius) {
+      particle.y = CONFIG.CANVAS_HEIGHT + particle.radius;
+      particle.x = Math.random() * CONFIG.CANVAS_WIDTH;
+    }
+  });
+}
+
+// Draw tavern dust over the prep screen.
+export function drawAmbientDust(ctx, particles) {
+  drawAmbientParticles(ctx, particles, CONFIG.TEXT_PRIMARY, CONFIG.AMBIENT_DUST_ALPHA);
+}
+
+// Draw slow lava embers over the fight arena.
+export function drawAmbientEmbers(ctx, particles) {
+  drawAmbientParticles(ctx, particles, CONFIG.HP_BAR_MID, CONFIG.ARENA_HP_HIGH_THRESHOLD);
+}
+
+// Draw pulsing void fog across the bottom of the boss arena.
+export function drawBossFog(ctx) {
+  const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+  const wave = (Math.sin(now / CONFIG.AMBIENT_FOG_PULSE_MS) + 1) / 2;
+  const alpha = CONFIG.AMBIENT_FOG_ALPHA_MIN
+    + ((CONFIG.AMBIENT_FOG_ALPHA_MAX - CONFIG.AMBIENT_FOG_ALPHA_MIN) * wave);
+  const fogHeight = CONFIG.CANVAS_HEIGHT * CONFIG.AMBIENT_FOG_HEIGHT_RATIO;
+  const gradient = ctx.createLinearGradient(0, CONFIG.CANVAS_HEIGHT - fogHeight, 0, CONFIG.CANVAS_HEIGHT);
+  gradient.addColorStop(0, colorWithAlpha(CONFIG.BOSS_HP_COLOR, 0));
+  gradient.addColorStop(1, colorWithAlpha(CONFIG.BOSS_HP_COLOR, alpha));
+  ctx.save();
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, CONFIG.CANVAS_HEIGHT - fogHeight, CONFIG.CANVAS_WIDTH, fogHeight);
+  ctx.restore();
+}
+
+function drawAmbientParticles(ctx, particles, color, baseAlpha) {
+  ctx.save();
+  particles.forEach(particle => {
+    ctx.globalAlpha = baseAlpha * particle.alpha;
+    ctx.beginPath();
+    ctx.arc(
+      particle.x + (Math.sin(particle.phase) * CONFIG.AMBIENT_PARTICLE_DRIFT_X),
+      particle.y,
+      particle.radius,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fillStyle = color;
+    ctx.fill();
+  });
+  ctx.restore();
+}
+
+export function colorWithAlpha(color, alpha) {
+  if (!color || !color.startsWith('#')) return color;
+  const hex = color.slice(1);
+  const value = Number.parseInt(hex.length === 3
+    ? hex.split('').map(character => character + character).join('')
+    : hex, 16);
+  const red = (value >> 16) & 255;
+  const green = (value >> 8) & 255;
+  const blue = value & 255;
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
 // Check pointer containment without coupling renderer code to layout helpers.

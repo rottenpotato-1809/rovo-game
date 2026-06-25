@@ -42,13 +42,16 @@ export function ease(progress, type) {
 }
 
 // Build a floating combat number that rises and fades.
-export function createFloatingNumber(text, x, y, color) {
+export function createFloatingNumber(text, x, y, color, options = {}) {
   return {
     text,
     x: x + CONFIG.ARENA_FLOAT_OFFSET_X,
     y: y + CONFIG.ARENA_FLOAT_OFFSET_Y,
     alpha: CONFIG.ARENA_FLOAT_ALPHA,
     color,
+    size: options.size || CONFIG.DAMAGE_FLOAT_FONT_SIZE,
+    bold: options.bold || false,
+    delayMs: options.delayMs || 0,
     ageMs: 0,
   };
 }
@@ -58,8 +61,13 @@ export function updateFloatingNumbers(numbers, dt) {
   const elapsedFrameMs = dt * 1000;
   numbers.forEach(number => {
     number.ageMs += elapsedFrameMs;
+    if (number.ageMs < number.delayMs) {
+      number.alpha = 0;
+      return;
+    }
     number.y -= CONFIG.DAMAGE_FLOAT_SPEED * dt;
-    number.alpha = CONFIG.ARENA_FLOAT_ALPHA - Math.min(CONFIG.ARENA_FLOAT_ALPHA, number.ageMs / CONFIG.DAMAGE_FLOAT_DURATION);
+    const visibleAgeMs = number.ageMs - number.delayMs;
+    number.alpha = CONFIG.ARENA_FLOAT_ALPHA - Math.min(CONFIG.ARENA_FLOAT_ALPHA, visibleAgeMs / CONFIG.DAMAGE_FLOAT_DURATION);
   });
-  return numbers.filter(number => number.ageMs < CONFIG.DAMAGE_FLOAT_DURATION);
+  return numbers.filter(number => number.ageMs < CONFIG.DAMAGE_FLOAT_DURATION + number.delayMs);
 }

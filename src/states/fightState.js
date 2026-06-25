@@ -1,6 +1,18 @@
 import { CONFIG } from '../config.js';
+import { playAbility, playDeath, playDefeat, playHit, playVictory } from '../engine/audio.js';
 import { TweenSystem, createFloatingNumber, updateFloatingNumbers } from '../ui/animations.js';
-import { clear, drawCircle, drawDragon, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
+import {
+  clear,
+  createAmbientParticles,
+  drawAmbientEmbers,
+  drawCircle,
+  drawDragon,
+  drawFitText,
+  drawPhaseBackground,
+  drawRect,
+  drawText,
+  updateAmbientParticles,
+} from '../ui/renderer.js';
 import { getBattleSpeedButtons, getFightPoint, pointInRect } from '../ui/layout.js';
 import { createPlaybackSpeedState, getPlaybackEventDelay, getPlaybackMultiplier, setPlaybackSpeedMode, updatePlaybackSpeed } from '../systems/playbackSpeed.js';
 
@@ -21,6 +33,9 @@ export class FightState {
     this.logScrollOffset = 0;
     this.logDragY = null;
     this.playbackSpeed = createPlaybackSpeedState();
+    this.emberParticles = createAmbientParticles(CONFIG.AMBIENT_EMBER_COUNT);
+    this.screenShakeMs = 0;
+    this.resultSfxPlayed = false;
   }
 
   // Load a fresh battle result and create visual state for each combatant.
@@ -38,6 +53,8 @@ export class FightState {
     this.logScrollOffset = 0;
     this.logDragY = null;
     this.playbackSpeed = createPlaybackSpeedState();
+    this.screenShakeMs = 0;
+    this.resultSfxPlayed = false;
     this.tweens = new TweenSystem();
     this.views = new Map();
     [...this.playerTeam, ...this.enemyTeam].forEach((dragon, index) => {
@@ -61,19 +78,31 @@ export class FightState {
   update(dt) {
     this.tweens.update(dt);
     this.floaters = updateFloatingNumbers(this.floaters, dt);
-    if (this.eventIndex >= this.events.length) return;
+    updateAmbientParticles(this.emberParticles, dt, CONFIG.AMBIENT_EMBER_SPEED);
+    if (this.screenShakeMs > 0) this.screenShakeMs = Math.max(0, this.screenShakeMs - (dt * 1000));
+    if (this.eventIndex >= this.events.length) {
+      this.playResultSfx();
+      return;
+    }
     this.playbackSpeed = updatePlaybackSpeed(this.playbackSpeed, dt);
     this.eventTimerMs += dt * 1000;
     if (this.eventTimerMs < getPlaybackEventDelay(this.playbackSpeed)) return;
     this.eventTimerMs = 0;
     this.playEvent(this.events[this.eventIndex]);
     this.eventIndex += 1;
+    if (this.eventIndex >= this.events.length) this.playResultSfx();
   }
 
   // Draw the fight state.
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'fight');
+    drawAmbientEmbers(ctx, this.emberParticles);
+    ctx.save();
+    if (this.screenShakeMs > 0) {
+      const shake = (this.screenShakeMs / CONFIG.SHAKE_DURATION) * CONFIG.SHAKE_INTENSITY;
+      ctx.translate((Math.random() - CONFIG.ARENA_HP_HIGH_THRESHOLD) * shake, (Math.random() - CONFIG.ARENA_HP_HIGH_THRESHOLD) * shake);
+    }
     const isFinished = this.eventIndex >= this.events.length;
     if (!isFinished) {
       drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
@@ -87,6 +116,7 @@ export class FightState {
       drawRect(ctx, this.getResultPanel(), CONFIG.UI_PANEL_COLOR, CONFIG.TEXT_PRIMARY);
       drawText(ctx, this.outcome.toUpperCase(), CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_Y, CONFIG.FONT_SIZE_FIGHT_RESULT, this.outcome === 'win' ? CONFIG.HP_BAR_FULL : CONFIG.HP_BAR_LOW);
     }
+    ctx.restore();
   }
 
   // Continue to the next run state after playback finishes.
@@ -176,7 +206,15 @@ export class FightState {
     this.floaters.forEach(number => {
       ctx.save();
       ctx.globalAlpha = number.alpha;
-      drawText(ctx, number.text, number.x, number.y, CONFIG.DAMAGE_FLOAT_FONT_SIZE, number.color);
+      ctx.font = `${number.bold ? 'bold ' : ''}${number.size}px ${CONFIG.FONT_FAMILY}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = CONFIG.TEXT_OUTLINE_COLOR;
+      ctx.lineWidth = CONFIG.TEXT_OUTLINE_WIDTH;
+      ctx.strokeText(number.text, number.x, number.y);
+      ctx.fillStyle = number.color;
+      ctx.fillText(number.text, number.x, number.y);
       ctx.restore();
     });
   }
@@ -230,6 +268,7 @@ export class FightState {
     if (actor) this.animateActor(actor, event);
     if (target && event.value > 0) this.applyValueToTarget(target, event);
     if (event.action === 'kill' && target) this.fadeDragon(target);
+    this.playEventSfx(event, actor);
     this.updateAbilityCooldown(actor, event);
     if (this.logScrollOffset > 0) this.logScrollOffset += 1;
     this.combatLog.push(this.describeEvent(event));
@@ -305,7 +344,11 @@ export class FightState {
     if (!view) return;
     if (event.action.includes('heal')) {
       target.hp = Math.min(target.maxHp, target.hp + event.value);
-      this.floaters.push(createFloatingNumber(`+${event.value}`, view.x, view.y, CONFIG.HEAL_NUMBER_COLOR));
+      this.floaters.push(createFloatingNumber(`+${event.value}`, view.x, view.y, CONFIG.HEAL_NUMBER_COLOR, { size: CONFIG.DAMAGE_FONT_BASIC }));
+      return;
+    }
+    if (event.action.includes('shielded')) {
+      this.floaters.push(createFloatingNumber(`🛡 ${event.value}`, view.x, view.y, CONFIG.SHIELD_COLOR, { size: CONFIG.DAMAGE_FONT_SHIELD }));
       return;
     }
     const recoilDirection = target.team === 'player'
@@ -320,8 +363,28 @@ export class FightState {
       CONFIG.DEFAULT_EASE,
     );
     this.tweens.add(view, 'hitFlash', CONFIG.ARENA_ABILITY_GLOW_ALPHA, 0, CONFIG.HIT_FLASH_DURATION, 'linear');
+    const critical = target.maxHp > 0 && event.value / target.maxHp > CONFIG.DAMAGE_CRIT_THRESHOLD;
+    if (critical) this.screenShakeMs = CONFIG.SHAKE_DURATION;
     target.hp = Math.max(0, target.hp - event.value);
-    this.floaters.push(createFloatingNumber(`-${event.value}`, view.x, view.y, CONFIG.DAMAGE_NUMBER_COLOR));
+    this.floaters.push(this.createDamageFloater(event, view, target, critical));
+  }
+
+  // Create styled floating damage based on combat event type.
+  createDamageFloater(event, view, target, critical) {
+    const actor = this.findDragon(event.actorId);
+    const elementColor = actor ? CONFIG.ELEMENT_COLORS[actor.element] || CONFIG.DAMAGE_NUMBER_COLOR : CONFIG.DAMAGE_NUMBER_COLOR;
+    if (critical) {
+      return createFloatingNumber(`-${event.value}`, view.x, view.y, elementColor, { size: CONFIG.DAMAGE_FONT_CRIT, bold: true });
+    }
+    if (event.action.includes('ability')) {
+      const aoeIndex = event.action.includes('aoe') ? target.slotIndex || 0 : 0;
+      return createFloatingNumber(`-${event.value}`, view.x, view.y, elementColor, {
+        size: event.action.includes('aoe') ? CONFIG.DAMAGE_FONT_BASIC : CONFIG.DAMAGE_FONT_ABILITY,
+        bold: !event.action.includes('aoe'),
+        delayMs: event.action.includes('aoe') ? aoeIndex * CONFIG.DAMAGE_AOE_STAGGER_MS : 0,
+      });
+    }
+    return createFloatingNumber(`-${event.value}`, view.x, view.y, CONFIG.TEXT_PRIMARY, { size: CONFIG.DAMAGE_FONT_BASIC });
   }
 
   // Fade out a defeated dragon.
@@ -340,6 +403,27 @@ export class FightState {
     const action = event.action.replaceAll('_', ' ');
     if (event.targetName) return `${event.actorName} ${action} ${event.targetName}`;
     return `${event.actorName} ${action}`;
+  }
+
+  // Play non-blocking SFX from playback events after browser audio unlock.
+  playEventSfx(event, actor) {
+    if (event.action === 'kill') {
+      playDeath();
+      return;
+    }
+    if (this.isAbilityEvent(event.action) && actor) {
+      playAbility(actor.element);
+      return;
+    }
+    if (event.action.includes('basic_attack') && event.value > 0) playHit();
+  }
+
+  // Announce the final result once when playback finishes.
+  playResultSfx() {
+    if (this.resultSfxPlayed) return;
+    this.resultSfxPlayed = true;
+    if (this.outcome === 'win') playVictory();
+    else playDefeat();
   }
 
   // Clamp a requested combat-log offset to available history.

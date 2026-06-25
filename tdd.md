@@ -14,7 +14,7 @@ main.js              ← entry point: boots game, starts loop
 engine/
 loop.js            ← requestAnimationFrame loop, delta time
 input.js           ← unified mouse/touch handler, hit-testing
-music.js           ← phase soundtrack routing and browser playback unlock
+audio.js           ← opt-in synthesized SFX via Web Audio API
 states/
 stateManager.js    ← finite state machine, transitions
 menuState.js       ← main menu screen
@@ -24,6 +24,7 @@ bossState.js       ← boss fight (variant of fightState)
 resultState.js     ← end-of-run summary
 codexState.js      ← collection viewer
 systems/
+music.js           ← phase soundtrack routing and browser playback unlock
 battle.js          ← combat simulation (pure logic, no rendering)
 shop.js            ← shop generation, buy/sell/reroll logic
 merge.js           ← merge detection and tier-up logic
@@ -64,7 +65,7 @@ Milestone 3 runtime owns one shared `game.saveData` object loaded at boot. Resul
 | Commits | Conventional commits after every completed feature/fix. Format: `feat: add shop reroll` / `fix: dragon targeting ignoring taunt` / `test: add merge tier-up cases`. Only commit if build passes. |
 | Build check | Before reporting done: confirm `index.html` loads in browser with zero console errors. If dev server can't run in sandbox, flag it explicitly. |
 
-The game loop starts in `LoadingState`, which renders dedicated loading artwork and receives normalized progress from the centralized bitmap preloader. The preloader resolves the loading background and shared title first, then fetches the remaining runtime images in parallel. After every registered image and the minimum presentation time complete, LoadingState exposes a canvas confirmation button; only that gesture enters Menu and unlocks browser audio. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas, and loading/menu share one transparent title bitmap. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use enlarged T2 artwork. The renderer adds Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot, including the compact menu command buttons, without highlighting their larger illustrated hotspots.
+The game loop starts in `LoadingState`, which renders dedicated loading artwork and receives normalized progress from the centralized bitmap preloader. The preloader resolves the loading background and shared title first, then fetches the remaining runtime images in parallel. After every registered image and the minimum presentation time complete, LoadingState exposes a canvas confirmation button; only that gesture enters Menu and unlocks browser audio. Menu, prep, and fight render dedicated 16:9 backgrounds over the full logical canvas, and loading/menu share one transparent title bitmap. Dragon IDs map centrally to element sprite files; Tier 1 uses T1 artwork, while Tier 2 and Tier 3 use enlarged T2 artwork. The renderer adds evolved tier glow and Tier 3 aura motion at draw time so no third bitmap set is required. Button hover/press animation reads the shared logical pointer snapshot and applies the shared dark-stone/gold-border style, including compact menu command buttons, without highlighting their larger illustrated hotspots.
 
 `BossState` owns an explicit intro -> montage -> flash -> reveal -> complete cinematic state machine. The montage derives event delay from normalized playback progress so tempo accelerates deterministically, while the reveal counts to the simulated score before accepting input. `ResultState` remains the only owner of XP/high-score persistence and suppresses its optional notice when progression has no remaining dragon unlock.
 
@@ -150,11 +151,19 @@ export const CONFIG = {
   // ─── RENDERING ────────────────────────────────────────────
   CANVAS_WIDTH: 960,         // logical width (CSS scales to viewport)
   CANVAS_HEIGHT: 540,        // logical height
-  BG_COLOR: '#1a1a2e',       // main background
-  HEADER_COLOR: '#16213e',   // top bar background
-  CARD_COLOR: '#1a1a4e',     // shop card fill
+  BG_COLOR: '#0d0d1a',       // deeper void background
+  HEADER_BG_COLOR: '#16213e', // top bar background
+  CARD_BG_COLOR: '#1a1a4e',  // shop card fill
+  CARD_HOVER_BG: '#2a2a5e',  // shop card hover fill
+  CARD_BORDER_ALPHA: 0.4,    // resting element-border opacity
+  CARD_AFFORDABLE_PULSE: true, // buyable shop cards pulse their border
   ACCENT_COLOR: '#e94560',   // primary accent (borders, highlights)
   GOLD_COLOR: '#f5c842',     // gold/currency color
+  MASTER_VOLUME: 0.3,        // synthesized SFX master gain
+  SFX_ENABLED: true,         // SFX remains gated by first pointer gesture
+  TIER_SCALE_T1: 1.0,        // clean baby scale, no glow
+  TIER_SCALE_T2: 1.15,       // soft evolved glow scale
+  TIER_SCALE_T3: 1.3,        // strong aura scale
   HEALTH_BAR_HEIGHT: 6,      // pixel height of HP bars above dragons
   DRAGON_RADIUS_TEAM: 25,    // circle radius for dragons in team slots
   DRAGON_RADIUS_BENCH: 16,   // circle radius for bench dragons
@@ -294,6 +303,10 @@ Rendering (ui/renderer.js)
 
 - Dragon artwork applies centralized per-tier scale multipliers: Tier 1 is smaller, while Tier 2 and Tier 3 share the larger adult silhouette. Prep, shop, drag-preview, and codex rendering mirror sprites to face left. The prep bench row uses the lower-left staging floor with taller reserve slots.
 
+- Visual identity is "Chibi Dark Fantasy Tavern": deep void clear color, warm stone panels, gold-bordered dark-stone buttons, element-colored dragon borders/glows, and readable outlined text. Prep renders low-alpha dust motes, fight renders a few rising embers, and boss overlays bottom purple fog. Particle counts and speeds are small config values so the canvas stays within the 55fps budget.
+
+- Floating combat text is styled from playback event metadata only: basics use white text, abilities use the caster element color, heals are green, shield absorbs use the configured shield color and shield prefix, and critical hits enlarge the number plus trigger screen shake. These effects do not alter combat results.
+
 - Canvas scales to the largest 16:9 size that fits the viewport via CSS: `width: min(100vw, calc(100vh * 16 / 9)); aspect-ratio: 16/9`.
 
 - Game coordinates stay fixed at CANVAS_WIDTH × CANVAS_HEIGHT, but the backing canvas is resized to displayed CSS pixels times device pixel ratio, capped by CANVAS_MAX_PIXEL_RATIO, to avoid blurry scaled rendering.
@@ -310,6 +323,8 @@ Run Health
 - Fight playback reconstructs ability cooldowns from combat events. The upper-right canvas combat log owns a clamped history offset, accepts wheel and pointer-drag input, and formats internal snake_case action names for display. Pointer-down inside the log is consumed before completed-fight continuation, so hold-drag remains available after the match; presses outside the log continue.
 
 - `systems/music.js` owns looping phase music. StateManager reports transitions to MusicManager; playback is deferred until the first canvas pointer gesture to satisfy browser autoplay policy. Tracks preload metadata rather than full audio payloads, use centralized `MUSIC_VOLUME`, and the local static server serves `.ogg` as `audio/ogg`.
+
+- `engine/audio.js` owns synthesized Web Audio SFX. It exports `playBuy`, `playSell`, `playMerge`, `playHit`, `playAbility`, `playDeath`, `playVictory`, `playDefeat`, and `playBossAppear`; all are no-ops until `bindAudioUnlock` sees the first canvas pointer gesture. Final gain is `MASTER_VOLUME * soundVolume`, and the existing Settings sound slider updates that value live.
 
 Animation (ui/animations.js)
 - Tween system: array of active tweens, each with { target, property, from, to, duration, elapsed, easing }.

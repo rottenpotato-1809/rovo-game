@@ -14,6 +14,12 @@ A casual 3v3 auto-battler where you draft dragons from a shop, merge duplicates 
 
 ---
 
+## Visual Identity
+
+**Chibi Dark Fantasy Tavern:** deep warm-dark backgrounds, vivid element-colored dragons, gold-accented stone UI, and subtle tavern/arena atmosphere. Buttons use dark stone fills with gold borders, evolved dragons gain element-colored glow, and combat feedback favors readable outlined text over clutter.
+
+---
+
 ## Core Mechanic
 
 **Merge-to-evolve auto-combat.** Players buy dragons from a randomized shop, place 3 on the field, and watch them fight an AI team. Combining 3 identical dragons creates a stronger evolved form. Evolved forms are permanently logged in a codex.
@@ -120,7 +126,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 
 ### Audio
 - Phase music loops after the player's first browser gesture: `Dragon-Menu-Drift` for Menu/Codex, `Ember-Draft` for Prep, `Dragon-Clash` for normal battles, and `Dragon-Ascension` for Boss/Results.
-- The main-menu Settings panel saves the player name plus independent Music and Sound volume levels. Music changes apply immediately; Sound stores the preferred level for effects playback.
+- The main-menu Settings panel saves the player name plus independent Music and Sound volume levels. Music changes apply immediately; Sound controls opt-in synthesized effects for buying, selling, merging, hits, abilities, deaths, boss entrance, and run outcomes.
 
 ---
 
@@ -131,7 +137,7 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - **Team zone:** 3 tall, visually dominant slots across the upper-left under a framed "YOUR TEAM" heading.
 - **Bench zone:** 5 shorter reserve slots across the lower-left under a framed "BENCH" heading.
 - The bench occupies the lower-left staging floor instead of crowding the active team row. Prep and codex portraits consistently face left.
-- **Shop zone:** 3 tall dragon cards side by side in the upper-right, with portrait, identity, stats, and price arranged vertically.
+- **Shop zone:** 4 compact dragon cards side by side in the upper-right, with portrait, identity, stats, and price arranged vertically.
 - **Command zone:** Sell, Merge, and Reroll stack below the shop while Fight is a larger standalone call to action.
 - **Sell zone:** Visible drop target (trash icon or "SELL" label) beside the bench.
 - The Sell zone includes a drag instruction and changes to the held dragon's exact sell value while dragging.
@@ -202,6 +208,7 @@ PREP PHASE → [Back] → MAIN MENU → [Continue Run] → PREP PHASE
 - XP progression with 4 unlock thresholds.
 - Score tracking (high score saved locally).
 - Basic visual feedback: HP bars, damage numbers, attack animations.
+- Cohesive art-direction pass: dark tavern palette, stone/gold buttons, tier glow scaling, styled damage numbers, prep dust motes, fight embers, boss fog, and opt-in SFX.
 - Arena labels use high-contrast outlined text, with dragon names and HP placed beside portraits so combat rows never overlap.
 - The arena uses a subdued neutral stone-and-moss backdrop so elemental dragons and combat text remain the visual focus.
 - Voltfang is a fast multi-target DPS whose total early-tier ability damage is spread across targets rather than exceeding starter DPS output.
@@ -218,7 +225,6 @@ PREP PHASE → [Back] → MAIN MENU → [Continue Run] → PREP PHASE
 - Items or equipment.
 - Multiple merge recipes or branching evolutions.
 - Narrative, dialogue, or lore.
-- Sound design (nice-to-have, not required).
 - Monetization or IAP.
 - Balancing beyond "feels roughly fair."
 - Localization.

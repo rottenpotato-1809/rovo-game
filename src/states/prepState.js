@@ -1,4 +1,5 @@
 import { CONFIG } from '../config.js';
+import { playBuy, playMerge, playSell } from '../engine/audio.js';
 import { getDragon, getDragonTier } from '../data/dragons.js';
 import { save } from '../persistence/save.js';
 import { simulateBattle } from '../systems/battle.js';
@@ -8,7 +9,20 @@ import { registerCodexEntry } from '../systems/progression.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
 import { buyDragon, cloneDraftState, rerollShop, sellDragon } from '../systems/shop.js';
 import { getBenchSlots, getPrepBackButton, getPrepButtons, getSellZone, getShopCards, getTeamSlots, pointInRect } from '../ui/layout.js';
-import { clear, drawButton, drawDragonInspector, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
+import {
+  clear,
+  colorWithAlpha,
+  createAmbientParticles,
+  drawAmbientDust,
+  drawButton,
+  drawDragonInspector,
+  drawDragonSprite,
+  drawFitText,
+  drawPhaseBackground,
+  drawRect,
+  drawText,
+  updateAmbientParticles,
+} from '../ui/renderer.js';
 
 // Render and operate the draft/prep phase for Milestone 2.
 export class PrepState {
@@ -23,6 +37,9 @@ export class PrepState {
     this.hoverPoint = null;
     this.interestFlashText = '';
     this.interestFlashMs = 0;
+    this.lastGold = null;
+    this.goldFlashMs = 0;
+    this.dustParticles = createAmbientParticles(CONFIG.AMBIENT_DUST_COUNT);
     this.backButton = getPrepBackButton();
   }
 
@@ -34,6 +51,8 @@ export class PrepState {
     this.dragPoint = null;
     this.hoveredDragon = null;
     this.hoverPoint = null;
+    this.lastGold = this.game.run.gold;
+    this.goldFlashMs = 0;
     if (!Number.isInteger(this.game.run.tutorialStep)) this.game.run.tutorialStep = 0;
     this.interestFlashText = this.game.run.lastInterestEarned > 0 ? `+${this.game.run.lastInterestEarned}G INTEREST` : '';
     this.interestFlashMs = this.interestFlashText ? CONFIG.PREP_INTEREST_FLASH_MS : 0;
@@ -42,15 +61,24 @@ export class PrepState {
 
   // Keep prep state static between pointer interactions.
   update(dt) {
+    if (this.game.run && this.lastGold !== null && this.game.run.gold !== this.lastGold) {
+      this.goldFlashMs = CONFIG.GOLD_FLASH_DURATION;
+      this.lastGold = this.game.run.gold;
+    }
+    if (this.goldFlashMs > 0) {
+      this.goldFlashMs = Math.max(0, this.goldFlashMs - (dt * 1000));
+    }
     if (this.interestFlashMs > 0) {
       this.interestFlashMs = Math.max(0, this.interestFlashMs - (dt * 1000));
     }
+    updateAmbientParticles(this.dustParticles, dt, CONFIG.AMBIENT_DUST_SPEED);
   }
 
   // Draw the prep screen.
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'prep');
+    drawAmbientDust(ctx, this.dustParticles);
     ctx.lineWidth = CONFIG.PREP_FRAME_LINE_WIDTH;
     this.renderHeader(ctx);
     drawButton(ctx, this.backButton, 'BACK', CONFIG.ACCENT_SECONDARY);
@@ -82,8 +110,21 @@ export class PrepState {
     drawRect(ctx, rightPanel, CONFIG.UI_PANEL_COLOR, CONFIG.GOLD_COLOR);
     const phaseLabel = this.isBossPrep() ? 'BOSS PREP' : `ROUND ${this.game.run.round}/${CONFIG.TOTAL_ROUNDS}`;
     drawText(ctx, phaseLabel, leftPanel.x + leftPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER);
-    drawText(ctx, `GOLD ${this.game.run.gold}`, rightPanel.x + rightPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
+    this.renderGoldCounter(ctx, rightPanel);
     this.renderInterestFlash(ctx, rightPanel.x + rightPanel.width / 2);
+  }
+
+  // Draw the gold counter with a short bump when the amount changes.
+  renderGoldCounter(ctx, panel) {
+    const centerX = panel.x + panel.width / 2;
+    const centerY = CONFIG.HEADER_HEIGHT / 2;
+    const progress = CONFIG.GOLD_FLASH_DURATION > 0 ? this.goldFlashMs / CONFIG.GOLD_FLASH_DURATION : 0;
+    const scale = CONFIG.ARENA_ALIVE_ALPHA + ((CONFIG.GOLD_FLASH_SCALE - CONFIG.ARENA_ALIVE_ALPHA) * progress);
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.scale(scale, scale);
+    drawText(ctx, `GOLD ${this.game.run.gold}`, 0, 0, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
+    ctx.restore();
   }
 
   // Briefly show the start-of-prep interest payout.
@@ -142,7 +183,16 @@ export class PrepState {
       }
       const dragon = getDragon(id);
       const tier = getDragonTier(id, 1);
-      drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, CONFIG.ELEMENT_COLORS[dragon.element]);
+      const elementColor = CONFIG.ELEMENT_COLORS[dragon.element];
+      const hovered = this.hoverPoint && pointInRect(this.hoverPoint, rect);
+      const canAfford = this.game.run.gold >= CONFIG.DRAGON_BUY_COST;
+      const pulse = CONFIG.CARD_AFFORDABLE_PULSE && canAfford
+        ? (Math.sin((globalThis.performance?.now?.() || Date.now()) / CONFIG.TIER_THREE_AURA_PULSE_MS) + CONFIG.ARENA_ALIVE_ALPHA) / 2
+        : 0;
+      const borderAlpha = hovered
+        ? CONFIG.ARENA_ALIVE_ALPHA
+        : CONFIG.CARD_BORDER_ALPHA + (pulse * CONFIG.CARD_BORDER_ALPHA);
+      drawRect(ctx, rect, hovered ? CONFIG.CARD_HOVER_BG : CONFIG.CARD_BG_COLOR, colorWithAlpha(elementColor, borderAlpha));
       const textWidth = rect.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2);
       drawDragonSprite(
         ctx,
@@ -192,7 +242,7 @@ export class PrepState {
     drawText(ctx, 'SELL', centerX, centerY + CONFIG.PREP_SELL_TITLE_OFFSET_Y, CONFIG.FONT_SIZE_BUTTON);
     drawFitText(ctx, this.getSellHint(), centerX, centerY + CONFIG.PREP_SELL_HINT_OFFSET_Y, CONFIG.FONT_SIZE_STATS, sellZone.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2), CONFIG.FONT_SIZE_SMALL, CONFIG.TEXT_SECONDARY);
     const mergeAvailable = checkMergeAvailable(this.game.run.team, this.game.run.bench);
-    drawButton(ctx, buttons.merge, mergeAvailable ? 'MERGE' : 'NO MERGE', mergeAvailable ? CONFIG.GOLD_COLOR : CONFIG.ACCENT_SECONDARY);
+    drawButton(ctx, buttons.merge, mergeAvailable ? 'MERGE' : 'NO MERGE', CONFIG.GOLD_COLOR, CONFIG.FONT_SIZE_BUTTON, { disabled: !mergeAvailable });
     drawButton(ctx, buttons.reroll, `REROLL ${CONFIG.REROLL_COST}G`, CONFIG.ACCENT_SECONDARY);
     const fightFontSize = this.isBossPrep() ? CONFIG.FONT_SIZE_PREP_BOSS_FIGHT : CONFIG.FONT_SIZE_PREP_FIGHT;
     drawButton(ctx, buttons.fight, this.isBossPrep() ? 'FIGHT BOSS' : 'FIGHT', CONFIG.ACCENT_PRIMARY, fightFontSize);
@@ -280,6 +330,7 @@ export class PrepState {
     if (shopIndex !== -1) {
       const result = buyDragon(this.game.run, shopIndex);
       this.applyDraftResult(result, 'Bought dragon', 'Cannot buy');
+      if (result.success) playBuy();
       if (result.success) this.advanceTutorial(1);
       return;
     }
@@ -319,6 +370,7 @@ export class PrepState {
     if (!this.dragSource) return;
     if (pointInRect(point, getSellZone())) {
       this.applyDraftResult(sellDragon(this.game.run, this.dragSource), 'Sold dragon', 'Nothing to sell');
+      if (this.message === 'Sold dragon') playSell();
       this.dragSource = null;
       this.selectedSource = null;
       this.dragPoint = null;
@@ -352,6 +404,7 @@ export class PrepState {
     this.game.run = result.state;
     this.registerOwnedDiscovery(result.discovery);
     this.message = `Merged ${result.discovery.name} T${result.discovery.tier}`;
+    playMerge();
     this.persistRun();
   }
 

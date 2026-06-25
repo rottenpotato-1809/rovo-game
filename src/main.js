@@ -14,6 +14,7 @@ import { load } from './persistence/save.js';
 import { preloadAssets } from './ui/assets.js';
 import { setupFullscreenButton } from './ui/fullscreen.js';
 import { MusicManager } from './systems/music.js';
+import { bindAudioUnlock, setSoundVolume } from './engine/audio.js';
 
 // Boot the canvas application and start the animation loop.
 async function main() {
@@ -26,6 +27,8 @@ async function main() {
   const saveData = load();
   const music = new MusicManager(undefined, saveData.musicVolume);
   music.bindUnlock(canvas);
+  setSoundVolume(saveData.soundVolume);
+  bindAudioUnlock(canvas);
   const stateManager = new StateManager(stateName => music.setState(stateName));
   const game = {
     run: saveData.activeRun,

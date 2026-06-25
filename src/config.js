@@ -252,14 +252,23 @@ export const CONFIG = {
   // ─── RENDERING — COLORS ───────────────────────────────────────
   // All color values used in the game. Change these to retheme instantly.
 
-  BG_COLOR: '#1a1a2e',
-  // Main background color (dark blue-black).
+  BG_COLOR: '#0d0d1a',
+  // Main background color (deep void).
 
   HEADER_BG_COLOR: '#16213e',
   // Top header bar background.
 
   CARD_BG_COLOR: '#1a1a4e',
   // Shop card and UI card background.
+
+  CARD_HOVER_BG: '#2a2a5e',
+  // Shop card hover background.
+
+  CARD_BORDER_ALPHA: 0.4,
+  // Resting alpha for element-colored card borders.
+
+  CARD_AFFORDABLE_PULSE: true,
+  // Pulse shop-card borders when the dragon can be bought.
 
   ACCENT_PRIMARY: '#e94560',
   // Primary accent — team slot borders, fight button, highlights.
@@ -269,6 +278,12 @@ export const CONFIG = {
 
   GOLD_COLOR: '#f5c842',
   // Currency display, shop card borders, gold-related UI.
+
+  GOLD_FLASH_SCALE: 1.3,
+  // Gold counter bump scale when the amount changes.
+
+  GOLD_FLASH_DURATION: 200,
+  // Gold counter bump duration in milliseconds.
 
   LOADING_BAR_COLOR: '#b94cff',
   // Loading progress fill over the illustrated boot screen.
@@ -345,6 +360,24 @@ export const CONFIG = {
   DRAGON_SPRITE_SCALE: 2.7,
   // Sprite width/height relative to the legacy dragon-token radius.
 
+  TIER_SCALE_T1: 1.0,
+  // Tier 1 dragon render scale.
+
+  TIER_SCALE_T2: 1.15,
+  // Tier 2 dragon render scale.
+
+  TIER_SCALE_T3: 1.3,
+  // Tier 3 dragon render scale.
+
+  TIER_GLOW_T2_ALPHA: 0.2,
+  // Soft element glow opacity for Tier 2 dragons.
+
+  TIER_GLOW_T3_ALPHA: 0.4,
+  // Stronger element glow opacity for Tier 3 dragons.
+
+  TIER_GLOW_SPREAD: 4,
+  // Number of layered glow circles around evolved dragons.
+
   DRAGON_TIER_ONE_SCALE: 0.86,
   // Baby-dragon artwork scale relative to its slot or battle radius.
 
@@ -408,17 +441,50 @@ export const CONFIG = {
   BUTTON_PRESS_SCALE: 0.96,
   // Button scale while held down.
 
+  BUTTON_FILL_COLOR: '#232437',
+  // Dark stone button fill.
+
+  BUTTON_FILL_HOVER: '#2f3046',
+  // Slightly lighter stone fill while hovered.
+
+  BUTTON_FILL_DISABLED: '#252732',
+  // Desaturated fill for disabled buttons.
+
+  BUTTON_BORDER_COLOR: '#f5c842',
+  // Gold button border.
+
+  BUTTON_BORDER_DISABLED: '#777b86',
+  // Grey disabled button border.
+
+  BUTTON_TEXT_DISABLED: '#8f95a1',
+  // Grey disabled button text.
+
+  BUTTON_BORDER_REST_ALPHA: 0.4,
+  // Resting gold-border opacity.
+
+  BUTTON_BORDER_HOVER_ALPHA: 1,
+  // Hovered gold-border opacity.
+
+  BUTTON_BORDER_WIDTH: 1,
+  // Thin stone-and-gold button border.
+
+  BUTTON_PRESS_BORDER_WIDTH: 2,
+  // Slight border flash while pressed.
+
   BUTTON_MOTION_DURATION_MS: 110,
   // Time for button hover and press motion to settle.
 
   BUTTON_GLOW_BLUR: 14,
   // Hover glow softness around interactive buttons.
 
-  BUTTON_SHADOW_OFFSET_Y: 5,
+  BUTTON_SHADOW_OFFSET_Y: 2,
   // Resting button shadow distance.
 
   BUTTON_SHADOW_COLOR: 'rgba(8, 10, 24, 0.55)',
   // Shadow color shared by canvas buttons.
+
+  BUTTON_PRESS_SHADOW_OFFSET_Y: 1,
+  // Compressed button shadow distance while pressed.
 
   UI_PANEL_COLOR: 'rgba(14, 18, 45, 0.82)',
   // Translucent panel color that preserves background visibility.
@@ -528,9 +594,93 @@ export const CONFIG = {
 
   MUSIC_VOLUME: 0.32,
 
+  MASTER_VOLUME: 0.3,
+  // Master gain applied to synthesized sound effects.
+
+  SFX_ENABLED: true,
+  // Sound effects are still gated behind the first user interaction.
+
   SOUND_VOLUME: 0.65,
   // Default sound-effect volume reserved for current and future effects.
   // Shared background-music volume. Browser playback begins after first input.
+
+  SFX_MIN_GAIN: 0.0001,
+  // Web Audio exponential ramps need a positive floor.
+
+  SFX_STOP_PADDING_SECONDS: 0.03,
+  // Extra time before disconnecting a finished sound source.
+
+  SFX_DEFAULT_ATTACK_SECONDS: 0.01,
+  // Default envelope attack for clean oscillator pings.
+
+  SFX_NOISE_ATTACK_SECONDS: 0.005,
+  // Shorter attack for noise bursts.
+
+  SFX_BUY_FREQUENCY: 800,
+  SFX_BUY_DURATION_SECONDS: 0.08,
+  SFX_BUY_GAIN: 0.42,
+
+  SFX_SELL_FREQUENCIES: [600, 800, 1000],
+  SFX_SELL_DURATION_SECONDS: 0.08,
+  SFX_SELL_GAIN: 0.32,
+  SFX_SELL_STAGGER_SECONDS: 0.04,
+
+  SFX_MERGE_START_FREQUENCY: 400,
+  SFX_MERGE_END_FREQUENCY: 1200,
+  SFX_MERGE_DURATION_SECONDS: 0.3,
+  SFX_MERGE_GAIN: 0.5,
+  SFX_MERGE_ATTACK_SECONDS: 0.08,
+  SFX_MERGE_PING_FREQUENCY: 1600,
+  SFX_MERGE_PING_DURATION_SECONDS: 0.11,
+  SFX_MERGE_PING_GAIN: 0.55,
+
+  SFX_HIT_FREQUENCY: 150,
+  SFX_HIT_DURATION_SECONDS: 0.06,
+  SFX_HIT_GAIN: 0.32,
+
+  SFX_FIRE_NOISE_DURATION_SECONDS: 0.1,
+  SFX_FIRE_NOISE_GAIN: 0.22,
+  SFX_FIRE_CRACKLE_FREQUENCY: 300,
+  SFX_FIRE_CRACKLE_DURATION_SECONDS: 0.08,
+  SFX_FIRE_CRACKLE_GAIN: 0.2,
+  SFX_FIRE_CRACKLE_DELAY_SECONDS: 0.03,
+
+  SFX_ABILITY_DURATION_SECONDS: 0.14,
+  SFX_ABILITY_GAIN: 0.34,
+  SFX_ABILITY_VOICES: {
+    earth: { frequency: 180, type: 'triangle' },
+    wind: { frequency: 720, type: 'sine' },
+    water: { frequency: 520, type: 'sine' },
+    lightning: { frequency: 980, type: 'square' },
+    shadow: { frequency: 140, type: 'sawtooth' },
+    ice: { frequency: 1040, type: 'triangle' },
+    light: { frequency: 880, type: 'sine' },
+    default: { frequency: 640, type: 'sine' },
+  },
+
+  SFX_DEATH_START_FREQUENCY: 800,
+  SFX_DEATH_END_FREQUENCY: 200,
+  SFX_DEATH_DURATION_SECONDS: 0.25,
+  SFX_DEATH_GAIN: 0.34,
+  SFX_DEATH_ATTACK_SECONDS: 0.02,
+
+  SFX_VICTORY_FREQUENCIES: [523, 659, 784],
+  SFX_VICTORY_DURATION_SECONDS: 0.16,
+  SFX_VICTORY_GAIN: 0.38,
+  SFX_VICTORY_STAGGER_SECONDS: 0.12,
+
+  SFX_DEFEAT_FREQUENCIES: [392, 330],
+  SFX_DEFEAT_DURATION_SECONDS: 0.24,
+  SFX_DEFEAT_GAIN: 0.32,
+  SFX_DEFEAT_STAGGER_SECONDS: 0.2,
+
+  SFX_BOSS_RUMBLE_FREQUENCY: 80,
+  SFX_BOSS_RUMBLE_DURATION_SECONDS: 0.6,
+  SFX_BOSS_RUMBLE_GAIN: 0.36,
+  SFX_BOSS_PULSE_FREQUENCY: 120,
+  SFX_BOSS_PULSE_DURATION_SECONDS: 0.08,
+  SFX_BOSS_PULSE_GAIN: 0.22,
+  SFX_BOSS_PULSE_DELAYS_SECONDS: [0, 0.18, 0.36],
 
   ATTACK_LUNGE_DIST: 36,
   // Pixels a dragon moves toward its target during an attack animation.
@@ -548,7 +698,25 @@ export const CONFIG = {
   // Milliseconds before floating numbers fully fade out.
 
   DAMAGE_FLOAT_FONT_SIZE: 16,
-  // Font size for floating damage numbers (px).
+  // Legacy fallback font size for floating damage numbers (px).
+
+  DAMAGE_FONT_BASIC: 14,
+  // Floating text size for basic attacks.
+
+  DAMAGE_FONT_ABILITY: 16,
+  // Floating text size for special abilities.
+
+  DAMAGE_FONT_CRIT: 22,
+  // Floating text size for critical hits.
+
+  DAMAGE_FONT_SHIELD: 12,
+  // Floating text size for shield absorbs.
+
+  DAMAGE_CRIT_THRESHOLD: 0.5,
+  // Damage above this fraction of target max HP counts as critical.
+
+  DAMAGE_AOE_STAGGER_MS: 50,
+  // Offset between floating damage numbers from the same area ability.
 
   SHAKE_INTENSITY: 4,
   // Pixels of random offset during screen/dragon shake.
@@ -573,6 +741,48 @@ export const CONFIG = {
 
   HEAL_PULSE_DURATION: 400,
   // Milliseconds for the green heal pulse animation.
+
+  AMBIENT_DUST_COUNT: 8,
+  // Slow prep-screen tavern dust motes.
+
+  AMBIENT_DUST_SPEED: 15,
+  // Pixels per second dust drifts upward.
+
+  AMBIENT_DUST_ALPHA: 0.15,
+  // Base dust mote alpha.
+
+  AMBIENT_EMBER_COUNT: 4,
+  // Fight-screen ember count.
+
+  AMBIENT_EMBER_SPEED: 25,
+  // Pixels per second embers drift upward.
+
+  AMBIENT_FOG_ALPHA_MIN: 0.1,
+  // Lowest boss fog opacity.
+
+  AMBIENT_FOG_ALPHA_MAX: 0.2,
+  // Highest boss fog opacity.
+
+  AMBIENT_FOG_HEIGHT_RATIO: 0.2,
+  // Bottom-screen share covered by boss fog.
+
+  AMBIENT_FOG_PULSE_MS: 900,
+  // Boss fog alpha oscillation period.
+
+  AMBIENT_PARTICLE_MIN_RADIUS: 1,
+  // Smallest ambient particle radius.
+
+  AMBIENT_PARTICLE_RADIUS_RANGE: 2,
+  // Extra random radius for ambient particles.
+
+  AMBIENT_PARTICLE_DRIFT_X: 6,
+  // Horizontal wobble range for ambient particles.
+
+  BUTTON_INNER_GLOW_INSET: 3,
+  // Inset for the hover inner-glow rectangle.
+
+  BUTTON_INNER_GLOW_ALPHA: 0.16,
+  // Opacity of the button hover inner glow.
 
   DEATH_FADE_DURATION: 320,
   // Milliseconds for a defeated dragon to fade out.

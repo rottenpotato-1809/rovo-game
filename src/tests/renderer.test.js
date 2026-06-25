@@ -77,7 +77,7 @@ test('team and bench portraits stay above their labels', () => {
 
 test('adult dragon artwork is larger than baby artwork', () => {
   assert(getDragonTierScale(2) > getDragonTierScale(1), 'Tier 2 must visually read as larger than Tier 1');
-  assertEqual(getDragonTierScale(3), getDragonTierScale(2), 'Tier 3 reuses the adult silhouette scale');
+  assert(getDragonTierScale(3) > getDragonTierScale(2), 'Tier 3 must visually read as the strongest evolution');
 });
 
 test('bench row fills the lower-left prep staging area', () => {

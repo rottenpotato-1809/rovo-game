@@ -1,4 +1,5 @@
 import { CONFIG } from '../config.js';
+import { setSoundVolume } from '../engine/audio.js';
 import { save } from '../persistence/save.js';
 import { getNextUnlockInfo } from '../systems/progression.js';
 import { createRunState } from '../systems/run.js';
@@ -191,6 +192,7 @@ export class MenuState {
     const field = key === 'music' ? 'musicVolume' : 'soundVolume';
     this.game.saveData[field] = value;
     if (key === 'music') this.game.music?.setVolume(value);
+    if (key === 'sound') setSoundVolume(value);
   }
 
   // Save identity and audio preferences without altering the active run.
