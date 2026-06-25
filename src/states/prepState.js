@@ -2,7 +2,7 @@ import { CONFIG } from '../config.js';
 import { getDragon, getDragonTier } from '../data/dragons.js';
 import { save } from '../persistence/save.js';
 import { simulateBattle } from '../systems/battle.js';
-import { calculateRoundGold, getSellPrice } from '../systems/economy.js';
+import { getSellPrice } from '../systems/economy.js';
 import { checkMergeAvailable, executeMerge } from '../systems/merge.js';
 import { registerCodexEntry } from '../systems/progression.js';
 import { applyWin, createPlayerBattleTeam, createRoundEnemyTeam, createRunState } from '../systems/run.js';
@@ -21,6 +21,8 @@ export class PrepState {
     this.message = '';
     this.hoveredDragon = null;
     this.hoverPoint = null;
+    this.interestFlashText = '';
+    this.interestFlashMs = 0;
     this.backButton = getPrepBackButton();
   }
 
@@ -33,11 +35,17 @@ export class PrepState {
     this.hoveredDragon = null;
     this.hoverPoint = null;
     if (!Number.isInteger(this.game.run.tutorialStep)) this.game.run.tutorialStep = 0;
+    this.interestFlashText = this.game.run.lastInterestEarned > 0 ? `+${this.game.run.lastInterestEarned}G INTEREST` : '';
+    this.interestFlashMs = this.interestFlashText ? CONFIG.PREP_INTEREST_FLASH_MS : 0;
     this.persistRun();
   }
 
   // Keep prep state static between pointer interactions.
-  update() {}
+  update(dt) {
+    if (this.interestFlashMs > 0) {
+      this.interestFlashMs = Math.max(0, this.interestFlashMs - (dt * 1000));
+    }
+  }
 
   // Draw the prep screen.
   render(ctx) {
@@ -75,6 +83,17 @@ export class PrepState {
     const phaseLabel = this.isBossPrep() ? 'BOSS PREP' : `ROUND ${this.game.run.round}/${CONFIG.TOTAL_ROUNDS}`;
     drawText(ctx, phaseLabel, leftPanel.x + leftPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER);
     drawText(ctx, `GOLD ${this.game.run.gold}`, rightPanel.x + rightPanel.width / 2, CONFIG.HEADER_HEIGHT / 2, CONFIG.FONT_SIZE_HEADER, CONFIG.GOLD_COLOR);
+    this.renderInterestFlash(ctx, rightPanel.x + rightPanel.width / 2);
+  }
+
+  // Briefly show the start-of-prep interest payout.
+  renderInterestFlash(ctx, centerX) {
+    if (!this.interestFlashText || this.interestFlashMs <= 0) return;
+    const alpha = Math.min(CONFIG.ARENA_ALIVE_ALPHA, this.interestFlashMs / CONFIG.PREP_INTEREST_FLASH_MS);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    drawText(ctx, this.interestFlashText, centerX, CONFIG.PREP_INTEREST_FLASH_Y, CONFIG.FONT_SIZE_DRAGON_NAME, CONFIG.GOLD_COLOR);
+    ctx.restore();
   }
 
   // Draw a row of team or bench slots.

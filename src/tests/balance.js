@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { DRAGONS, getDragon } from '../data/dragons.js';
 import { createBattleInstance, simulateBattle, simulateBossFight } from '../systems/battle.js';
-import { calculateRoundGold } from '../systems/economy.js';
+import { calculateInterest, calculateRoundGold } from '../systems/economy.js';
 import { generateEnemyTeam } from '../systems/enemy.js';
 import { executeMerge } from '../systems/merge.js';
 import { buyDragon, generateShop, rerollShop, sellDragon } from '../systems/shop.js';
@@ -93,6 +93,7 @@ export function simulateProfileRun(profile, seed) {
     run.round += 1;
     run.team = run.team.map(refreshOwnedDragon);
     run.bench = run.bench.map(refreshOwnedDragon);
+    run = applySimulationInterest(run);
     run.shop = generateShop(run.unlockedDragonIds, random, [...run.team, ...run.bench]);
   }
 
@@ -218,6 +219,16 @@ function perfectDraftRound(initialRun, random, result) {
   let run = organizeTeam(mergeAll(initialRun), 'perfect');
   let rerolls = 0;
 
+  if (
+    getOwned(run).length >= CONFIG.TEAM_SIZE
+    && run.gold >= 8
+    && !hasMergePressure(run)
+    && (run.perfectBankRounds || 0) < 2
+  ) {
+    recordHighestTier(result, run);
+    return { ...run, perfectBankRounds: (run.perfectBankRounds || 0) + 1 };
+  }
+
   while (run.gold >= CONFIG.DRAGON_BUY_COST || run.gold >= CONFIG.REROLL_COST) {
     run = sellPerfectDeadEnds(run);
     const shopIndex = choosePerfectPurchase(run);
@@ -225,6 +236,7 @@ function perfectDraftRound(initialRun, random, result) {
       const purchase = buyDragon(run, shopIndex);
       if (!purchase.success) break;
       run = organizeTeam(mergeAll(purchase.state), 'perfect');
+      run.perfectBankRounds = 0;
       recordPurchase(result, run.round);
       continue;
     }
@@ -238,6 +250,7 @@ function perfectDraftRound(initialRun, random, result) {
     const reroll = rerollShop(run, random);
     if (!reroll.success) break;
     run = reroll.state;
+    run.perfectBankRounds = 0;
     result.rerolls += 1;
     rerolls += 1;
   }
@@ -319,7 +332,7 @@ function shouldPerfectReroll(run) {
   const owned = getOwned(run);
   const tierCounts = countOwnedByIdAndTier(owned);
   if (owned.length < CONFIG.TEAM_SIZE) return true;
-  return [...tierCounts.values()].some(count => count >= 1) || !hasIdealCore(owned);
+  return hasMergePressure(run) || !hasIdealCore(owned);
 }
 
 function sellDeadEndsIfBenchFull(run) {
@@ -392,13 +405,17 @@ function pickTeam(owned, profile) {
 
 function createHarnessRun(random) {
   const unlockedDragonIds = [...CONFIG.DEFAULT_SAVE.unlockedDragons];
-  return {
+  const run = applySimulationInterest({
     round: 1,
     gold: CONFIG.STARTING_GOLD,
     team: Array(CONFIG.TEAM_SIZE).fill(null),
     bench: Array(CONFIG.BENCH_SIZE).fill(null),
-    shop: generateShop(unlockedDragonIds, random),
+    shop: [],
     unlockedDragonIds,
+  });
+  return {
+    ...run,
+    shop: generateShop(unlockedDragonIds, random, [...run.team, ...run.bench]),
   };
 }
 
@@ -665,6 +682,21 @@ function countOwnedByIdAndTier(owned) {
     counts.set(key, (counts.get(key) || 0) + 1);
   });
   return counts;
+}
+
+function hasMergePressure(run) {
+  return [...countOwnedByIdAndTier(getOwned(run)).values()].some(count => count >= CONFIG.MERGE_COUNT - 1);
+}
+
+function applySimulationInterest(run) {
+  const interest = calculateInterest(run.gold);
+  return {
+    ...run,
+    gold: run.gold + interest,
+    lastInterestEarned: interest,
+    lastInterestHeldGold: run.gold,
+    interestAppliedRound: run.round,
+  };
 }
 
 function isTankOrSupport(id) {

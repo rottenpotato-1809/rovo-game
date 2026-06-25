@@ -1,7 +1,7 @@
 import { CONFIG } from '../config.js';
 import { getDragon } from '../data/dragons.js';
 import { createBattleInstance } from './battle.js';
-import { calculateRoundGold } from './economy.js';
+import { calculateInterest, calculateRoundGold } from './economy.js';
 import { generateEnemyTeam } from './enemy.js';
 import { generateShop } from './shop.js';
 
@@ -12,16 +12,20 @@ export function createRunState(unlockedDragonIds = CONFIG.DEFAULT_SAVE.unlockedD
     unlockedDragonIds = CONFIG.DEFAULT_SAVE.unlockedDragons;
   }
   const availableDragonIds = [...unlockedDragonIds];
-  return {
+  const runState = applyPrepInterest({
     round: 1,
     gold: CONFIG.STARTING_GOLD,
     roundsSurvived: 0,
     team: Array(CONFIG.TEAM_SIZE).fill(null),
     bench: Array(CONFIG.BENCH_SIZE).fill(null),
-    shop: generateShop(availableDragonIds, random),
+    shop: [],
     unlockedDragonIds: availableDragonIds,
     lastDiscoveries: [],
     tutorialStep: 0,
+  });
+  return {
+    ...runState,
+    shop: generateShop(availableDragonIds, random, [...runState.team, ...runState.bench]),
   };
 }
 
@@ -53,11 +57,12 @@ export function applyWin(runState, random = Math.random) {
   };
   nextState.gold += calculateRoundGold(runState.round);
   nextState.round += 1;
-  nextState.shop = generateShop(nextState.unlockedDragonIds, random, [...nextState.team, ...nextState.bench]);
+  const withInterest = applyPrepInterest(nextState);
+  withInterest.shop = generateShop(withInterest.unlockedDragonIds, random, [...withInterest.team, ...withInterest.bench]);
   if (CONFIG.LOG_ENABLED && CONFIG.LOG_STATE) {
-    console.log(`[STATE] advanced to round ${nextState.round}`);
+    console.log(`[STATE] advanced to round ${withInterest.round}`);
   }
-  return nextState;
+  return withInterest;
 }
 
 // Reset an owned dragon to full health for the next prep/fight round.
@@ -70,4 +75,21 @@ export function refreshOwnedDragonHealth(owned) {
 // Return whether a run should end after a battle outcome.
 export function isRunDefeat(outcome) {
   return outcome !== 'win';
+}
+
+// Award start-of-prep interest once per round checkpoint.
+export function applyPrepInterest(runState) {
+  if (runState.interestAppliedRound === runState.round) return runState;
+  const heldGold = runState.gold;
+  const interest = calculateInterest(heldGold);
+  if (CONFIG.LOG_ENABLED && CONFIG.LOG_ECONOMY && interest > 0) {
+    console.log(`[ECONOMY] Interest earned: +${interest}g (held ${heldGold}g)`);
+  }
+  return {
+    ...runState,
+    gold: heldGold + interest,
+    lastInterestEarned: interest,
+    lastInterestHeldGold: heldGold,
+    interestAppliedRound: runState.round,
+  };
 }

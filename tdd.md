@@ -100,7 +100,10 @@ export const CONFIG = {
   SELL_PRICE_T2: 4,          // gold received when selling a Tier 2
   SELL_PRICE_T3: 8,          // gold received when selling a Tier 3
   REROLL_COST: 1,            // gold to refresh the shop
-  SHOP_SIZE: 3,              // number of dragons offered per shop roll
+  INTEREST_PER_THRESHOLD: 1, // gold earned per saved-gold threshold at prep start
+  INTEREST_THRESHOLD: 5,     // held gold required per interest tick
+  INTEREST_CAP: 3,           // maximum interest gold per prep phase
+  SHOP_SIZE: 4,              // number of dragons offered per shop roll
 
   // ─── COMBAT ───────────────────────────────────────────────
   MAX_TURNS_PER_ROUND: 50,   // if exceeded, player loses (anti-infinite-loop)
@@ -191,6 +194,8 @@ Key Formulas (Plain Language)
 What : Formula
 
 Gold earned on win : GOLD_PER_WIN_BASE + (current_round × GOLD_PER_WIN_SCALING)
+
+Interest at prep start : min(floor(current_gold ÷ INTEREST_THRESHOLD) × INTEREST_PER_THRESHOLD, INTEREST_CAP)
 
 XP earned per run : (rounds_survived × XP_PER_ROUND_SURVIVED) + (boss_damage ÷ XP_BOSS_DAMAGE_DIVISOR) — rounded down
 

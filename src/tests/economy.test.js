@@ -1,11 +1,19 @@
 import { CONFIG } from '../config.js';
-import { calculateRoundGold, canAfford, earn, getSellPrice, spend } from '../systems/economy.js';
+import { calculateInterest, calculateRoundGold, canAfford, earn, getSellPrice, spend } from '../systems/economy.js';
 import { assertEqual, test, summarize } from './testHarness.js';
 
 console.log('Economy System Test Suite');
 
 test('round gold follows configured formula', () => {
   assertEqual(calculateRoundGold(4), CONFIG.GOLD_PER_WIN_BASE + (4 * CONFIG.GOLD_PER_WIN_SCALING));
+});
+
+test('interest rewards saved gold up to the cap', () => {
+  assertEqual(calculateInterest(0), 0);
+  assertEqual(calculateInterest(CONFIG.INTEREST_THRESHOLD - 1), 0);
+  assertEqual(calculateInterest(CONFIG.INTEREST_THRESHOLD), CONFIG.INTEREST_PER_THRESHOLD);
+  assertEqual(calculateInterest(CONFIG.INTEREST_THRESHOLD * 2), CONFIG.INTEREST_PER_THRESHOLD * 2);
+  assertEqual(calculateInterest(CONFIG.INTEREST_THRESHOLD * 4), CONFIG.INTEREST_CAP);
 });
 
 test('sell prices match tier config', () => {

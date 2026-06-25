@@ -5,6 +5,12 @@ export function calculateRoundGold(roundNumber) {
   return CONFIG.GOLD_PER_WIN_BASE + (roundNumber * CONFIG.GOLD_PER_WIN_SCALING);
 }
 
+// Calculate start-of-prep interest from saved gold.
+export function calculateInterest(currentGold) {
+  const ticks = Math.floor(currentGold / CONFIG.INTEREST_THRESHOLD) * CONFIG.INTEREST_PER_THRESHOLD;
+  return Math.min(ticks, CONFIG.INTEREST_CAP);
+}
+
 // Return the configured sell value for a dragon tier.
 export function getSellPrice(tier) {
   if (tier === 1) return CONFIG.SELL_PRICE_T1;

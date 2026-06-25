@@ -69,7 +69,16 @@ export const CONFIG = {
   // Gold to refresh the shop offerings.
   // Recommended range: 1–2. Lower = more flexibility. Higher = more commitment.
 
-  SHOP_SIZE: 3,
+  INTEREST_PER_THRESHOLD: 1,
+  // Gold earned for each saved-gold threshold at the start of prep.
+
+  INTEREST_THRESHOLD: 5,
+  // Held gold required per interest tick.
+
+  INTEREST_CAP: 3,
+  // Maximum interest gold awarded per prep phase.
+
+  SHOP_SIZE: 4,
   // Number of dragon cards offered in the shop each round/reroll.
   // Recommended range: 3–5. More = easier to find what you want.
 
@@ -381,7 +390,7 @@ export const CONFIG = {
   HP_BAR_WIDTH_TEAM: 96,
   // Width of HP bars in team/fight view (px).
 
-  SHOP_CARD_WIDTH: 108,
+  SHOP_CARD_WIDTH: 85,
   // Width of each shop card (px).
 
   SHOP_CARD_HEIGHT: 192,
@@ -862,6 +871,12 @@ export const CONFIG = {
 
   PREP_MESSAGE_Y: 522,
   // Y position for temporary prep feedback text.
+
+  PREP_INTEREST_FLASH_Y: 78,
+  // Y position for the short interest-earned flash below the gold header.
+
+  PREP_INTEREST_FLASH_MS: 1800,
+  // Duration of the interest-earned flash at the start of prep.
 
   PREP_DRAG_PREVIEW_ALPHA: 0.8,
   // Opacity for the floating dragon preview while dragging.
@@ -1454,6 +1469,9 @@ export const CONFIG = {
 
   LOG_SHOP: true,
   // Log shop generation, purchases, sells, rerolls.
+
+  LOG_ECONOMY: true,
+  // Log economy rewards such as interest gold.
 
   LOG_MERGE: true,
   // Log merge detections and tier-ups.

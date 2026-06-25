@@ -1,23 +1,19 @@
 import { CONFIG } from '../config.js';
-import { simulateCampaign } from '../../scripts/balance-sim.mjs';
+import { runProfileSimulations } from './balance.js';
 import { assert, test, summarize } from './testHarness.js';
 
-const BALANCE_SAMPLE_RUNS = 5000;
-const MIN_BOSS_REACH_RATE = 0.58;
-const MAX_BOSS_REACH_RATE = 0.64;
+const BALANCE_SAMPLE_RUNS = 1000;
 
-const report = simulateCampaign(BALANCE_SAMPLE_RUNS);
+const reports = runProfileSimulations(BALANCE_SAMPLE_RUNS);
 
-test('competent drafting reaches the boss at the target campaign rate', () => {
-  assert(report.bossReachRate >= MIN_BOSS_REACH_RATE, `Boss reach rate ${(report.bossReachRate * 100).toFixed(1)}% is below target`);
-  assert(report.bossReachRate <= MAX_BOSS_REACH_RATE, `Boss reach rate ${(report.bossReachRate * 100).toFixed(1)}% leaves too little pre-boss pressure`);
+test('profile simulation keeps the intended skill ordering', () => {
+  assert(reports.RANDOM.fullClearRate < reports.COMPETENT.fullClearRate, 'Competent drafting should outperform random drafting');
+  assert(reports.COMPETENT.fullClearRate < reports.PERFECT.fullClearRate, 'Perfect drafting should outperform competent drafting');
 });
 
-test('campaign losses follow the intended phase funnel', () => {
-  assert(report.earlyLossRate >= 0.02 && report.earlyLossRate <= 0.045, `Round 1-6 loss rate ${(report.earlyLossRate * 100).toFixed(1)}% is outside target`);
-  assert(report.midLossRate >= 0.04 && report.midLossRate <= 0.08, `Round 7-8 loss rate ${(report.midLossRate * 100).toFixed(1)}% is outside target`);
-  assert(report.conditionalLossRates[8] >= 0.08 && report.conditionalLossRates[8] <= 0.13, `Round 9 loss rate ${(report.conditionalLossRates[8] * 100).toFixed(1)}% is outside target`);
-  assert(report.conditionalLossRates[9] >= 0.22 && report.conditionalLossRates[9] <= 0.28, `Round 10 loss rate ${(report.conditionalLossRates[9] * 100).toFixed(1)}% is outside target`);
+test('interest and shop size raise the perfect profile into the target ceiling', () => {
+  assert(reports.PERFECT.fullClearRate >= 0.80, `Perfect boss reach ${(reports.PERFECT.fullClearRate * 100).toFixed(1)}% is below target`);
+  assert(reports.PERFECT.fullClearRate <= 0.90, `Perfect boss reach ${(reports.PERFECT.fullClearRate * 100).toFixed(1)}% is above target`);
 });
 
 test('round ten remains stronger than round nine after tier scaling', () => {

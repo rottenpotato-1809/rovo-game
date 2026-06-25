@@ -45,12 +45,12 @@ Between runs: XP accumulates → unlocks new dragons in the shop pool → more t
 - Dragon HP is round-based: every owned dragon starts each new round at full health, even if it died in the previous winning fight.
 
 ### Shop & Economy
-- The shop displays **3 random dragons** each round from the player's unlocked pool. A dragon family is removed from the roll pool while the player owns its Tier 3 evolution; if every unlocked family is maxed, unavailable shop slots remain empty.
+- The shop displays **4 random dragons** each round from the player's unlocked pool. A dragon family is removed from the roll pool while the player owns its Tier 3 evolution; if every unlocked family is maxed, unavailable shop slots remain empty.
 - All dragons cost **3 gold** to buy.
 - Buying a shop dragon consumes that shop slot until the next reroll or round refresh. New purchases auto-equip into the first empty Team slot; Bench is used only when all 3 Team slots are full.
 - Selling returns **2 gold** (Tier 1), **4 gold** (Tier 2), or **8 gold** (Tier 3).
 - Rerolling the shop costs **1 gold** and can be done unlimited times.
-- Starting gold: **6** so round 1 can field two dragons. Gold earned per round won: **4 + current round number** (e.g., winning round 4 gives 8 gold).
+- Starting gold: **6** so round 1 can field two dragons. At the start of each prep phase, before the shop is shown, saved gold earns interest: **+1 gold per 5 gold held**, capped at **+3 gold**. Gold earned per round won: **4 + current round number** (e.g., winning round 4 gives 8 gold).
 
 ### Merging
 - Place 3 identical dragons together → they fuse into 1 dragon of the next tier.
