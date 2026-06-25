@@ -357,25 +357,25 @@ export const CONFIG = {
   // ─── RENDERING — SIZES ────────────────────────────────────────
   // Dimensions of game objects on screen
 
-  DRAGON_RADIUS_TEAM: 25,
+  DRAGON_RADIUS_TEAM: 28,
   // Radius of dragon circles in team slots (px).
 
-  DRAGON_RADIUS_BENCH: 22,
+  DRAGON_RADIUS_BENCH: 24,
   // Radius of dragon circles on the bench (px).
 
   DRAGON_RADIUS_FIGHT: 34,
   // Radius of dragon circles during battle view (px).
 
-  DRAGON_SPRITE_SCALE: 2.7,
+  DRAGON_SPRITE_SCALE: 2.8,
   // Sprite width/height relative to the legacy dragon-token radius.
 
   TIER_SCALE_T1: 1.0,
   // Tier 1 dragon render scale.
 
-  TIER_SCALE_T2: 1.15,
+  TIER_SCALE_T2: 1.18,
   // Tier 2 dragon render scale.
 
-  TIER_SCALE_T3: 1.3,
+  TIER_SCALE_T3: 1.38,
   // Tier 3 dragon render scale.
 
   TIER_GLOW_T2_ALPHA: 0.2,
@@ -396,7 +396,7 @@ export const CONFIG = {
   DRAGON_TIER_THREE_SCALE: 1.35,
   // Tier 3 keeps the adult silhouette and adds evolution effects.
 
-  SHOP_DRAGON_SPRITE_SIZE: 72,
+  SHOP_DRAGON_SPRITE_SIZE: 86,
   // Dragon artwork size inside one shop card.
 
   TIER_THREE_AURA_RADIUS_MULTIPLIER: 1.45,
@@ -1082,7 +1082,7 @@ export const CONFIG = {
   PREP_TEAM_DRAGON_Y_OFFSET: 72,
   // Dragon circle vertical offset inside a team slot.
 
-  PREP_BENCH_DRAGON_Y_OFFSET: 42,
+  PREP_BENCH_DRAGON_Y_OFFSET: 48,
   // Smaller dragon circle vertical offset inside a bench slot.
 
   PREP_DRAGON_NAME_BOTTOM_OFFSET: 28,
@@ -1459,10 +1459,10 @@ export const CONFIG = {
   CODEX_START_Y: 110,
   // Codex grid top edge.
 
-  CODEX_CELL_WIDTH: 78,
+  CODEX_CELL_WIDTH: 80,
   // Codex cell width.
 
-  CODEX_CELL_HEIGHT: 88,
+  CODEX_CELL_HEIGHT: 92,
   // Codex cell height.
 
   CODEX_COLUMN_GAP: 6,
@@ -1471,22 +1471,22 @@ export const CONFIG = {
   CODEX_ROW_GAP: 7,
   // Vertical gap between codex rows.
 
-  CODEX_DRAGON_RADIUS: 18,
+  CODEX_DRAGON_RADIUS: 22,
   // Portrait radius inside an unlocked codex cell.
 
-  CODEX_PORTRAIT_Y_OFFSET: 24,
+  CODEX_PORTRAIT_Y_OFFSET: 26,
   // Portrait offset inside a codex cell.
 
-  CODEX_NAME_Y_OFFSET: 53,
+  CODEX_NAME_Y_OFFSET: 58,
   // Name offset inside a codex cell.
 
-  CODEX_TIER_Y_OFFSET: 72,
+  CODEX_TIER_Y_OFFSET: 77,
   // Tier label offset inside a codex cell.
 
   CODEX_FOOTER_Y: 464,
   // Discovery count baseline.
 
-  CODEX_BOOK_CONTENT_RIGHT: 832,
+  CODEX_BOOK_CONTENT_RIGHT: 850,
   // Right edge of the writable parchment area.
 
   CODEX_BOOK_CONTENT_BOTTOM: 410,
@@ -1495,7 +1495,7 @@ export const CONFIG = {
   CODEX_INSPECTOR_X: 250,
   // Left edge of the codex hover inspector.
 
-  CODEX_INSPECTOR_Y: 394,
+  CODEX_INSPECTOR_Y: 404,
   // Top edge of the codex hover inspector below the collection grid.
 
   CODEX_INSPECTOR_WIDTH: 460,
