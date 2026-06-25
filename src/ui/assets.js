@@ -1,5 +1,5 @@
 const BACKGROUND_SOURCES = {
-  loading: new URL('../background/loading.webp', import.meta.url).href,
+  loading: new URL('../background/loading_title_card.webp', import.meta.url).href,
   menu: new URL('../background/main_menu_dungeon.webp', import.meta.url).href,
   prep: new URL('../background/prep_phase.webp', import.meta.url).href,
   fight: new URL('../background/fight_phase.webp', import.meta.url).href,

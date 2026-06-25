@@ -1,6 +1,6 @@
 import { CONFIG } from '../config.js';
 import { getLoadingContinueButton, pointInRect } from '../ui/layout.js';
-import { clear, drawBar, drawButton, drawGameTitle, drawPhaseBackground, drawText } from '../ui/renderer.js';
+import { clear, drawBar, drawButton, drawPhaseBackground, drawText } from '../ui/renderer.js';
 
 // Present asset preload progress before entering the interactive menu.
 export class LoadingState {
@@ -24,12 +24,6 @@ export class LoadingState {
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'loading');
-    drawGameTitle(ctx, {
-      x: CONFIG.LOADING_TITLE_X,
-      y: CONFIG.LOADING_TITLE_Y,
-      width: CONFIG.LOADING_TITLE_WIDTH,
-      height: CONFIG.LOADING_TITLE_HEIGHT,
-    });
     if (this.ready) {
       drawButton(ctx, this.continueButton, 'CLICK TO CONTINUE', CONFIG.LOADING_BAR_COLOR);
     } else {
