@@ -18,6 +18,7 @@ import {
   drawDragonInspector,
   drawDragonSprite,
   drawFitText,
+  drawPanelTexture,
   drawPhaseBackground,
   drawRect,
   drawText,
@@ -193,6 +194,7 @@ export class PrepState {
         ? CONFIG.ARENA_ALIVE_ALPHA
         : CONFIG.CARD_BORDER_ALPHA + (pulse * CONFIG.CARD_BORDER_ALPHA);
       drawRect(ctx, rect, hovered ? CONFIG.CARD_HOVER_BG : CONFIG.CARD_BG_COLOR, colorWithAlpha(elementColor, borderAlpha));
+      drawPanelTexture(ctx, rect);
       const textWidth = rect.width - (CONFIG.PREP_CARD_TEXT_LEFT_PAD * 2);
       drawDragonSprite(
         ctx,
@@ -204,11 +206,39 @@ export class PrepState {
         CONFIG.ARENA_ALIVE_ALPHA,
         true,
       );
+      drawRect(ctx, {
+        x: rect.x,
+        y: rect.y + Math.floor(rect.height * 0.62),
+        width: rect.width,
+        height: Math.ceil(rect.height * 0.38),
+      }, CONFIG.CARD_STATS_OVERLAY, null, CONFIG.BUTTON_BORDER_RADIUS);
+      this.renderTierGem(ctx, rect, elementColor);
+      if (!canAfford) drawRect(ctx, rect, CONFIG.CARD_DISABLED_OVERLAY, null);
       drawFitText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
       drawFitText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_SECONDARY, 'left');
-      drawFitText(ctx, `ATK ${tier.atk} HP ${tier.hp} SPD ${tier.spd}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_STAT_Y_OFFSET, CONFIG.FONT_SIZE_STATS, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_PRIMARY, 'left');
-      drawText(ctx, `BUY ${CONFIG.DRAGON_BUY_COST}G`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_COST_Y_OFFSET, CONFIG.FONT_SIZE_BUTTON, CONFIG.GOLD_COLOR, 'left');
+      drawFitText(ctx, `A${tier.atk} H${tier.hp} S${tier.spd}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_STAT_Y_OFFSET, CONFIG.FONT_SIZE_STATS, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_PRIMARY, 'left');
+      drawFitText(ctx, `BUY ${CONFIG.DRAGON_BUY_COST}G`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_COST_Y_OFFSET, CONFIG.FONT_SIZE_BUTTON, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, canAfford ? CONFIG.GOLD_COLOR : CONFIG.TEXT_MUTED, 'left');
     });
+  }
+
+  // Draw the Tier 1 rough gem badge in the top-right of a shop card.
+  renderTierGem(ctx, rect, elementColor) {
+    const centerX = rect.x + rect.width - 14;
+    const centerY = rect.y + 14;
+    ctx.save();
+    ctx.fillStyle = colorWithAlpha(elementColor, 0.8);
+    ctx.strokeStyle = CONFIG.GOLD_COLOR;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY - 8);
+    ctx.lineTo(centerX + 7, centerY);
+    ctx.lineTo(centerX, centerY + 8);
+    ctx.lineTo(centerX - 7, centerY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    drawText(ctx, 'I', centerX, centerY, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_PRIMARY);
+    ctx.restore();
   }
 
   // Draw a compact framed heading above a prep region.

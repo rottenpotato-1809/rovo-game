@@ -1,13 +1,14 @@
 const BACKGROUND_SOURCES = {
   loading: new URL('../background/loading.webp', import.meta.url).href,
-  menu: new URL('../background/main_menu.webp', import.meta.url).href,
+  menu: new URL('../background/main_menu_dungeon.webp', import.meta.url).href,
   prep: new URL('../background/prep_phase.webp', import.meta.url).href,
   fight: new URL('../background/fight_phase.webp', import.meta.url).href,
   codex: new URL('../background/codex.webp', import.meta.url).href,
+  result: new URL('../background/results_dungeon.webp', import.meta.url).href,
 };
 
 const UI_SOURCES = {
-  gameTitle: new URL('../background/game-name.webp', import.meta.url).href,
+  gameTitle: new URL('../background/game-name-dark.png', import.meta.url).href,
   boss: new URL('../sprites/boss.webp', import.meta.url).href,
 };
 

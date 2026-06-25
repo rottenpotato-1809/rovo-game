@@ -40,10 +40,10 @@ canvas {
   font: 700 24px/1 monospace;
   height: 40px;
   justify-content: center;
-  left: max(8px, env(safe-area-inset-left));
+  bottom: max(8px, env(safe-area-inset-bottom));
+  left: max(64px, calc(env(safe-area-inset-left) + 64px));
   padding: 0;
   position: absolute;
-  top: max(8px, env(safe-area-inset-top));
   width: 40px;
   z-index: 5;
 }

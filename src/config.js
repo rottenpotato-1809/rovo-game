@@ -258,10 +258,10 @@ export const CONFIG = {
   HEADER_BG_COLOR: '#16213e',
   // Top header bar background.
 
-  CARD_BG_COLOR: '#1a1a4e',
+  CARD_BG_COLOR: 'rgba(14, 17, 42, 0.9)',
   // Shop card and UI card background.
 
-  CARD_HOVER_BG: '#2a2a5e',
+  CARD_HOVER_BG: 'rgba(30, 31, 66, 0.94)',
   // Shop card hover background.
 
   CARD_BORDER_ALPHA: 0.4,
@@ -269,6 +269,15 @@ export const CONFIG = {
 
   CARD_AFFORDABLE_PULSE: true,
   // Pulse shop-card borders when the dragon can be bought.
+
+  CARD_DISABLED_OVERLAY: 'rgba(6, 8, 18, 0.55)',
+  // Dim overlay for shop cards the player cannot afford.
+
+  CARD_STATS_OVERLAY: 'rgba(8, 10, 24, 0.72)',
+  // Dark lower information plate inside shop cards.
+
+  CARD_TEXTURE_ALPHA: 0.07,
+  // Subtle cross-hatch grain on stone/parchment panels.
 
   ACCENT_PRIMARY: '#e94560',
   // Primary accent — team slot borders, fight button, highlights.
@@ -297,7 +306,7 @@ export const CONFIG = {
   TEXT_MUTED: '#aeb8c6',
   // Very faint text (empty slot labels, annotations).
 
-  HP_BAR_FULL: '#4CAF50',
+  HP_BAR_FULL: '#2fd27a',
   // Health bar color when HP is above 50%.
 
   HP_BAR_LOW: '#e94560',
@@ -306,7 +315,7 @@ export const CONFIG = {
   HP_BAR_MID: '#FF9800',
   // Health bar color when HP is between 25-50%.
 
-  HP_BAR_BG: '#333333',
+  HP_BAR_BG: '#171923',
   // Health bar background (empty portion).
 
   TEXT_OUTLINE_COLOR: '#101522',
@@ -334,14 +343,14 @@ export const CONFIG = {
   // Dashed border for empty bench slots.
 
   ELEMENT_COLORS: {
-    fire: '#e94560',
-    earth: '#8B6914',
-    wind: '#4CAF50',
-    water: '#2196F3',
+    fire: '#d84a2f',
+    earth: '#9a741f',
+    wind: '#4f9f73',
+    water: '#1d8ea5',
     lightning: '#f5c842',
-    shadow: '#9C27B0',
+    shadow: '#8f3bcc',
     ice: '#B3E5FC',
-    light: '#FF9800',
+    light: '#e8b957',
   },
   // Element-to-color mapping. Used for dragon circles and ability effects.
 
@@ -419,6 +428,12 @@ export const CONFIG = {
 
   HP_BAR_HEIGHT: 6,
   // Height of HP bars above dragons (px).
+
+  HP_BAR_BORDER_COLOR: 'rgba(227, 232, 239, 0.5)',
+  // Thin frame around health bars so they read over busy art.
+
+  HP_BAR_LOW_PULSE_MS: 520,
+  // Pulse speed for critical HP bars.
 
   HP_BAR_WIDTH_TEAM: 96,
   // Width of HP bars in team/fight view (px).
@@ -784,6 +799,9 @@ export const CONFIG = {
   BUTTON_INNER_GLOW_ALPHA: 0.16,
   // Opacity of the button hover inner glow.
 
+  BUTTON_TEXTURE_ALPHA: 0.08,
+  // Subtle stone grain drawn inside command buttons.
+
   DEATH_FADE_DURATION: 320,
   // Milliseconds for a defeated dragon to fade out.
 
@@ -887,20 +905,23 @@ export const CONFIG = {
   ARENA_ABILITY_TIMER_WIDTH: 96,
   // Maximum width for the special-ability cooldown label.
 
-  ARENA_RESULT_Y: 48,
+  ARENA_RESULT_Y: 44,
   // Y position for WIN/LOSE result text after combat.
 
   ARENA_RESULT_PANEL_X: 310,
   // Left edge of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_Y: 8,
+  ARENA_RESULT_PANEL_Y: 4,
   // Top edge of the compact completed-fight panel.
 
   ARENA_RESULT_PANEL_WIDTH: 340,
   // Width of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_HEIGHT: 80,
+  ARENA_RESULT_PANEL_HEIGHT: 104,
   // Height of the completed-fight panel.
+
+  ARENA_RESULT_CONTINUE_Y: 82,
+  // Continue prompt baseline inside the completed-fight panel.
 
   PREP_SELL_TITLE_OFFSET_Y: -8,
   // Vertical offset for the main Sell label.
@@ -1031,7 +1052,7 @@ export const CONFIG = {
   PREP_LEFT_PANEL_X: 36,
   // Left edge for team and bench management.
 
-  PREP_RIGHT_PANEL_X: 590,
+  PREP_RIGHT_PANEL_X: 574,
   // Left edge for shop and command buttons.
 
   PREP_SECTION_LABEL_OFFSET_Y: 24,
@@ -1186,7 +1207,7 @@ export const CONFIG = {
   MENU_STATS_PANEL_X: 650,
   // Left edge of the progression panel over the lower-right sea.
 
-  MENU_STATS_PANEL_Y: 320,
+  MENU_STATS_PANEL_Y: 360,
   // Top edge of the progression panel.
 
   MENU_STATS_PANEL_WIDTH: 276,
@@ -1195,16 +1216,16 @@ export const CONFIG = {
   MENU_STATS_PANEL_HEIGHT: 150,
   // Height of the progression panel.
 
-  MENU_SCORE_Y: 350,
+  MENU_SCORE_Y: 390,
   // Main menu high-score baseline.
 
-  MENU_XP_LABEL_Y: 392,
+  MENU_XP_LABEL_Y: 432,
   // Main menu progression label baseline.
 
   MENU_XP_BAR_X: 674,
   // Main menu XP bar left edge.
 
-  MENU_XP_BAR_Y: 416,
+  MENU_XP_BAR_Y: 456,
   // Main menu XP bar top edge.
 
   MENU_XP_BAR_WIDTH: 228,
@@ -1225,52 +1246,52 @@ export const CONFIG = {
   MENU_BUTTON_WIDTH: 200,
   // Main menu button width.
 
-  MENU_NEW_RUN_HOTSPOT_X: 242,
-  // Tower hotspot left edge.
+  MENU_NEW_RUN_HOTSPOT_X: 650,
+  // New Run command hotspot left edge.
 
-  MENU_NEW_RUN_HOTSPOT_Y: 44,
-  // Tower hotspot top edge.
+  MENU_NEW_RUN_HOTSPOT_Y: 174,
+  // New Run command hotspot top edge.
 
-  MENU_NEW_RUN_HOTSPOT_WIDTH: 172,
-  // Tower hotspot width.
+  MENU_NEW_RUN_HOTSPOT_WIDTH: 276,
+  // New Run command hotspot width.
 
-  MENU_NEW_RUN_HOTSPOT_HEIGHT: 226,
-  // Tower hotspot height.
+  MENU_NEW_RUN_HOTSPOT_HEIGHT: 40,
+  // New Run command hotspot height.
 
-  MENU_NEW_RUN_LABEL_X: 258,
-  // New Run label left edge over the tower entrance.
+  MENU_NEW_RUN_LABEL_X: 650,
+  // New Run label left edge.
 
-  MENU_NEW_RUN_LABEL_Y: 214,
+  MENU_NEW_RUN_LABEL_Y: 174,
   // New Run label top edge.
 
-  MENU_CODEX_HOTSPOT_X: 178,
-  // Ground-dragon hotspot left edge.
+  MENU_CODEX_HOTSPOT_X: 650,
+  // Codex command hotspot left edge.
 
-  MENU_CODEX_HOTSPOT_Y: 312,
-  // Ground-dragon hotspot top edge.
+  MENU_CODEX_HOTSPOT_Y: 286,
+  // Codex command hotspot top edge.
 
-  MENU_CODEX_HOTSPOT_WIDTH: 410,
-  // Ground-dragon hotspot width.
+  MENU_CODEX_HOTSPOT_WIDTH: 276,
+  // Codex command hotspot width.
 
-  MENU_CODEX_HOTSPOT_HEIGHT: 104,
-  // Ground-dragon hotspot height.
+  MENU_CODEX_HOTSPOT_HEIGHT: 40,
+  // Codex command hotspot height.
 
-  MENU_CODEX_LABEL_X: 426,
-  // Codex label left edge beside the ground dragons.
+  MENU_CODEX_LABEL_X: 650,
+  // Codex label left edge.
 
-  MENU_CODEX_LABEL_Y: 348,
+  MENU_CODEX_LABEL_Y: 286,
   // Codex label top edge.
 
-  MENU_HOTSPOT_LABEL_WIDTH: 140,
+  MENU_HOTSPOT_LABEL_WIDTH: 276,
   // Shared command-label width on image hotspots.
 
   MENU_HOTSPOT_LABEL_HEIGHT: 40,
   // Shared command-label height on image hotspots.
 
-  MENU_CONTINUE_X: 258,
+  MENU_CONTINUE_X: 650,
   // Left edge of Continue Run when a saved run exists.
 
-  MENU_CONTINUE_Y: 270,
+  MENU_CONTINUE_Y: 230,
   // Top edge of Continue Run below the tower entrance.
 
   MENU_CONFIRM_PANEL_X: 300,
@@ -1300,10 +1321,10 @@ export const CONFIG = {
   MENU_CONFIRM_BUTTON_GAP: 20,
   // Gap between confirmation actions.
 
-  MENU_SETTINGS_BUTTON_X: 900,
+  MENU_SETTINGS_BUTTON_X: 16,
   // Left edge of the compact settings icon.
 
-  MENU_SETTINGS_BUTTON_Y: 16,
+  MENU_SETTINGS_BUTTON_Y: 482,
   // Top edge of the compact settings icon.
 
   MENU_SETTINGS_BUTTON_SIZE: 42,
@@ -1375,13 +1396,13 @@ export const CONFIG = {
   PREP_BACK_BUTTON_HEIGHT: 34,
   // Height of the prep Back button.
 
-  PREP_INSPECTOR_X: 300,
+  PREP_INSPECTOR_X: 228,
   // Left edge of the prep dragon inspector.
 
   PREP_INSPECTOR_Y: 296,
   // Top edge of the prep dragon inspector between staging rows.
 
-  PREP_INSPECTOR_WIDTH: 280,
+  PREP_INSPECTOR_WIDTH: 330,
   // Width of the prep dragon inspector.
 
   PREP_INSPECTOR_HEIGHT: 72,
@@ -1396,13 +1417,13 @@ export const CONFIG = {
   DRAGON_INSPECTOR_LINE_GAP: 17,
   // Vertical spacing between inspector text rows.
 
-  TUTORIAL_PANEL_X: 300,
+  TUTORIAL_PANEL_X: 228,
   // Left edge of the first-run tutorial panel.
 
   TUTORIAL_PANEL_Y: 298,
   // Top edge of the first-run tutorial panel.
 
-  TUTORIAL_PANEL_WIDTH: 280,
+  TUTORIAL_PANEL_WIDTH: 330,
   // Width of the first-run tutorial panel.
 
   TUTORIAL_PANEL_HEIGHT: 66,
@@ -1420,13 +1441,13 @@ export const CONFIG = {
   TUTORIAL_HIGHLIGHT_FILL: 'rgba(245, 200, 66, 0.08)',
   // Subtle fill over the current tutorial target.
 
-  PREP_MERGE_TOOLTIP_X: 590,
+  PREP_MERGE_TOOLTIP_X: 228,
   // Left edge of the Merge hover tooltip.
 
-  PREP_MERGE_TOOLTIP_Y: 348,
+  PREP_MERGE_TOOLTIP_Y: 330,
   // Top edge of the Merge hover tooltip.
 
-  PREP_MERGE_TOOLTIP_WIDTH: 180,
+  PREP_MERGE_TOOLTIP_WIDTH: 330,
   // Width of the Merge hover tooltip.
 
   PREP_MERGE_TOOLTIP_HEIGHT: 36,

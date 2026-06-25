@@ -88,6 +88,21 @@ export function drawRect(ctx, rect, fill, stroke = null, radius = CONFIG.BUTTON_
   }
 }
 
+// Add a restrained hand-painted grain to flat canvas UI surfaces.
+export function drawPanelTexture(ctx, rect, alpha = CONFIG.CARD_TEXTURE_ALPHA) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = CONFIG.TEXT_SECONDARY;
+  ctx.lineWidth = 1;
+  for (let x = rect.x + 8; x < rect.x + rect.width; x += 16) {
+    ctx.beginPath();
+    ctx.moveTo(x, rect.y + 4);
+    ctx.lineTo(x - 10, rect.y + rect.height - 4);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 // Draw a filled circle with optional alpha and outline.
 export function drawCircle(ctx, x, y, radius, fill, alpha = CONFIG.ARENA_ALIVE_ALPHA, stroke = null) {
   ctx.save();
@@ -143,10 +158,25 @@ export function drawDragonInspector(ctx, rect, dragon, tierData) {
 // Draw a horizontal value bar for HP and shields.
 export function drawBar(ctx, x, y, width, height, ratio, fill) {
   const clamped = Math.max(0, Math.min(CONFIG.ARENA_ALIVE_ALPHA, ratio));
+  ctx.save();
   ctx.fillStyle = CONFIG.HP_BAR_BG;
   ctx.fillRect(x, y, width, height);
-  ctx.fillStyle = fill;
-  ctx.fillRect(x, y, width * clamped, height);
+  if (clamped > 0) {
+    const gradient = ctx.createLinearGradient(x, y, x + width, y);
+    gradient.addColorStop(0, fill);
+    gradient.addColorStop(1, shadeColor(fill, -34));
+    ctx.fillStyle = gradient;
+    if (clamped < CONFIG.ARENA_HP_LOW_THRESHOLD) {
+      const now = globalThis.performance ? globalThis.performance.now() : Date.now();
+      ctx.globalAlpha = 0.72 + (Math.sin(now / CONFIG.HP_BAR_LOW_PULSE_MS) * 0.22);
+    }
+    ctx.fillRect(x, y, width * clamped, height);
+  }
+  ctx.globalAlpha = CONFIG.ARENA_ALIVE_ALPHA;
+  ctx.strokeStyle = CONFIG.HP_BAR_BORDER_COLOR;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(x, y, width, height);
+  ctx.restore();
 }
 
 // Draw a button-shaped card with centered text.
@@ -191,6 +221,7 @@ export function drawButton(ctx, rect, label, accent = CONFIG.GOLD_COLOR, fontSiz
   ctx.shadowOffsetY = pressed ? CONFIG.BUTTON_PRESS_SHADOW_OFFSET_Y : CONFIG.BUTTON_SHADOW_OFFSET_Y;
   ctx.lineWidth = pressed ? CONFIG.BUTTON_PRESS_BORDER_WIDTH : CONFIG.BUTTON_BORDER_WIDTH;
   drawRect(ctx, buttonRect, fill, borderColor);
+  drawPanelTexture(ctx, buttonRect, CONFIG.BUTTON_TEXTURE_ALPHA);
   ctx.shadowColor = 'transparent';
   if (hovered) {
     ctx.globalAlpha = CONFIG.BUTTON_INNER_GLOW_ALPHA;
@@ -423,6 +454,18 @@ export function colorWithAlpha(color, alpha) {
   const green = (value >> 8) & 255;
   const blue = value & 255;
   return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function shadeColor(color, amount) {
+  if (!color || !color.startsWith('#')) return color;
+  const hex = color.slice(1);
+  const value = Number.parseInt(hex.length === 3
+    ? hex.split('').map(character => character + character).join('')
+    : hex, 16);
+  const red = Math.max(0, Math.min(255, ((value >> 16) & 255) + amount));
+  const green = Math.max(0, Math.min(255, ((value >> 8) & 255) + amount));
+  const blue = Math.max(0, Math.min(255, (value & 255) + amount));
+  return `rgb(${red}, ${green}, ${blue})`;
 }
 
 // Check pointer containment without coupling renderer code to layout helpers.

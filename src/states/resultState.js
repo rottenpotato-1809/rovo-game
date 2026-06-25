@@ -51,7 +51,7 @@ export class ResultState {
   // Draw complete run rewards and navigation commands.
   render(ctx) {
     clear(ctx);
-    drawPhaseBackground(ctx, 'menu');
+    drawPhaseBackground(ctx, 'result');
     const panel = {
       x: CONFIG.RESULT_PANEL_X,
       y: CONFIG.RESULT_PANEL_Y,
