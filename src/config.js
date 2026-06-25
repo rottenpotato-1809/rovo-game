@@ -417,7 +417,7 @@ export const CONFIG = {
   BOSS_RADIUS: 60,
   // Radius of the boss circle in boss fight (px). Bigger = more intimidating.
 
-  BOSS_SPRITE_SIZE: 220,
+  BOSS_SPRITE_SIZE: 250,
   // Square draw size for the transparent boss crystal sprite.
 
   BOSS_SPRITE_PULSE_SCALE: 0.06,

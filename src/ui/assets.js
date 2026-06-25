@@ -45,7 +45,7 @@ export function getBossSpriteDescriptor() {
   return { file: 'boss.webp' };
 }
 
-// Return a dragon sprite, reusing Tier 2 artwork for Tier 3.
+// Return a dragon sprite for the requested family and evolution tier.
 export function getDragonImage(id, tier) {
   const descriptor = getDragonSpriteDescriptor(id, tier);
   if (!descriptor) return null;
@@ -57,7 +57,7 @@ export function getDragonImage(id, tier) {
 export function getDragonSpriteDescriptor(id, tier) {
   const element = DRAGON_ELEMENTS[id];
   if (!element) return null;
-  return { element, artworkTier: tier <= 1 ? 1 : 2 };
+  return { element, artworkTier: Math.max(1, Math.min(3, tier)) };
 }
 
 // Load all runtime images before the first interactive frame.
@@ -72,6 +72,7 @@ export async function preloadAssets(onProgress = () => {}) {
     ...Object.values(DRAGON_ELEMENTS).flatMap(element => [
       new URL(`../sprites/${element}_Dragon_T1.webp`, import.meta.url).href,
       new URL(`../sprites/${element}_Dragon_T2.webp`, import.meta.url).href,
+      new URL(`../sprites/${element}_Dragon_T3.webp`, import.meta.url).href,
     ]),
   ];
   const sources = [...bootSources, ...runtimeSources];
