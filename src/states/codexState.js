@@ -49,7 +49,12 @@ export class CodexState {
     const centerX = rect.x + rect.width / 2;
     const portraitY = rect.y + CONFIG.CODEX_PORTRAIT_Y_OFFSET;
     if (unlocked) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4, CONFIG.BUTTON_BORDER_RADIUS);
+      ctx.clip();
       drawDragonSprite(ctx, { ...dragon, tier: tier.tier }, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_ALIVE_ALPHA, true);
+      ctx.restore();
     } else {
       drawCircle(ctx, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.TEXT_MUTED, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
       drawText(ctx, '?', centerX, portraitY, CONFIG.FONT_SIZE_HEADER);

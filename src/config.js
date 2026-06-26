@@ -1485,28 +1485,28 @@ export const CONFIG = {
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
   // Height of the Merge hover tooltip.
 
-  CODEX_LEFT_PAGE_X: 82,
+  CODEX_LEFT_PAGE_X: 74,
   // Left edge of the usable left parchment page.
 
-  CODEX_RIGHT_PAGE_X: 472,
+  CODEX_RIGHT_PAGE_X: 488,
   // Left edge of the usable right parchment page.
 
   CODEX_PAGE_Y: 66,
   // Top edge of the usable parchment pages.
 
-  CODEX_PAGE_WIDTH: 382,
+  CODEX_PAGE_WIDTH: 398,
   // Width of each usable parchment page.
 
-  CODEX_PAGE_HEIGHT: 340,
+  CODEX_PAGE_HEIGHT: 354,
   // Height of each usable parchment page.
 
   CODEX_COLUMNS_PER_PAGE: 4,
   // Number of dragon columns shown on each open-book page.
 
-  CODEX_CELL_WIDTH: 88,
+  CODEX_CELL_WIDTH: 92,
   // Codex cell width.
 
-  CODEX_CELL_HEIGHT: 104,
+  CODEX_CELL_HEIGHT: 112,
   // Codex cell height.
 
   CODEX_COLUMN_GAP: 8,
@@ -1518,40 +1518,40 @@ export const CONFIG = {
   CODEX_DRAGON_RADIUS: 20,
   // Portrait radius inside an unlocked codex cell.
 
-  CODEX_PORTRAIT_Y_OFFSET: 30,
+  CODEX_PORTRAIT_Y_OFFSET: 37,
   // Portrait offset inside a codex cell.
 
-  CODEX_NAME_Y_OFFSET: 70,
+  CODEX_NAME_Y_OFFSET: 80,
   // Name offset inside a codex cell.
 
-  CODEX_TIER_Y_OFFSET: 91,
+  CODEX_TIER_Y_OFFSET: 101,
   // Tier label offset inside a codex cell.
 
   CODEX_FOOTER_Y: 464,
   // Discovery count baseline.
 
-  CODEX_BOOK_CONTENT_RIGHT: 864,
+  CODEX_BOOK_CONTENT_RIGHT: 886,
   // Right edge of the writable parchment area.
 
-  CODEX_BOOK_GUTTER_LEFT: 462,
+  CODEX_BOOK_GUTTER_LEFT: 470,
   // Left edge of the book gutter that codex cells should avoid.
 
-  CODEX_BOOK_GUTTER_RIGHT: 470,
+  CODEX_BOOK_GUTTER_RIGHT: 488,
   // Right edge of the book gutter that codex cells should avoid.
 
-  CODEX_BOOK_CONTENT_BOTTOM: 410,
+  CODEX_BOOK_CONTENT_BOTTOM: 418,
   // Bottom edge of the writable parchment area.
 
   CODEX_INSPECTOR_X: 250,
   // Left edge of the codex hover inspector.
 
-  CODEX_INSPECTOR_Y: 414,
+  CODEX_INSPECTOR_Y: 418,
   // Top edge of the codex hover inspector below the collection grid.
 
   CODEX_INSPECTOR_WIDTH: 460,
   // Width of the codex hover inspector.
 
-  CODEX_INSPECTOR_HEIGHT: 68,
+  CODEX_INSPECTOR_HEIGHT: 58,
   // Height of the codex hover inspector.
 
   CODEX_BACK_Y: 486,
