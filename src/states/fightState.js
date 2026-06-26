@@ -70,6 +70,8 @@ export class FightState {
         hitFlash: 0,
         hitOffset: 0,
         scale: CONFIG.ARENA_ALIVE_ALPHA,
+        rotation: 0,
+        fallOffset: 0,
       });
     });
   }
@@ -393,6 +395,11 @@ export class FightState {
     const view = this.views.get(target.instanceId);
     if (!view) return;
     this.tweens.add(view, 'alpha', CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_DEAD_ALPHA, CONFIG.DEATH_FADE_DURATION);
+    const fallRotation = target.team === 'player'
+      ? CONFIG.DEATH_FALL_ROTATION
+      : -CONFIG.DEATH_FALL_ROTATION;
+    this.tweens.add(view, 'rotation', 0, fallRotation, CONFIG.DEATH_FADE_DURATION);
+    this.tweens.add(view, 'fallOffset', 0, CONFIG.DEATH_FALL_OFFSET_Y, CONFIG.DEATH_FADE_DURATION);
   }
 
   // Convert a structured battle event into a short combat log line.

@@ -60,6 +60,8 @@ export class BossState {
         alpha: CONFIG.ARENA_ALIVE_ALPHA,
         scale: CONFIG.ARENA_ALIVE_ALPHA,
         hitFlash: 0,
+        rotation: 0,
+        fallOffset: 0,
       });
     });
   }
@@ -226,6 +228,8 @@ export class BossState {
     if (target && event.action === 'kill') {
       const view = this.views.get(target.instanceId);
       this.tweens.add(view, 'alpha', CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_DEAD_ALPHA, CONFIG.DEATH_FADE_DURATION);
+      this.tweens.add(view, 'rotation', 0, CONFIG.DEATH_FALL_ROTATION, CONFIG.DEATH_FADE_DURATION);
+      this.tweens.add(view, 'fallOffset', 0, CONFIG.DEATH_FALL_OFFSET_Y, CONFIG.DEATH_FADE_DURATION);
       playDeath();
     }
   }

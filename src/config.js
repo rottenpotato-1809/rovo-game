@@ -369,6 +369,18 @@ export const CONFIG = {
   DRAGON_SPRITE_SCALE: 2.8,
   // Sprite width/height relative to the legacy dragon-token radius.
 
+  DRAGON_SHADOW_COLOR: 'rgba(0, 0, 0, 0.38)',
+  // Soft oval shadow beneath dragon sprites in battle.
+
+  DRAGON_SHADOW_WIDTH_MULTIPLIER: 2.25,
+  // Shadow width relative to the legacy dragon-token radius.
+
+  DRAGON_SHADOW_HEIGHT_MULTIPLIER: 0.46,
+  // Shadow height relative to the legacy dragon-token radius.
+
+  DRAGON_SHADOW_OFFSET_Y: 24,
+  // Shadow baseline offset below the dragon sprite center.
+
   TIER_SCALE_T1: 1.0,
   // Tier 1 dragon render scale.
 
@@ -804,6 +816,12 @@ export const CONFIG = {
 
   DEATH_FADE_DURATION: 320,
   // Milliseconds for a defeated dragon to fade out.
+
+  DEATH_FALL_ROTATION: -1.18,
+  // Final rotation in radians for defeated dragons falling backward.
+
+  DEATH_FALL_OFFSET_Y: 12,
+  // Extra drop as a defeated dragon tips over.
 
   ROUND_TRANSITION_DURATION: 1000,
   // Milliseconds for "Round X" text to display between rounds.

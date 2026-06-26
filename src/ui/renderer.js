@@ -259,6 +259,7 @@ export function drawDragonSprite(
   alpha = CONFIG.ARENA_ALIVE_ALPHA,
   scale = CONFIG.ARENA_ALIVE_ALPHA,
   mirrored = false,
+  rotation = 0,
 ) {
   const image = getDragonImage(dragon.id, dragon.tier);
   const tierScale = getDragonTierScale(dragon.tier);
@@ -272,6 +273,7 @@ export function drawDragonSprite(
   if (image && image.complete && image.naturalWidth) {
     ctx.imageSmoothingEnabled = true;
     ctx.translate(x, y);
+    ctx.rotate(rotation);
     ctx.scale(mirrored ? -1 : 1, 1);
     ctx.drawImage(image, -(spriteSize / 2), -(spriteSize / 2), spriteSize, spriteSize);
   } else {
@@ -302,15 +304,17 @@ export function drawDragon(ctx, dragon, view) {
   if (view.hitFlash > 0) {
     drawCircle(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT * CONFIG.ARENA_ABILITY_GLOW_RADIUS_MULTIPLIER, CONFIG.HP_BAR_LOW, view.hitFlash);
   }
+  drawDragonShadow(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, view.scale || CONFIG.ARENA_ALIVE_ALPHA);
   drawDragonSprite(
     ctx,
     dragon,
     view.x,
-    view.y,
+    view.y + (view.fallOffset || 0),
     CONFIG.DRAGON_RADIUS_FIGHT,
     view.alpha,
     view.scale || CONFIG.ARENA_ALIVE_ALPHA,
     isPlayer,
+    view.rotation || 0,
   );
   drawFitText(
     ctx,
@@ -332,6 +336,24 @@ export function drawDragon(ctx, dragon, view) {
     hpRatio,
     hpColor,
   );
+}
+
+// Ground dragon artwork with a persistent shadow even as death fades the sprite.
+function drawDragonShadow(ctx, x, y, radius, scale = CONFIG.ARENA_ALIVE_ALPHA) {
+  ctx.save();
+  ctx.fillStyle = CONFIG.DRAGON_SHADOW_COLOR;
+  ctx.beginPath();
+  ctx.ellipse(
+    x,
+    y + CONFIG.DRAGON_SHADOW_OFFSET_Y,
+    radius * CONFIG.DRAGON_SHADOW_WIDTH_MULTIPLIER * scale,
+    radius * CONFIG.DRAGON_SHADOW_HEIGHT_MULTIPLIER * scale,
+    0,
+    0,
+    Math.PI * 2,
+  );
+  ctx.fill();
+  ctx.restore();
 }
 
 // Draw a soft evolved-dragon element glow using cheap layered circles.
