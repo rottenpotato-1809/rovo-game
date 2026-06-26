@@ -304,7 +304,7 @@ export function drawDragon(ctx, dragon, view) {
   if (view.hitFlash > 0) {
     drawCircle(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT * CONFIG.ARENA_ABILITY_GLOW_RADIUS_MULTIPLIER, CONFIG.HP_BAR_LOW, view.hitFlash);
   }
-  drawDragonShadow(ctx, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, view.scale || CONFIG.ARENA_ALIVE_ALPHA);
+  drawDragonShadow(ctx, dragon, view.x, view.y, CONFIG.DRAGON_RADIUS_FIGHT, view.scale || CONFIG.ARENA_ALIVE_ALPHA);
   drawDragonSprite(
     ctx,
     dragon,
@@ -339,15 +339,19 @@ export function drawDragon(ctx, dragon, view) {
 }
 
 // Ground dragon artwork with a persistent shadow even as death fades the sprite.
-function drawDragonShadow(ctx, x, y, radius, scale = CONFIG.ARENA_ALIVE_ALPHA) {
+function drawDragonShadow(ctx, dragon, x, y, radius, scale = CONFIG.ARENA_ALIVE_ALPHA) {
+  const tier = Math.min(dragon.tier || 1, CONFIG.MAX_TIER);
+  const widthMultiplier = CONFIG.DRAGON_SHADOW_WIDTH_BY_TIER[tier] || CONFIG.DRAGON_SHADOW_WIDTH_BY_TIER[1];
+  const heightMultiplier = CONFIG.DRAGON_SHADOW_HEIGHT_BY_TIER[tier] || CONFIG.DRAGON_SHADOW_HEIGHT_BY_TIER[1];
+  const offsetY = CONFIG.DRAGON_SHADOW_OFFSET_BY_TIER[tier] || CONFIG.DRAGON_SHADOW_OFFSET_BY_TIER[1];
   ctx.save();
   ctx.fillStyle = CONFIG.DRAGON_SHADOW_COLOR;
   ctx.beginPath();
   ctx.ellipse(
     x,
-    y + CONFIG.DRAGON_SHADOW_OFFSET_Y,
-    radius * CONFIG.DRAGON_SHADOW_WIDTH_MULTIPLIER * scale,
-    radius * CONFIG.DRAGON_SHADOW_HEIGHT_MULTIPLIER * scale,
+    y + offsetY,
+    radius * widthMultiplier * scale,
+    radius * heightMultiplier * scale,
     0,
     0,
     Math.PI * 2,

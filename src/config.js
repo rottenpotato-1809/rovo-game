@@ -373,14 +373,26 @@ export const CONFIG = {
   DRAGON_SHADOW_COLOR: 'rgba(0, 0, 0, 0.38)',
   // Soft oval shadow beneath dragon sprites in battle.
 
-  DRAGON_SHADOW_WIDTH_MULTIPLIER: 2.25,
-  // Shadow width relative to the legacy dragon-token radius.
+  DRAGON_SHADOW_WIDTH_BY_TIER: {
+    1: 1.1,
+    2: 1.34,
+    3: 1.58,
+  },
+  // Shadow width relative to the legacy dragon-token radius for each tier.
 
-  DRAGON_SHADOW_HEIGHT_MULTIPLIER: 0.46,
-  // Shadow height relative to the legacy dragon-token radius.
+  DRAGON_SHADOW_HEIGHT_BY_TIER: {
+    1: 0.22,
+    2: 0.28,
+    3: 0.34,
+  },
+  // Shadow height relative to the legacy dragon-token radius for each tier.
 
-  DRAGON_SHADOW_OFFSET_Y: 24,
-  // Shadow baseline offset below the dragon sprite center.
+  DRAGON_SHADOW_OFFSET_BY_TIER: {
+    1: 22,
+    2: 27,
+    3: 32,
+  },
+  // Shadow baseline offset below the dragon sprite center for each tier.
 
   TIER_SCALE_T1: 1.0,
   // Tier 1 dragon render scale.
