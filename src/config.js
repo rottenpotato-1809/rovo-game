@@ -1485,10 +1485,10 @@ export const CONFIG = {
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
   // Height of the Merge hover tooltip.
 
-  CODEX_LEFT_PAGE_X: 86,
+  CODEX_LEFT_PAGE_X: 82,
   // Left edge of the usable left parchment page.
 
-  CODEX_RIGHT_PAGE_X: 492,
+  CODEX_RIGHT_PAGE_X: 472,
   // Left edge of the usable right parchment page.
 
   CODEX_PAGE_Y: 66,
@@ -1503,10 +1503,10 @@ export const CONFIG = {
   CODEX_COLUMNS_PER_PAGE: 4,
   // Number of dragon columns shown on each open-book page.
 
-  CODEX_CELL_WIDTH: 84,
+  CODEX_CELL_WIDTH: 88,
   // Codex cell width.
 
-  CODEX_CELL_HEIGHT: 100,
+  CODEX_CELL_HEIGHT: 104,
   // Codex cell height.
 
   CODEX_COLUMN_GAP: 8,
@@ -1515,16 +1515,16 @@ export const CONFIG = {
   CODEX_ROW_GAP: 6,
   // Vertical gap between codex rows.
 
-  CODEX_DRAGON_RADIUS: 19,
+  CODEX_DRAGON_RADIUS: 20,
   // Portrait radius inside an unlocked codex cell.
 
-  CODEX_PORTRAIT_Y_OFFSET: 28,
+  CODEX_PORTRAIT_Y_OFFSET: 30,
   // Portrait offset inside a codex cell.
 
-  CODEX_NAME_Y_OFFSET: 66,
+  CODEX_NAME_Y_OFFSET: 70,
   // Name offset inside a codex cell.
 
-  CODEX_TIER_Y_OFFSET: 86,
+  CODEX_TIER_Y_OFFSET: 91,
   // Tier label offset inside a codex cell.
 
   CODEX_FOOTER_Y: 464,
@@ -1533,10 +1533,10 @@ export const CONFIG = {
   CODEX_BOOK_CONTENT_RIGHT: 864,
   // Right edge of the writable parchment area.
 
-  CODEX_BOOK_GUTTER_LEFT: 466,
+  CODEX_BOOK_GUTTER_LEFT: 462,
   // Left edge of the book gutter that codex cells should avoid.
 
-  CODEX_BOOK_GUTTER_RIGHT: 494,
+  CODEX_BOOK_GUTTER_RIGHT: 470,
   // Right edge of the book gutter that codex cells should avoid.
 
   CODEX_BOOK_CONTENT_BOTTOM: 410,
