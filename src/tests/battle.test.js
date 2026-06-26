@@ -334,6 +334,53 @@ test('Assassin abilities ignore taunt', () => {
   assertEqual(abilityHit.targetId, 'e_fast', 'Assassin ability should ignore taunt and hit backline');
 });
 
+test('Single-target abilities respect taunt unless they explicitly ignore it', () => {
+  const taunter = makeDragon({
+    team: 'enemy', instanceId: 'e_tank',
+    hp: 500, atk: 5, spd: 1, name: 'Tank',
+    statuses: [{ type: 'taunt', duration: 5, damageReduction: 0 }],
+  });
+  const wounded = makeDragon({
+    team: 'enemy', instanceId: 'e_wounded',
+    hp: 20, atk: 5, spd: 1, name: 'Wounded',
+  });
+  const attacker = makeDragon({
+    team: 'player', instanceId: 'p0',
+    hp: 200, atk: 30, spd: 20,
+    abilityType: 'hit_lowest_hp', abilityPower: 1.5,
+  });
+
+  const result = simulateBattle([attacker], [taunter, wounded]);
+  const abilityHit = result.log.find(e => e.actorId === 'p0' && e.action === 'ability');
+  assert(abilityHit !== undefined, 'Should use single-target ability');
+  assertEqual(abilityHit.targetId, 'e_tank', 'Taunt should protect lower-HP allies from single-target abilities');
+});
+
+test('Self-taunt dragons start combat guarding allies', () => {
+  const tank = makeDragon({
+    team: 'enemy', instanceId: 'e_tank',
+    hp: 500, atk: 5, spd: 1, name: 'Tank',
+    abilityType: 'self_taunt',
+    abilityExtra: { damageReduction: 0.5, duration: 2 },
+  });
+  const carry = makeDragon({
+    team: 'enemy', instanceId: 'e_carry',
+    hp: 20, atk: 80, spd: 1, name: 'Carry',
+  });
+  const attacker = makeDragon({
+    team: 'player', instanceId: 'p0',
+    hp: 200, atk: 100, spd: 20,
+    abilityType: 'hit_lowest_hp', abilityPower: 1.0,
+  });
+
+  const result = simulateBattle([attacker], [tank, carry]);
+  const guard = result.log.find(e => e.turn === 0 && e.actorId === 'e_tank' && e.action === 'opening_guard');
+  const abilityHit = result.log.find(e => e.actorId === 'p0' && e.action === 'ability');
+  assert(guard !== undefined, 'Tank should log opening guard');
+  assertEqual(abilityHit.targetId, 'e_tank', 'Opening guard should absorb the first single-target burst');
+  assertEqual(abilityHit.value, 50, 'Opening guard should apply tank damage reduction');
+});
+
 test('Damage reduction works on taunting dragon', () => {
   const tank = makeDragon({
     team: 'enemy', instanceId: 'e_tank',

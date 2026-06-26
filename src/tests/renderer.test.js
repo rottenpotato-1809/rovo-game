@@ -123,6 +123,14 @@ test('completed fight messaging stays inside its result panel', () => {
   assert(CONFIG.FONT_SIZE_FIGHT_RESULT < CONFIG.ARENA_RESULT_PANEL_HEIGHT, 'Fight result text must fit inside its compact panel');
 });
 
+test('boss status UI stays above the boss artwork', () => {
+  const bossSpriteTop = CONFIG.FIGHT_BOSS_Y - (CONFIG.BOSS_SPRITE_SIZE / 2);
+  const statusBottom = CONFIG.BOSS_STATUS_Y + (CONFIG.FONT_SIZE_DRAGON_NAME / 2);
+  assert(CONFIG.BOSS_NAME_Y < CONFIG.BOSS_HP_BAR_Y, 'Boss name must sit above the HP bar');
+  assert(CONFIG.BOSS_HP_BAR_Y + CONFIG.BOSS_HP_BAR_HEIGHT < CONFIG.BOSS_STATUS_Y, 'Boss HP bar must clear the status text');
+  assert(statusBottom < bossSpriteTop, 'Boss status UI must not overlap the boss artwork');
+});
+
 test('main menu regions stay aligned to the illustrated scene', () => {
   const buttons = getMenuButtons();
   const statsRight = CONFIG.MENU_STATS_PANEL_X + CONFIG.MENU_STATS_PANEL_WIDTH;

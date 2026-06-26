@@ -59,6 +59,7 @@ export function simulateBattle(playerTeam, enemyTeam) {
   enemyTeam.forEach(d => { d.team = 'enemy'; });
 
   const allDragons = [...playerTeam, ...enemyTeam];
+  _applyOpeningGuard(allDragons, 0, log);
 
   if (CONFIG.LOG_BATTLE) console.log('[BATTLE] Fight started:', 
     playerTeam.map(d => `${d.name} T${d.tier}`).join(', '),
@@ -225,7 +226,7 @@ function _executeAbility(dragon, allDragons, playerTeam, enemyTeam, turn, log) {
     // ─── DAMAGE: Hit lowest HP enemy ─────────────────────────────
     case 'hit_lowest_hp': {
       if (enemies.length === 0) break;
-      const target = _selectTarget(enemies, 'lowest_hp');
+      const target = _selectEnemyTarget(enemies, 'lowest_hp', extra);
       const damage = Math.round(dragon.atk * power);
       _applyDamage(target, damage, dragon, turn, log, 'ability');
       
@@ -289,7 +290,7 @@ function _executeAbility(dragon, allDragons, playerTeam, enemyTeam, turn, log) {
     case 'hit_one_bounce': {
       if (enemies.length === 0) break;
       // Primary target: highest ATK (kill the threat)
-      const primary = _selectTarget(enemies, 'highest_atk');
+      const primary = _selectEnemyTarget(enemies, 'highest_atk', extra);
       const primaryDmg = Math.round(dragon.atk * power);
       _applyDamage(primary, primaryDmg, dragon, turn, log, 'ability');
 
@@ -322,7 +323,7 @@ function _executeAbility(dragon, allDragons, playerTeam, enemyTeam, turn, log) {
       } else {
         // T1/T2 — single target nuke
         if (enemies.length === 0) break;
-        const target = _selectTarget(enemies, 'highest_atk');
+        const target = _selectEnemyTarget(enemies, 'highest_atk', extra);
         const damage = Math.round(dragon.atk * power);
         _applyDamage(target, damage, dragon, turn, log, 'ability');
 
@@ -548,6 +549,19 @@ function _applyStatus(dragon, type, duration, data) {
   dragon.statuses.push({ type, duration, ...data });
 }
 
+function _applyOpeningGuard(allDragons, turn, log) {
+  allDragons
+    .filter(dragon => dragon.isAlive && dragon.abilityType === 'self_taunt')
+    .forEach(dragon => {
+      const extra = dragon.abilityExtra || {};
+      _applyStatus(dragon, 'taunt', 1, {
+        damageReduction: extra.damageReduction || 0,
+        reflect: extra.reflect || 0,
+      });
+      log.push(_event(turn, dragon, 'opening_guard', dragon, 0));
+    });
+}
+
 /**
  * Check if a dragon has a specific status.
  */
@@ -760,6 +774,7 @@ export function simulateBossFight(playerTeam) {
 
   const enemyTeam = [boss];
   playerTeam.forEach(d => { d.team = 'player'; });
+  _applyOpeningGuard(playerTeam, 0, log);
 
   if (CONFIG.LOG_BATTLE) console.log('[BATTLE] Boss fight started! Eternal Wyrm awaits.');
 
@@ -912,4 +927,12 @@ export function createBattleInstance(dragonDef, tier, team, index) {
     isCharging: false,
     chargeTurnsLeft: 0,
   };
+}
+
+function _selectEnemyTarget(candidates, strategy, abilityExtra = {}) {
+  if (!abilityExtra.ignoreTaunt) {
+    const taunter = candidates.find(candidate => candidate.isAlive && _hasStatus(candidate, 'taunt'));
+    if (taunter) return taunter;
+  }
+  return _selectTarget(candidates, strategy);
 }

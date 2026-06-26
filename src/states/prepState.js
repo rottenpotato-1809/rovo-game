@@ -214,8 +214,8 @@ export class PrepState {
       }, CONFIG.CARD_STATS_OVERLAY, null, CONFIG.BUTTON_BORDER_RADIUS);
       this.renderTierGem(ctx, rect, elementColor);
       if (!canAfford) drawRect(ctx, rect, CONFIG.CARD_DISABLED_OVERLAY, null);
-      drawFitText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, CONFIG.TEXT_PRIMARY, 'left');
-      drawFitText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_SECONDARY, 'left');
+      drawFitText(ctx, dragon.name, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER, textWidth, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_PRIMARY, 'left');
+      drawFitText(ctx, `${dragon.role} / ${dragon.element}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, textWidth, CONFIG.FONT_SIZE_SMALL, CONFIG.TEXT_SECONDARY, 'left');
       drawFitText(ctx, `A${tier.atk} H${tier.hp} S${tier.spd}`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_STAT_Y_OFFSET, CONFIG.FONT_SIZE_STATS, textWidth, CONFIG.FONT_SIZE_CARD_META_MIN, CONFIG.TEXT_PRIMARY, 'left');
       drawFitText(ctx, `BUY ${CONFIG.DRAGON_BUY_COST}G`, rect.x + CONFIG.PREP_CARD_TEXT_LEFT_PAD, rect.y + CONFIG.PREP_CARD_COST_Y_OFFSET, CONFIG.FONT_SIZE_BUTTON, textWidth, CONFIG.FONT_SIZE_CARD_TITLE_MIN, canAfford ? CONFIG.GOLD_COLOR : CONFIG.TEXT_MUTED, 'left');
     });

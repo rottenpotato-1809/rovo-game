@@ -438,7 +438,7 @@ export const CONFIG = {
   HP_BAR_WIDTH_TEAM: 96,
   // Width of HP bars in team/fight view (px).
 
-  SHOP_CARD_WIDTH: 85,
+  SHOP_CARD_WIDTH: 92,
   // Width of each shop card (px).
 
   SHOP_CARD_HEIGHT: 192,
@@ -550,7 +550,7 @@ export const CONFIG = {
   SHOP_ZONE_Y: 116,
   // Top edge of the shop cards area.
 
-  SHOP_CARD_GAP: 10,
+  SHOP_CARD_GAP: 7,
   // Horizontal gap between shop cards.
 
   BUTTON_ZONE_Y: 450,
@@ -565,22 +565,22 @@ export const CONFIG = {
   FIGHT_ENEMY_X: 620,
   // X position for center of enemy dragons column.
 
-  FIGHT_Y_POSITIONS: [310, 390, 470],
+  FIGHT_Y_POSITIONS: [280, 355, 430],
   // Y positions for the 3 dragon slots (top, middle, bottom) during fight.
 
-  ARENA_BATTLEFIELD_TOP_Y: 260,
+  ARENA_BATTLEFIELD_TOP_Y: 214,
   // Top edge of the brown floor reserved for combatants.
 
   FIGHT_BOSS_X: 700,
   // X position for the boss during boss fight.
 
-  FIGHT_BOSS_Y: 300,
+  FIGHT_BOSS_Y: 338,
   // Y position for the boss.
 
   COMBAT_LOG_Y: 50,
   // Baseline of the first scrolling combat-log line.
 
-  COMBAT_LOG_MAX_LINES: 9,
+  COMBAT_LOG_MAX_LINES: 4,
   // How many lines of combat log to show at once.
 
   COMBAT_LOG_SCROLL_STEP: 1,
@@ -863,7 +863,7 @@ export const CONFIG = {
   FONT_SIZE_EMOJI: 26,
   // Emoji glyph size rendered inside dragon circles (px).
 
-  FONT_SIZE_SMALL: 7,
+  FONT_SIZE_SMALL: 6,
   // Tiny helper labels in compact arena areas (px).
 
   // ─── MILESTONE 1 ARENA UI ─────────────────────────────────────
@@ -908,13 +908,13 @@ export const CONFIG = {
   ARENA_RESULT_Y: 44,
   // Y position for WIN/LOSE result text after combat.
 
-  ARENA_RESULT_PANEL_X: 310,
+  ARENA_RESULT_PANEL_X: 320,
   // Left edge of the compact completed-fight panel.
 
   ARENA_RESULT_PANEL_Y: 4,
   // Top edge of the compact completed-fight panel.
 
-  ARENA_RESULT_PANEL_WIDTH: 340,
+  ARENA_RESULT_PANEL_WIDTH: 320,
   // Width of the compact completed-fight panel.
 
   ARENA_RESULT_PANEL_HEIGHT: 104,
@@ -929,16 +929,16 @@ export const CONFIG = {
   PREP_SELL_HINT_OFFSET_Y: 11,
   // Vertical offset for drag guidance and the active sell value.
 
-  ARENA_LOG_PANEL_X: 662,
+  ARENA_LOG_PANEL_X: 642,
   // Left edge of the combat-log panel in the upper-right UI space.
 
   ARENA_LOG_PANEL_Y: 12,
   // Top edge of the combat-log panel.
 
-  ARENA_LOG_PANEL_WIDTH: 280,
+  ARENA_LOG_PANEL_WIDTH: 286,
   // Width of the combat-log panel.
 
-  ARENA_LOG_PANEL_HEIGHT: 218,
+  ARENA_LOG_PANEL_HEIGHT: 124,
   // Height of the combat-log panel.
 
   ARENA_LOG_PANEL_PADDING: 12,
@@ -947,7 +947,7 @@ export const CONFIG = {
   ARENA_LOG_HEADER_Y: 28,
   // Battle-log heading baseline.
 
-  ARENA_LOG_X: 674,
+  ARENA_LOG_X: 654,
   // Left edge of combat-log text.
 
   ARENA_LOG_LINE_HEIGHT: 18,
@@ -1052,7 +1052,7 @@ export const CONFIG = {
   PREP_LEFT_PANEL_X: 36,
   // Left edge for team and bench management.
 
-  PREP_RIGHT_PANEL_X: 574,
+  PREP_RIGHT_PANEL_X: 560,
   // Left edge for shop and command buttons.
 
   PREP_SECTION_LABEL_OFFSET_Y: 24,
@@ -1061,7 +1061,7 @@ export const CONFIG = {
   PREP_SLOT_LABEL_OFFSET_Y: 18,
   // Vertical offset for empty slot labels.
 
-  PREP_CARD_TEXT_LEFT_PAD: 10,
+  PREP_CARD_TEXT_LEFT_PAD: 7,
   // Left text padding inside shop cards.
 
   PREP_CARD_SPRITE_Y_OFFSET: 48,
@@ -1453,34 +1453,34 @@ export const CONFIG = {
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
   // Height of the Merge hover tooltip.
 
-  CODEX_START_X: 158,
+  CODEX_START_X: 118,
   // Codex grid left edge.
 
-  CODEX_START_Y: 110,
+  CODEX_START_Y: 96,
   // Codex grid top edge.
 
-  CODEX_CELL_WIDTH: 80,
+  CODEX_CELL_WIDTH: 86,
   // Codex cell width.
 
-  CODEX_CELL_HEIGHT: 92,
+  CODEX_CELL_HEIGHT: 100,
   // Codex cell height.
 
-  CODEX_COLUMN_GAP: 6,
+  CODEX_COLUMN_GAP: 5,
   // Horizontal gap between codex columns.
 
-  CODEX_ROW_GAP: 7,
+  CODEX_ROW_GAP: 6,
   // Vertical gap between codex rows.
 
-  CODEX_DRAGON_RADIUS: 22,
+  CODEX_DRAGON_RADIUS: 19,
   // Portrait radius inside an unlocked codex cell.
 
-  CODEX_PORTRAIT_Y_OFFSET: 26,
+  CODEX_PORTRAIT_Y_OFFSET: 28,
   // Portrait offset inside a codex cell.
 
-  CODEX_NAME_Y_OFFSET: 58,
+  CODEX_NAME_Y_OFFSET: 66,
   // Name offset inside a codex cell.
 
-  CODEX_TIER_Y_OFFSET: 77,
+  CODEX_TIER_Y_OFFSET: 86,
   // Tier label offset inside a codex cell.
 
   CODEX_FOOTER_Y: 464,
@@ -1495,7 +1495,7 @@ export const CONFIG = {
   CODEX_INSPECTOR_X: 250,
   // Left edge of the codex hover inspector.
 
-  CODEX_INSPECTOR_Y: 404,
+  CODEX_INSPECTOR_Y: 414,
   // Top edge of the codex hover inspector below the collection grid.
 
   CODEX_INSPECTOR_WIDTH: 460,
@@ -1510,16 +1510,16 @@ export const CONFIG = {
   BOSS_SCORE_Y: 62,
   // Live boss damage-counter baseline.
 
-  BOSS_NAME_Y: 146,
+  BOSS_NAME_Y: 42,
   // Eternal Wyrm name baseline.
 
-  BOSS_STATUS_Y: 182,
+  BOSS_STATUS_Y: 76,
   // Boss power and blast countdown baseline.
 
   BOSS_HP_BAR_X: 590,
   // Boss HP bar left edge.
 
-  BOSS_HP_BAR_Y: 170,
+  BOSS_HP_BAR_Y: 56,
   // Boss HP bar top edge.
 
   BOSS_HP_BAR_WIDTH: 220,
