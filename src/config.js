@@ -1491,7 +1491,7 @@ export const CONFIG = {
   CODEX_RIGHT_PAGE_X: 488,
   // Left edge of the usable right parchment page.
 
-  CODEX_PAGE_Y: 66,
+  CODEX_PAGE_Y: 44,
   // Top edge of the usable parchment pages.
 
   CODEX_PAGE_WIDTH: 398,
