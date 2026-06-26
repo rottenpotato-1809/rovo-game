@@ -57,7 +57,7 @@ export class MenuState {
     drawMenuHotspot(ctx, this.getNewRunLabel(), 'NEW RUN');
     if (this.game.run) drawButton(ctx, this.continueButton, 'CONTINUE', CONFIG.GOLD_COLOR);
     drawMenuHotspot(ctx, this.getCodexLabel(), 'CODEX');
-    drawButton(ctx, this.settingsControls.icon, '\u2699', CONFIG.UI_PANEL_COLOR, CONFIG.FONT_SIZE_TITLE);
+    drawButton(ctx, this.settingsControls.icon, '\u2699', CONFIG.UI_PANEL_COLOR, CONFIG.FONT_SIZE_TITLE - 8);
     if (this.confirmingNewRun) this.renderNewRunConfirmation(ctx);
     if (this.settingsOpen) this.renderSettings(ctx);
   }

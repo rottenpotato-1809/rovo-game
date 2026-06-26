@@ -31,25 +31,28 @@ canvas {
 
 .fullscreen-button {
   align-items: center;
-  background: rgb(9 9 18 / 82%);
-  border: 2px solid #fff;
+  background: rgb(9 9 18 / 38%);
+  border: 1px solid rgb(255 255 255 / 58%);
   border-radius: 6px;
   color: #fff;
   cursor: pointer;
   display: none;
-  font: 700 24px/1 monospace;
-  height: 40px;
+  font: 700 16px/1 monospace;
+  height: 28px;
   justify-content: center;
-  bottom: max(8px, env(safe-area-inset-bottom));
-  left: max(64px, calc(env(safe-area-inset-left) + 64px));
+  left: 50%;
+  opacity: 0.52;
   padding: 0;
   position: absolute;
-  width: 40px;
+  top: max(8px, env(safe-area-inset-top));
+  transform: translateX(-50%);
+  width: 28px;
   z-index: 5;
 }
 
 .fullscreen-button:active {
-  transform: scale(0.92);
+  opacity: 0.72;
+  transform: translateX(-50%) scale(0.92);
 }
 
 .fullscreen-button[hidden] {
@@ -74,6 +77,11 @@ canvas {
   height: auto;
   max-height: 100dvh;
   width: min(100vw, calc(100dvh * 16 / 9));
+}
+
+.game-shell:fullscreen .fullscreen-button,
+.game-shell:-webkit-full-screen .fullscreen-button {
+  display: none;
 }
 
 @media (pointer: coarse), (max-height: 640px) {

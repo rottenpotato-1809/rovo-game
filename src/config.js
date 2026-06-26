@@ -196,7 +196,7 @@ export const CONFIG = {
 
   UNLOCK_THRESHOLDS: [100, 200, 350, 500],
   // Cumulative XP needed to unlock each locked dragon (in order).
-  // Order matches: Voltfang (100), Nightshade (200), Crystalwing (350), Solflare (500).
+  // Order matches: Voltfang (100), Nightshade (200), Metalwing (350), Solflare (500).
   // These are TOTAL XP, not incremental. A new player unlocking everything needs 500 XP total.
 
   // ─── STATUS EFFECTS ───────────────────────────────────────────
@@ -350,6 +350,7 @@ export const CONFIG = {
     lightning: '#f5c842',
     shadow: '#8f3bcc',
     ice: '#B3E5FC',
+    metal: '#9aa3ad',
     light: '#e8b957',
   },
   // Element-to-color mapping. Used for dragon circles and ability effects.
@@ -681,6 +682,7 @@ export const CONFIG = {
     lightning: { frequency: 980, type: 'square' },
     shadow: { frequency: 140, type: 'sawtooth' },
     ice: { frequency: 1040, type: 'triangle' },
+    metal: { frequency: 360, type: 'square' },
     light: { frequency: 880, type: 'sine' },
     default: { frequency: 640, type: 'sine' },
   },

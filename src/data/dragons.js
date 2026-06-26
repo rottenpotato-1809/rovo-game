@@ -26,7 +26,7 @@
  * 
  * ABILITY TYPES (targeting keywords):
  *   "hit_lowest_hp"    → targets enemy with lowest current HP
- *   "hit_highest_spd"  → targets enemy with highest SPD (backline)
+ *   "hit_highest_spd"  → targets enemy with highest SPD
  *   "hit_all_enemies"  → AoE damage to all enemies
  *   "hit_one_bounce"   → hits one target, then bounces to another at reduced power
  *   "heal_lowest_ally" → heals ally with lowest HP
@@ -154,7 +154,7 @@ export const DRAGONS = [
         atk: 22,
         spd: 18,
         abilityName: 'Gale Strike',
-        abilityDesc: 'Strikes the fastest enemy (backline), ignoring taunt. 130% ATK.',
+        abilityDesc: 'Strikes the fastest enemy, ignoring taunt. 130% ATK.',
         abilityType: 'hit_highest_spd',
         abilityPower: 1.3,
         abilityExtra: { ignoreTaunt: true },
@@ -165,7 +165,7 @@ export const DRAGONS = [
         atk: 44,
         spd: 20,
         abilityName: 'Gale Strike+',
-        abilityDesc: 'Strikes backline for 130% ATK, then gains 30% dodge for 1 turn.',
+        abilityDesc: 'Strikes the fastest enemy for 130% ATK, then gains 30% dodge for 1 turn.',
         abilityType: 'hit_highest_spd',
         abilityPower: 1.3,
         abilityExtra: { ignoreTaunt: true, dodgeChance: 0.3, dodgeDuration: 1 },
@@ -176,7 +176,7 @@ export const DRAGONS = [
         atk: 88,
         spd: 22,
         abilityName: 'Tornado Slash',
-        abilityDesc: 'Hits the backline TWICE for 130% ATK each. Ignores taunt.',
+        abilityDesc: 'Hits the fastest enemy TWICE for 130% ATK each. Ignores taunt.',
         abilityType: 'hit_highest_spd',
         abilityPower: 1.3,
         abilityExtra: { ignoreTaunt: true, hits: 2 },
@@ -329,14 +329,14 @@ export const DRAGONS = [
   },
 
   // ─────────────────────────────────────────────────────────────
-  // 7. CRYSTALWING — Locked Tank/Support hybrid (unlock: 350 XP)
+  // 7. METALWING — Locked Tank/Support hybrid (unlock: 350 XP)
   // ─────────────────────────────────────────────────────────────
   {
     id: 'crystalwing',
-    name: 'Crystalwing',
+    name: 'Metalwing',
     role: 'Support',
-    element: 'ice',
-    emoji: '❄️',
+    element: 'metal',
+    emoji: '⚙️',
     unlocked: false,
     unlockCost: 350,
     tiers: [
@@ -345,8 +345,8 @@ export const DRAGONS = [
         hp: 130,
         atk: 14,
         spd: 8,
-        abilityName: 'Frost Barrier',
-        abilityDesc: 'Grants all allies a shield equal to 15% of Crystalwing\'s max HP.',
+        abilityName: 'Iron Barrier',
+        abilityDesc: 'Grants all allies a shield equal to 15% of Metalwing\'s max HP.',
         abilityType: 'shield_all',
         abilityPower: 0,
         abilityExtra: { shieldPercent: 0.15 }, // percent of caster's max HP
@@ -356,7 +356,7 @@ export const DRAGONS = [
         hp: 260,
         atk: 28,
         spd: 9,
-        abilityName: 'Ice Wall',
+        abilityName: 'Steel Wall',
         abilityDesc: 'Shields all allies (15% max HP) and slows all enemies (SPD -3) for 2 turns.',
         abilityType: 'shield_all',
         abilityPower: 0,
@@ -367,8 +367,8 @@ export const DRAGONS = [
         hp: 520,
         atk: 56,
         spd: 10,
-        abilityName: 'Absolute Zero',
-        abilityDesc: 'Shields all allies (20% max HP), slows all enemies (SPD -3, 2 turns), and freezes the lowest-HP enemy for 1 turn.',
+        abilityName: 'Magnetic Lock',
+        abilityDesc: 'Shields all allies (20% max HP), slows all enemies (SPD -3, 2 turns), and locks the lowest-HP enemy for 1 turn.',
         abilityType: 'shield_all',
         abilityPower: 0,
         abilityExtra: { shieldPercent: 0.2, spdDebuff: 3, debuffDuration: 2, freezeLowest: 1 },

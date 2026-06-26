@@ -16,8 +16,9 @@ export function setupFullscreenButton(button, target, documentRef = globalThis.d
   const getFullscreenElement = () => documentRef.fullscreenElement || documentRef.webkitFullscreenElement;
   const syncLabel = () => {
     const active = Boolean(getFullscreenElement());
-    button.setAttribute('aria-label', active ? 'Exit fullscreen' : 'Enter fullscreen');
-    button.title = active ? 'Exit fullscreen' : 'Enter fullscreen';
+    button.hidden = active;
+    button.setAttribute('aria-label', 'Enter fullscreen');
+    button.title = 'Enter fullscreen';
   };
 
   button.hidden = false;
@@ -25,15 +26,10 @@ export function setupFullscreenButton(button, target, documentRef = globalThis.d
     event.preventDefault();
     event.stopPropagation();
     try {
-      if (getFullscreenElement()) {
-        const exit = documentRef.exitFullscreen || documentRef.webkitExitFullscreen;
-        await exit.call(documentRef);
-      } else {
+      if (!getFullscreenElement()) {
         const request = target.requestFullscreen || target.webkitRequestFullscreen;
         await request.call(target);
-        if (globalThis.screen?.orientation?.lock) {
-          await globalThis.screen.orientation.lock('landscape').catch(() => {});
-        }
+        if (globalThis.screen?.orientation?.lock) await globalThis.screen.orientation.lock('landscape').catch(() => {});
       }
     } catch {
       // Browsers may deny fullscreen outside an eligible top-level mobile tab.
