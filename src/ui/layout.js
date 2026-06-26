@@ -235,9 +235,15 @@ export function getCodexCell(column, row) {
   const pageX = column < CONFIG.CODEX_COLUMNS_PER_PAGE
     ? CONFIG.CODEX_LEFT_PAGE_X
     : CONFIG.CODEX_RIGHT_PAGE_X;
+  const gridWidth = (CONFIG.CODEX_COLUMNS_PER_PAGE * CONFIG.CODEX_CELL_WIDTH)
+    + ((CONFIG.CODEX_COLUMNS_PER_PAGE - 1) * CONFIG.CODEX_COLUMN_GAP);
+  const gridHeight = (CONFIG.MAX_TIER * CONFIG.CODEX_CELL_HEIGHT)
+    + ((CONFIG.MAX_TIER - 1) * CONFIG.CODEX_ROW_GAP);
+  const gridX = pageX + ((CONFIG.CODEX_PAGE_WIDTH - gridWidth) / 2);
+  const gridY = CONFIG.CODEX_PAGE_Y + ((CONFIG.CODEX_PAGE_HEIGHT - gridHeight) / 2);
   return {
-    x: pageX + (pageColumn * (CONFIG.CODEX_CELL_WIDTH + CONFIG.CODEX_COLUMN_GAP)),
-    y: CONFIG.CODEX_START_Y + (row * (CONFIG.CODEX_CELL_HEIGHT + CONFIG.CODEX_ROW_GAP)),
+    x: gridX + (pageColumn * (CONFIG.CODEX_CELL_WIDTH + CONFIG.CODEX_COLUMN_GAP)),
+    y: gridY + (row * (CONFIG.CODEX_CELL_HEIGHT + CONFIG.CODEX_ROW_GAP)),
     width: CONFIG.CODEX_CELL_WIDTH,
     height: CONFIG.CODEX_CELL_HEIGHT,
   };

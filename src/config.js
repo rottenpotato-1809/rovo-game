@@ -1485,19 +1485,25 @@ export const CONFIG = {
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
   // Height of the Merge hover tooltip.
 
-  CODEX_LEFT_PAGE_X: 100,
-  // Codex grid left edge on the left book page.
+  CODEX_LEFT_PAGE_X: 86,
+  // Left edge of the usable left parchment page.
 
-  CODEX_RIGHT_PAGE_X: 506,
-  // Codex grid left edge on the right book page.
+  CODEX_RIGHT_PAGE_X: 492,
+  // Left edge of the usable right parchment page.
+
+  CODEX_PAGE_Y: 66,
+  // Top edge of the usable parchment pages.
+
+  CODEX_PAGE_WIDTH: 382,
+  // Width of each usable parchment page.
+
+  CODEX_PAGE_HEIGHT: 340,
+  // Height of each usable parchment page.
 
   CODEX_COLUMNS_PER_PAGE: 4,
   // Number of dragon columns shown on each open-book page.
 
-  CODEX_START_Y: 96,
-  // Codex grid top edge.
-
-  CODEX_CELL_WIDTH: 82,
+  CODEX_CELL_WIDTH: 84,
   // Codex cell width.
 
   CODEX_CELL_HEIGHT: 100,

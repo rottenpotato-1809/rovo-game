@@ -174,9 +174,15 @@ test('loading artwork and progress bar stay inside the canvas', () => {
 });
 
 test('codex grid stays inside the illustrated book pages', () => {
+  const leftPageFirstCell = getCodexCell(0, 0);
   const leftPageFinalCell = getCodexCell(CONFIG.CODEX_COLUMNS_PER_PAGE - 1, 2);
   const rightPageFirstCell = getCodexCell(CONFIG.CODEX_COLUMNS_PER_PAGE, 0);
   const finalCell = getCodexCell(7, 2);
+  assert(leftPageFirstCell.x >= CONFIG.CODEX_LEFT_PAGE_X, 'Left codex grid must start inside the left page');
+  assert(leftPageFirstCell.y >= CONFIG.CODEX_PAGE_Y, 'Codex grid must start inside the page background');
+  assert(leftPageFinalCell.x + leftPageFinalCell.width <= CONFIG.CODEX_LEFT_PAGE_X + CONFIG.CODEX_PAGE_WIDTH, 'Left codex grid must end inside the left page');
+  assert(finalCell.x + finalCell.width <= CONFIG.CODEX_RIGHT_PAGE_X + CONFIG.CODEX_PAGE_WIDTH, 'Right codex grid must end inside the right page');
+  assert(finalCell.y + finalCell.height <= CONFIG.CODEX_PAGE_Y + CONFIG.CODEX_PAGE_HEIGHT, 'Codex grid must end inside the page background');
   assert(leftPageFinalCell.x + leftPageFinalCell.width <= CONFIG.CODEX_BOOK_GUTTER_LEFT, 'Left codex page must clear the book gutter');
   assert(rightPageFirstCell.x >= CONFIG.CODEX_BOOK_GUTTER_RIGHT, 'Right codex page must clear the book gutter');
   assert(finalCell.x + finalCell.width <= CONFIG.CODEX_BOOK_CONTENT_RIGHT, 'Codex columns must fit the parchment width');
