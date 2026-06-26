@@ -1485,19 +1485,25 @@ export const CONFIG = {
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
   // Height of the Merge hover tooltip.
 
-  CODEX_START_X: 118,
-  // Codex grid left edge.
+  CODEX_LEFT_PAGE_X: 100,
+  // Codex grid left edge on the left book page.
+
+  CODEX_RIGHT_PAGE_X: 506,
+  // Codex grid left edge on the right book page.
+
+  CODEX_COLUMNS_PER_PAGE: 4,
+  // Number of dragon columns shown on each open-book page.
 
   CODEX_START_Y: 96,
   // Codex grid top edge.
 
-  CODEX_CELL_WIDTH: 86,
+  CODEX_CELL_WIDTH: 82,
   // Codex cell width.
 
   CODEX_CELL_HEIGHT: 100,
   // Codex cell height.
 
-  CODEX_COLUMN_GAP: 5,
+  CODEX_COLUMN_GAP: 8,
   // Horizontal gap between codex columns.
 
   CODEX_ROW_GAP: 6,
@@ -1518,8 +1524,14 @@ export const CONFIG = {
   CODEX_FOOTER_Y: 464,
   // Discovery count baseline.
 
-  CODEX_BOOK_CONTENT_RIGHT: 850,
+  CODEX_BOOK_CONTENT_RIGHT: 864,
   // Right edge of the writable parchment area.
+
+  CODEX_BOOK_GUTTER_LEFT: 466,
+  // Left edge of the book gutter that codex cells should avoid.
+
+  CODEX_BOOK_GUTTER_RIGHT: 494,
+  // Right edge of the book gutter that codex cells should avoid.
 
   CODEX_BOOK_CONTENT_BOTTOM: 410,
   // Bottom edge of the writable parchment area.

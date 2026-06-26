@@ -174,7 +174,11 @@ test('loading artwork and progress bar stay inside the canvas', () => {
 });
 
 test('codex grid stays inside the illustrated book pages', () => {
+  const leftPageFinalCell = getCodexCell(CONFIG.CODEX_COLUMNS_PER_PAGE - 1, 2);
+  const rightPageFirstCell = getCodexCell(CONFIG.CODEX_COLUMNS_PER_PAGE, 0);
   const finalCell = getCodexCell(7, 2);
+  assert(leftPageFinalCell.x + leftPageFinalCell.width <= CONFIG.CODEX_BOOK_GUTTER_LEFT, 'Left codex page must clear the book gutter');
+  assert(rightPageFirstCell.x >= CONFIG.CODEX_BOOK_GUTTER_RIGHT, 'Right codex page must clear the book gutter');
   assert(finalCell.x + finalCell.width <= CONFIG.CODEX_BOOK_CONTENT_RIGHT, 'Codex columns must fit the parchment width');
   assert(finalCell.y + finalCell.height <= CONFIG.CODEX_BOOK_CONTENT_BOTTOM, 'Codex rows must fit above the book footer');
   assert(CONFIG.CODEX_FOOTER_Y < CONFIG.CODEX_BACK_Y, 'Discovery count must remain above the back button');

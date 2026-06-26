@@ -231,8 +231,12 @@ export function getFullResultButtons() {
 
 // Return a codex cell rectangle by dragon column and tier row.
 export function getCodexCell(column, row) {
+  const pageColumn = column % CONFIG.CODEX_COLUMNS_PER_PAGE;
+  const pageX = column < CONFIG.CODEX_COLUMNS_PER_PAGE
+    ? CONFIG.CODEX_LEFT_PAGE_X
+    : CONFIG.CODEX_RIGHT_PAGE_X;
   return {
-    x: CONFIG.CODEX_START_X + (column * (CONFIG.CODEX_CELL_WIDTH + CONFIG.CODEX_COLUMN_GAP)),
+    x: pageX + (pageColumn * (CONFIG.CODEX_CELL_WIDTH + CONFIG.CODEX_COLUMN_GAP)),
     y: CONFIG.CODEX_START_Y + (row * (CONFIG.CODEX_CELL_HEIGHT + CONFIG.CODEX_ROW_GAP)),
     width: CONFIG.CODEX_CELL_WIDTH,
     height: CONFIG.CODEX_CELL_HEIGHT,
