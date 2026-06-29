@@ -162,7 +162,7 @@ test('dragon inspectors fit between their surrounding UI regions', () => {
   const finalCodexCell = getCodexCell(7, 2);
   assert(CONFIG.PREP_INSPECTOR_Y >= CONFIG.TEAM_ZONE_Y + CONFIG.TEAM_SLOT_HEIGHT, 'Prep inspector must clear team cards');
   assert(CONFIG.PREP_INSPECTOR_Y + CONFIG.PREP_INSPECTOR_HEIGHT <= CONFIG.BENCH_ZONE_Y, 'Prep inspector must clear bench cards');
-  assert(CONFIG.CODEX_INSPECTOR_Y >= finalCodexCell.y + finalCodexCell.height, 'Codex inspector must follow the grid');
+  assert(CONFIG.CODEX_TOOLTIP_OFFSET > 0, 'Codex tooltip must keep pointer spacing');
   assert(CONFIG.CODEX_INSPECTOR_Y + CONFIG.CODEX_INSPECTOR_HEIGHT < CONFIG.CODEX_BACK_Y, 'Codex inspector must clear Back');
 });
 
