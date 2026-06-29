@@ -10,11 +10,13 @@ export class CodexState {
     this.game = game;
     this.backButton = getCodexBackButton();
     this.hoveredEntry = null;
+    this.hoverPoint = null;
   }
 
   // Keep the codex stateless between visits.
   enter() {
     this.hoveredEntry = null;
+    this.hoverPoint = null;
   }
 
   // Keep the codex static.
@@ -28,12 +30,7 @@ export class CodexState {
       dragon.tiers.forEach((tier, row) => this.renderCell(ctx, dragon, tier, column, row));
     });
     if (this.hoveredEntry) {
-      drawDragonInspector(ctx, {
-        x: CONFIG.CODEX_INSPECTOR_X,
-        y: CONFIG.CODEX_INSPECTOR_Y,
-        width: CONFIG.CODEX_INSPECTOR_WIDTH,
-        height: CONFIG.CODEX_INSPECTOR_HEIGHT,
-      }, this.hoveredEntry.dragon, this.hoveredEntry.tierData);
+      drawDragonInspector(ctx, this.getTooltipRect(), this.hoveredEntry.dragon, this.hoveredEntry.tierData);
     } else {
       const discovered = Object.values(this.game.saveData.codex).filter(Boolean).length;
       drawText(ctx, `DISCOVERED ${discovered}/${DRAGONS.length * CONFIG.MAX_TIER}`, CONFIG.CANVAS_WIDTH / 2, CONFIG.CODEX_FOOTER_Y, CONFIG.FONT_SIZE_HEADER);
@@ -63,6 +60,26 @@ export class CodexState {
     drawText(ctx, unlocked ? `T${tier.tier}` : 'LOCKED', centerX, rect.y + CONFIG.CODEX_TIER_Y_OFFSET, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
   }
 
+  // Keep hover details near the pointer without letting the panel leave the canvas.
+  getTooltipRect() {
+    const point = this.hoverPoint || { x: CONFIG.CANVAS_WIDTH / 2, y: CONFIG.CANVAS_HEIGHT / 2 };
+    const offset = CONFIG.CODEX_TOOLTIP_OFFSET;
+    let x = point.x + offset;
+    let y = point.y + offset;
+    if (x + CONFIG.CODEX_INSPECTOR_WIDTH > CONFIG.CANVAS_WIDTH - offset) {
+      x = point.x - CONFIG.CODEX_INSPECTOR_WIDTH - offset;
+    }
+    if (y + CONFIG.CODEX_INSPECTOR_HEIGHT > CONFIG.CANVAS_HEIGHT - offset) {
+      y = point.y - CONFIG.CODEX_INSPECTOR_HEIGHT - offset;
+    }
+    return {
+      x: Math.max(offset, Math.min(x, CONFIG.CANVAS_WIDTH - CONFIG.CODEX_INSPECTOR_WIDTH - offset)),
+      y: Math.max(offset, Math.min(y, CONFIG.CANVAS_HEIGHT - CONFIG.CODEX_INSPECTOR_HEIGHT - offset)),
+      width: CONFIG.CODEX_INSPECTOR_WIDTH,
+      height: CONFIG.CODEX_INSPECTOR_HEIGHT,
+    };
+  }
+
   // Return to the main menu.
   handlePointerDown(point) {
     if (pointInRect(point, this.backButton)) this.stateManager.change('menu');
@@ -71,11 +88,13 @@ export class CodexState {
   // Show details only for a discovered codex entry under the pointer.
   handlePointerMove(point) {
     this.hoveredEntry = null;
+    this.hoverPoint = null;
     DRAGONS.forEach((dragon, column) => {
       dragon.tiers.forEach((tierData, row) => {
         if (!pointInRect(point, getCodexCell(column, row))) return;
         if (this.game.saveData.codex[`${dragon.id}_${tierData.tier}`]) {
           this.hoveredEntry = { dragon, tierData };
+          this.hoverPoint = point;
         }
       });
     });
