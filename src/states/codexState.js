@@ -24,7 +24,6 @@ export class CodexState {
   render(ctx) {
     clear(ctx);
     drawPhaseBackground(ctx, 'codex');
-    drawText(ctx, 'codex', CONFIG.CANVAS_WIDTH / 2, CONFIG.CODEX_TITLE_Y, CONFIG.CODEX_TITLE_FONT_SIZE);
     DRAGONS.forEach((dragon, column) => {
       dragon.tiers.forEach((tier, row) => this.renderCell(ctx, dragon, tier, column, row));
     });

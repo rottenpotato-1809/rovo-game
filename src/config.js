@@ -1500,12 +1500,6 @@ export const CONFIG = {
   CODEX_PAGE_HEIGHT: 354,
   // Height of each usable parchment page.
 
-  CODEX_TITLE_Y: 24,
-  // Codex title baseline.
-
-  CODEX_TITLE_FONT_SIZE: 40,
-  // Large Codex screen title size.
-
   CODEX_COLUMNS_PER_PAGE: 4,
   // Number of dragon columns shown on each open-book page.
 
