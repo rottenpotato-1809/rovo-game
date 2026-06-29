@@ -1485,19 +1485,19 @@ export const CONFIG = {
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
   // Height of the Merge hover tooltip.
 
-  CODEX_LEFT_PAGE_X: 80,
+  CODEX_LEFT_PAGE_X: 50,
   // Left edge of the usable left parchment page.
 
-  CODEX_RIGHT_PAGE_X: 482,
+  CODEX_RIGHT_PAGE_X: 490,
   // Left edge of the usable right parchment page.
 
-  CODEX_PAGE_Y: 35,
+  CODEX_PAGE_Y: 32,
   // Top edge of the usable parchment pages.
 
-  CODEX_PAGE_WIDTH: 398,
+  CODEX_PAGE_WIDTH: 420,
   // Width of each usable parchment page.
 
-  CODEX_PAGE_HEIGHT: 375,
+  CODEX_PAGE_HEIGHT: 380,
   // Height of each usable parchment page.
 
   CODEX_COLUMNS_PER_PAGE: 4,
@@ -1530,16 +1530,16 @@ export const CONFIG = {
   CODEX_FOOTER_Y: 464,
   // Discovery count baseline.
 
-  CODEX_BOOK_CONTENT_RIGHT: 880,
+  CODEX_BOOK_CONTENT_RIGHT: 910,
   // Right edge of the writable parchment area.
 
-  CODEX_BOOK_GUTTER_LEFT: 478,
+  CODEX_BOOK_GUTTER_LEFT: 472,
   // Left edge of the book gutter that codex cells should avoid.
 
-  CODEX_BOOK_GUTTER_RIGHT: 482,
+  CODEX_BOOK_GUTTER_RIGHT: 490,
   // Right edge of the book gutter that codex cells should avoid.
 
-  CODEX_BOOK_CONTENT_BOTTOM: 410,
+  CODEX_BOOK_CONTENT_BOTTOM: 412,
   // Bottom edge of the writable parchment area.
 
   CODEX_INSPECTOR_X: 250,
