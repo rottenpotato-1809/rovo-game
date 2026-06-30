@@ -3,6 +3,15 @@ import { DRAGONS } from '../data/dragons.js';
 import { getCodexBackButton, getCodexCell, pointInRect } from '../ui/layout.js';
 import { clear, drawButton, drawCircle, drawDragonInspector, drawDragonSprite, drawFitText, drawPhaseBackground, drawRect, drawText } from '../ui/renderer.js';
 
+function colorWithAlpha(hexColor, alpha) {
+  const hex = hexColor.replace('#', '');
+  const value = Number.parseInt(hex, 16);
+  const red = (value >> 16) & 255;
+  const green = (value >> 8) & 255;
+  const blue = value & 255;
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
 // Display the persistent 8-by-3 dragon discovery collection.
 export class CodexState {
   constructor(stateManager, game) {
@@ -42,13 +51,22 @@ export class CodexState {
   renderCell(ctx, dragon, tier, column, row) {
     const rect = getCodexCell(column, row);
     const unlocked = Boolean(this.game.saveData.codex[`${dragon.id}_${tier.tier}`]);
-    drawRect(ctx, rect, CONFIG.CARD_BG_COLOR, unlocked ? CONFIG.ELEMENT_COLORS[dragon.element] : CONFIG.BENCH_EMPTY_BORDER);
+    const elementColor = CONFIG.ELEMENT_COLORS[dragon.element] || CONFIG.GOLD_COLOR;
+    const borderColor = unlocked
+      ? colorWithAlpha(elementColor, CONFIG.CODEX_CARD_BORDER_ALPHA)
+      : CONFIG.CODEX_LOCKED_BORDER_COLOR;
+    ctx.save();
+    ctx.lineWidth = 1.5;
+    drawRect(ctx, rect, CONFIG.CODEX_CARD_BG_COLOR, borderColor, CONFIG.CODEX_LAYOUT.CARD_CORNER_RADIUS);
+    ctx.restore();
     const centerX = rect.x + rect.width / 2;
-    const portraitY = rect.y + CONFIG.CODEX_PORTRAIT_Y_OFFSET;
+    const portraitY = rect.y + (rect.height * 0.32);
+    const nameY = rect.y + (rect.height * 0.72);
+    const tierY = rect.y + (rect.height * 0.91);
     if (unlocked) {
       ctx.save();
       ctx.beginPath();
-      ctx.roundRect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4, CONFIG.BUTTON_BORDER_RADIUS);
+      ctx.roundRect(rect.x + 2, rect.y + 2, rect.width - 4, rect.height - 4, CONFIG.CODEX_LAYOUT.CARD_CORNER_RADIUS);
       ctx.clip();
       drawDragonSprite(ctx, { ...dragon, tier: tier.tier }, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.ARENA_ALIVE_ALPHA, true);
       ctx.restore();
@@ -56,8 +74,8 @@ export class CodexState {
       drawCircle(ctx, centerX, portraitY, CONFIG.CODEX_DRAGON_RADIUS, CONFIG.TEXT_MUTED, CONFIG.ARENA_ALIVE_ALPHA, CONFIG.TEXT_PRIMARY);
       drawText(ctx, '?', centerX, portraitY, CONFIG.FONT_SIZE_HEADER);
     }
-    drawFitText(ctx, unlocked ? dragon.name : '???', centerX, rect.y + CONFIG.CODEX_NAME_Y_OFFSET, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
-    drawText(ctx, unlocked ? `T${tier.tier}` : 'LOCKED', centerX, rect.y + CONFIG.CODEX_TIER_Y_OFFSET, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
+    drawFitText(ctx, unlocked ? dragon.name : '???', centerX, nameY, CONFIG.FONT_SIZE_DRAGON_NAME, rect.width - CONFIG.PREP_CARD_TEXT_LEFT_PAD, CONFIG.FONT_SIZE_CARD_META_MIN);
+    drawText(ctx, unlocked ? `T${tier.tier}` : 'LOCKED', centerX, tierY, CONFIG.FONT_SIZE_STATS, CONFIG.TEXT_SECONDARY);
   }
 
   // Keep hover details near the pointer without letting the panel leave the canvas.

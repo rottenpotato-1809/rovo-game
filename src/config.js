@@ -261,6 +261,15 @@ export const CONFIG = {
   CARD_BG_COLOR: 'rgba(14, 17, 42, 0.9)',
   // Shop card and UI card background.
 
+  CODEX_CARD_BG_COLOR: 'rgba(26, 26, 46, 0.85)',
+  // Semi-transparent codex card fill so the parchment shows through.
+
+  CODEX_CARD_BORDER_ALPHA: 0.5,
+  // Element-border alpha for discovered codex cards.
+
+  CODEX_LOCKED_BORDER_COLOR: 'rgba(128, 132, 148, 0.3)',
+  // Muted border for undiscovered codex cards.
+
   CARD_HOVER_BG: 'rgba(30, 31, 66, 0.94)',
   // Shop card hover background.
 
@@ -1499,6 +1508,21 @@ export const CONFIG = {
 
   CODEX_PAGE_HEIGHT: 354,
   // Height of each usable parchment page.
+
+  CODEX_LAYOUT: {
+    LEFT_X: 0.14375,
+    LEFT_WIDTH: 0.32083333333333336,
+    RIGHT_X: 0.5479166666666667,
+    RIGHT_WIDTH: 0.3229166666666667,
+    TOP_Y: 0.2037037037037037,
+    BOTTOM_Y: 0.8148148148148148,
+    COLS_PER_PAGE: 4,
+    ROWS_PER_PAGE: 3,
+    CARD_GAP_X: 0.008333333333333333,
+    CARD_GAP_Y: 0.014814814814814815,
+    CARD_CORNER_RADIUS: 6,
+  },
+  // Percent-based codex grid bounds measured against the current open-book background.
 
   CODEX_COLUMNS_PER_PAGE: 4,
   // Number of dragon columns shown on each open-book page.

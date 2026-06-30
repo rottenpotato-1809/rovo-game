@@ -1,5 +1,6 @@
 import { CONFIG } from '../config.js';
-import { getBattleSpeedButtons, getBenchSlots, getCodexCell, getMenuButtons, getMenuConfirmButtons, getMenuContinueButton, getPrepBackButton, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
+import { DRAGONS } from '../data/dragons.js';
+import { calculateCodexGrid, getBattleSpeedButtons, getBenchSlots, getCodexCell, getMenuButtons, getMenuConfirmButtons, getMenuContinueButton, getPrepBackButton, getPrepButtons, getShopCards, getTeamSlots } from '../ui/layout.js';
 import { drawText, getDragonTierScale } from '../ui/renderer.js';
 import { assert, assertEqual, summarize, test } from './testHarness.js';
 
@@ -174,19 +175,28 @@ test('loading artwork and progress bar stay inside the canvas', () => {
 });
 
 test('codex grid stays inside the illustrated book pages', () => {
+  const layout = CONFIG.CODEX_LAYOUT;
+  const grid = calculateCodexGrid();
   const leftPageFirstCell = getCodexCell(0, 0);
-  const leftPageFinalCell = getCodexCell(CONFIG.CODEX_COLUMNS_PER_PAGE - 1, 2);
-  const rightPageFirstCell = getCodexCell(CONFIG.CODEX_COLUMNS_PER_PAGE, 0);
+  const leftPageFinalCell = getCodexCell(layout.COLS_PER_PAGE - 1, layout.ROWS_PER_PAGE - 1);
+  const rightPageFirstCell = getCodexCell(layout.COLS_PER_PAGE, 0);
   const finalCell = getCodexCell(7, 2);
-  assert(leftPageFirstCell.x >= CONFIG.CODEX_LEFT_PAGE_X, 'Left codex grid must start inside the left page');
-  assert(leftPageFirstCell.y >= CONFIG.CODEX_PAGE_Y, 'Codex grid must start inside the page background');
-  assert(leftPageFinalCell.x + leftPageFinalCell.width <= CONFIG.CODEX_LEFT_PAGE_X + CONFIG.CODEX_PAGE_WIDTH, 'Left codex grid must end inside the left page');
-  assert(finalCell.x + finalCell.width <= CONFIG.CODEX_RIGHT_PAGE_X + CONFIG.CODEX_PAGE_WIDTH, 'Right codex grid must end inside the right page');
-  assert(finalCell.y + finalCell.height <= CONFIG.CODEX_PAGE_Y + CONFIG.CODEX_PAGE_HEIGHT, 'Codex grid must end inside the page background');
-  assert(leftPageFinalCell.x + leftPageFinalCell.width <= CONFIG.CODEX_BOOK_GUTTER_LEFT, 'Left codex page must clear the book gutter');
-  assert(rightPageFirstCell.x >= CONFIG.CODEX_BOOK_GUTTER_RIGHT, 'Right codex page must clear the book gutter');
-  assert(finalCell.x + finalCell.width <= CONFIG.CODEX_BOOK_CONTENT_RIGHT, 'Codex columns must fit the parchment width');
-  assert(finalCell.y + finalCell.height <= CONFIG.CODEX_BOOK_CONTENT_BOTTOM, 'Codex rows must fit above the book footer');
+  const leftPageX = layout.LEFT_X * CONFIG.CANVAS_WIDTH;
+  const leftPageRight = leftPageX + (layout.LEFT_WIDTH * CONFIG.CANVAS_WIDTH);
+  const rightPageX = layout.RIGHT_X * CONFIG.CANVAS_WIDTH;
+  const rightPageRight = rightPageX + (layout.RIGHT_WIDTH * CONFIG.CANVAS_WIDTH);
+  const pageTop = layout.TOP_Y * CONFIG.CANVAS_HEIGHT;
+  const pageBottom = layout.BOTTOM_Y * CONFIG.CANVAS_HEIGHT;
+  const epsilon = 0.001;
+  assert(grid.cards.length === DRAGONS.length * CONFIG.MAX_TIER, 'Codex grid must produce one card per dragon tier');
+  assert(leftPageFirstCell.x >= leftPageX, 'Left codex grid must start inside the left page');
+  assert(leftPageFirstCell.y >= pageTop, 'Codex grid must start inside the page background');
+  assert(leftPageFinalCell.x + leftPageFinalCell.width <= leftPageRight + epsilon, 'Left codex grid must end inside the left page');
+  assert(finalCell.x + finalCell.width <= rightPageRight + epsilon, 'Right codex grid must end inside the right page');
+  assert(finalCell.y + finalCell.height <= pageBottom + epsilon, 'Codex grid must end inside the page background');
+  assert(leftPageFinalCell.x + leftPageFinalCell.width < rightPageFirstCell.x, 'Codex pages must clear the book spine');
+  assert(rightPageFirstCell.x >= rightPageX, 'Right codex grid must start inside the right page');
+  assert(finalCell.y + finalCell.height < CONFIG.CODEX_FOOTER_Y, 'Codex rows must fit above the discovery footer');
   assert(CONFIG.CODEX_FOOTER_Y < CONFIG.CODEX_BACK_Y, 'Discovery count must remain above the back button');
 });
 

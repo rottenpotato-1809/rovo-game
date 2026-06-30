@@ -230,22 +230,56 @@ export function getFullResultButtons() {
 }
 
 // Return a codex cell rectangle by dragon column and tier row.
-export function getCodexCell(column, row) {
-  const pageColumn = column % CONFIG.CODEX_COLUMNS_PER_PAGE;
-  const pageX = column < CONFIG.CODEX_COLUMNS_PER_PAGE
-    ? CONFIG.CODEX_LEFT_PAGE_X
-    : CONFIG.CODEX_RIGHT_PAGE_X;
-  const gridWidth = (CONFIG.CODEX_COLUMNS_PER_PAGE * CONFIG.CODEX_CELL_WIDTH)
-    + ((CONFIG.CODEX_COLUMNS_PER_PAGE - 1) * CONFIG.CODEX_COLUMN_GAP);
-  const gridHeight = (CONFIG.MAX_TIER * CONFIG.CODEX_CELL_HEIGHT)
-    + ((CONFIG.MAX_TIER - 1) * CONFIG.CODEX_ROW_GAP);
-  const gridX = pageX + ((CONFIG.CODEX_PAGE_WIDTH - gridWidth) / 2);
-  const gridY = CONFIG.CODEX_PAGE_Y + ((CONFIG.CODEX_PAGE_HEIGHT - gridHeight) / 2);
+export function calculateCodexGrid(canvasWidth = CONFIG.CANVAS_WIDTH, canvasHeight = CONFIG.CANVAS_HEIGHT) {
+  const layout = CONFIG.CODEX_LAYOUT;
+  const pageHeight = (layout.BOTTOM_Y - layout.TOP_Y) * canvasHeight;
+  const gapX = layout.CARD_GAP_X * canvasWidth;
+  const gapY = layout.CARD_GAP_Y * canvasHeight;
+  const makePageCards = (pageXPercent, pageWidthPercent, page, elementOffset) => {
+    const pageX = pageXPercent * canvasWidth;
+    const pageY = layout.TOP_Y * canvasHeight;
+    const pageWidth = pageWidthPercent * canvasWidth;
+    const cardWidth = (pageWidth - ((layout.COLS_PER_PAGE - 1) * gapX)) / layout.COLS_PER_PAGE;
+    const cardHeight = (pageHeight - ((layout.ROWS_PER_PAGE - 1) * gapY)) / layout.ROWS_PER_PAGE;
+    const cards = [];
+    for (let row = 0; row < layout.ROWS_PER_PAGE; row += 1) {
+      for (let col = 0; col < layout.COLS_PER_PAGE; col += 1) {
+        cards.push({
+          x: pageX + (col * (cardWidth + gapX)),
+          y: pageY + (row * (cardHeight + gapY)),
+          width: cardWidth,
+          height: cardHeight,
+          page,
+          element: elementOffset + col,
+          tier: row + 1,
+        });
+      }
+    }
+    return { cards, cardWidth, cardHeight };
+  };
+  const left = makePageCards(layout.LEFT_X, layout.LEFT_WIDTH, 'left', 0);
+  const right = makePageCards(layout.RIGHT_X, layout.RIGHT_WIDTH, 'right', layout.COLS_PER_PAGE);
   return {
-    x: gridX + (pageColumn * (CONFIG.CODEX_CELL_WIDTH + CONFIG.CODEX_COLUMN_GAP)),
-    y: gridY + (row * (CONFIG.CODEX_CELL_HEIGHT + CONFIG.CODEX_ROW_GAP)),
-    width: CONFIG.CODEX_CELL_WIDTH,
-    height: CONFIG.CODEX_CELL_HEIGHT,
+    cards: [...left.cards, ...right.cards],
+    cardWidth: left.cardWidth,
+    cardHeight: left.cardHeight,
+  };
+}
+
+// Return a codex cell rectangle by dragon column and tier row.
+export function getCodexCell(column, row) {
+  const layout = CONFIG.CODEX_LAYOUT;
+  const pageColumn = column % layout.COLS_PER_PAGE;
+  const grid = calculateCodexGrid();
+  const index = column < layout.COLS_PER_PAGE
+    ? (row * layout.COLS_PER_PAGE) + pageColumn
+    : (layout.COLS_PER_PAGE * layout.ROWS_PER_PAGE) + (row * layout.COLS_PER_PAGE) + pageColumn;
+  const rect = grid.cards[index];
+  return {
+    x: rect.x,
+    y: rect.y,
+    width: rect.width,
+    height: rect.height,
   };
 }
 
