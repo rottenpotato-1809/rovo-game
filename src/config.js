@@ -1108,7 +1108,7 @@ export const CONFIG = {
   PREP_CARD_SPRITE_Y_OFFSET: 48,
   // Dragon sprite center offset from the shop card top.
 
-  PREP_CARD_NAME_Y_OFFSET: 100,
+  PREP_CARD_NAME_Y_OFFSET: 106,
   // Name text offset from card top.
 
   PREP_CARD_ROLE_Y_OFFSET: 123,
