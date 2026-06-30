@@ -208,11 +208,12 @@ export class PrepState {
         CONFIG.ARENA_ALIVE_ALPHA,
         true,
       );
+      const statsOverlayY = rect.y + CONFIG.PREP_CARD_ROLE_Y_OFFSET - CONFIG.FONT_SIZE_DRAGON_NAME;
       drawRect(ctx, {
         x: rect.x,
-        y: rect.y + Math.floor(rect.height * 0.62),
+        y: statsOverlayY,
         width: rect.width,
-        height: Math.ceil(rect.height * 0.38),
+        height: rect.y + rect.height - statsOverlayY,
       }, CONFIG.CARD_STATS_OVERLAY, null, CONFIG.BUTTON_BORDER_RADIUS);
       if (!canAfford) drawRect(ctx, rect, CONFIG.CARD_DISABLED_OVERLAY, null);
       drawFitText(ctx, dragon.name, textX, rect.y + CONFIG.PREP_CARD_NAME_Y_OFFSET, CONFIG.FONT_SIZE_HEADER - 1, textWidth, CONFIG.FONT_SIZE_SMALL, CONFIG.TEXT_PRIMARY, 'left');
