@@ -46,13 +46,15 @@ export class MenuState {
       width: CONFIG.MENU_TITLE_WIDTH,
       height: CONFIG.MENU_TITLE_HEIGHT,
     });
-    drawText(ctx, `HIGH SCORE ${this.game.saveData.highScore}`, CONFIG.MENU_STATS_PANEL_X + (CONFIG.MENU_STATS_PANEL_WIDTH / 2), CONFIG.MENU_SCORE_Y, CONFIG.FONT_SIZE_HEADER);
+    const statsCenterX = CONFIG.MENU_STATS_PANEL_X + (CONFIG.MENU_STATS_PANEL_WIDTH / 2);
+    drawFitText(ctx, this.game.saveData.playerName.toUpperCase(), statsCenterX, CONFIG.MENU_STATS_PANEL_Y + 26, CONFIG.FONT_SIZE_BODY, CONFIG.MENU_STATS_PANEL_WIDTH - 32, CONFIG.FONT_SIZE_STATS, CONFIG.GOLD_COLOR);
+    drawText(ctx, `HIGH SCORE ${this.game.saveData.highScore}`, statsCenterX, CONFIG.MENU_SCORE_Y, CONFIG.FONT_SIZE_HEADER);
     const nextUnlock = getNextUnlockInfo(this.game.saveData.totalXP);
     const label = nextUnlock
       ? `XP ${this.game.saveData.totalXP} - NEXT: ${nextUnlock.name}`
       : `XP ${this.game.saveData.totalXP} - ALL DRAGONS UNLOCKED`;
     const ratio = nextUnlock ? nextUnlock.current / nextUnlock.required : 1;
-    drawText(ctx, label, CONFIG.MENU_STATS_PANEL_X + (CONFIG.MENU_STATS_PANEL_WIDTH / 2), CONFIG.MENU_XP_LABEL_Y, CONFIG.FONT_SIZE_HEADER);
+    drawText(ctx, label, statsCenterX, CONFIG.MENU_XP_LABEL_Y, CONFIG.FONT_SIZE_HEADER);
     drawBar(ctx, CONFIG.MENU_XP_BAR_X, CONFIG.MENU_XP_BAR_Y, CONFIG.MENU_XP_BAR_WIDTH, CONFIG.MENU_XP_BAR_HEIGHT, ratio, CONFIG.GOLD_COLOR);
     drawMenuHotspot(ctx, this.getNewRunLabel(), 'NEW RUN');
     if (this.game.run) drawButton(ctx, this.continueButton, 'CONTINUE', CONFIG.GOLD_COLOR);

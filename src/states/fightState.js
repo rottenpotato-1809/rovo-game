@@ -107,11 +107,10 @@ export class FightState {
     }
     const isFinished = this.eventIndex >= this.events.length;
     if (!isFinished) {
-      drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
-      drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
       this.renderSpeedControl(ctx);
     }
     [...this.playerTeam, ...this.enemyTeam].forEach(dragon => this.renderDragon(ctx, dragon));
+    if (!isFinished) this.renderTeamLabels(ctx);
     this.renderFloaters(ctx);
     this.renderCombatLog(ctx);
     if (isFinished) {
@@ -120,6 +119,12 @@ export class FightState {
       drawText(ctx, 'CLICK TO CONTINUE', CONFIG.CANVAS_WIDTH / 2, CONFIG.ARENA_RESULT_CONTINUE_Y, CONFIG.FONT_SIZE_BODY, CONFIG.TEXT_SECONDARY);
     }
     ctx.restore();
+  }
+
+  // Draw side labels after dragons so labels remain readable over busy sprites.
+  renderTeamLabels(ctx) {
+    drawText(ctx, 'YOUR TEAM', CONFIG.FIGHT_PLAYER_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
+    drawText(ctx, 'ENEMY', CONFIG.FIGHT_ENEMY_X, CONFIG.ARENA_TEAM_LABEL_Y, CONFIG.FONT_SIZE_HEADER, CONFIG.TEXT_SECONDARY);
   }
 
   // Continue to the next run state after playback finishes.

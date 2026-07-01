@@ -928,7 +928,7 @@ export const CONFIG = {
   ARENA_STATUS_Y: 404,
   // Y position for small temporary arena hints.
 
-  ARENA_TEAM_LABEL_Y: 246,
+  ARENA_TEAM_LABEL_Y: 218,
   // Y position for fight-side team labels.
 
   ARENA_INFO_OFFSET_X: 48,
@@ -1257,16 +1257,16 @@ export const CONFIG = {
   MENU_STATS_PANEL_HEIGHT: 150,
   // Height of the progression panel.
 
-  MENU_SCORE_Y: 390,
+  MENU_SCORE_Y: 414,
   // Main menu high-score baseline.
 
-  MENU_XP_LABEL_Y: 432,
+  MENU_XP_LABEL_Y: 444,
   // Main menu progression label baseline.
 
   MENU_XP_BAR_X: 674,
   // Main menu XP bar left edge.
 
-  MENU_XP_BAR_Y: 456,
+  MENU_XP_BAR_Y: 466,
   // Main menu XP bar top edge.
 
   MENU_XP_BAR_WIDTH: 228,
@@ -1386,16 +1386,16 @@ export const CONFIG = {
   SETTINGS_TITLE_Y: 130,
   // Settings heading baseline.
 
-  SETTINGS_LABEL_X: 320,
+  SETTINGS_LABEL_X: 300,
   // Left-aligned label position inside settings.
 
   SETTINGS_NAME_Y: 180,
   // Player-name control top edge.
 
-  SETTINGS_CONTROL_X: 420,
+  SETTINGS_CONTROL_X: 440,
   // Left edge of settings value controls.
 
-  SETTINGS_CONTROL_WIDTH: 220,
+  SETTINGS_CONTROL_WIDTH: 210,
   // Width of name and slider controls.
 
   SETTINGS_CONTROL_HEIGHT: 42,
@@ -1482,13 +1482,13 @@ export const CONFIG = {
   TUTORIAL_HIGHLIGHT_FILL: 'rgba(245, 200, 66, 0.08)',
   // Subtle fill over the current tutorial target.
 
-  PREP_MERGE_TOOLTIP_X: 228,
+  PREP_MERGE_TOOLTIP_X: 238,
   // Left edge of the Merge hover tooltip.
 
   PREP_MERGE_TOOLTIP_Y: 330,
   // Top edge of the Merge hover tooltip.
 
-  PREP_MERGE_TOOLTIP_WIDTH: 330,
+  PREP_MERGE_TOOLTIP_WIDTH: 300,
   // Width of the Merge hover tooltip.
 
   PREP_MERGE_TOOLTIP_HEIGHT: 36,
